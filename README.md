@@ -1,1 +1,2 @@
-# Capstone Project game. Top-down rougelike for the GameBoy. 
+# Capstone Project 
+Top-down rougelike for the GameBoy. 
