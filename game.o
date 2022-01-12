@@ -1,26 +1,52 @@
 XL3
-H 9 areas 3 global symbols
+H 9 areas 9 global symbols
 M game
 O -mgbz80
+S _set_sprite_data Ref000000
 S .__.ABS. Def000000
-S _puts Ref000000
-A _CODE size 19 flags 0 addr 0
-S _main Def000000
+S _shadow_OAM Ref000000
+S _LCDC_REG Ref000000
+A _CODE size 25 flags 0 addr 0
+S _main Def000022
+S _draw Def000002
+S _input Def000000
+S _logic Def000001
 A _DATA size 0 flags 0 addr 0
-A _INITIALIZED size 0 flags 0 addr 0
+A _INITIALIZED size 10 flags 0 addr 0
+S _heart Def000000
 A _DABS size 0 flags 8 addr 0
 A _HOME size 0 flags 0 addr 0
 A _GSINIT size 0 flags 0 addr 0
 A _GSFINAL size 0 flags 0 addr 0
-A _INITIALIZER size 0 flags 0 addr 0
+A _INITIALIZER size 10 flags 0 addr 0
 A _CABS size 0 flags 8 addr 0
 T 00 00 00
+R 00 00 02 00
+T 00 00 00
+R 00 00 02 00
+T 00 00 00
 R 00 00 00 00
-T 00 00 00 11 09 00 D5 CD 00 00 E1 C9
-R 00 00 00 00 00 04 00 00 02 08 01 00
-T 09 00 00
+T 00 00 00 C9
 R 00 00 00 00
-T 09 00 00 48 65 6C 6C 6F 2C 20 47 61 6D 65 42 6F
+T 01 00 00
 R 00 00 00 00
-T 16 00 00 79 21 00
+T 01 00 00 C9
 R 00 00 00 00
+T 02 00 00
+R 00 00 00 00
+T 02 00 00 11 00 00 D5 AF 3C F5 CD 00 00 E8 04 21
+R 00 00 00 00 00 04 02 00 02 0B 00 00
+T 0F 00 00 02 00 36 00 21 00 00 3E 48 22 36 50 F0
+R 00 00 00 00 02 03 02 00 02 08 02 00
+T 1C 00 00 00 00 00 F6 02 E0 00 00 00 C9
+R 00 00 00 00 0B 03 03 00 0B 09 03 00
+T 22 00 00
+R 00 00 00 00
+T 22 00 00 C3 02 00
+R 00 00 00 00 00 04 00 00
+T 00 00 00
+R 00 00 07 00
+T 00 00 00 66 66 99 FF 81 FF 81 FF 42 7E 24 3C 18
+R 00 00 07 00
+T 0D 00 00 18 00 00
+R 00 00 07 00
