@@ -5,7 +5,12 @@
 #include <stdio.h>
 // Include the sprites defined in their respective C folders. 
 // Thanks to GBTD for letting me not have to write 8x8 sprites in hex by hand.
-#include "heart.h"
+//#include "heart.h"
+extern unsigned char heart[] =
+{
+  0x66,0x66,0x99,0xFF,0x81,0xFF,0x81,0xFF,
+  0x42,0x7E,0x24,0x3C,0x18,0x18,0x00,0x00
+};
 // Function that handles the input of the game.
 void input() {
     // Does nothing atm...
@@ -25,7 +30,7 @@ void draw() {
     set_sprite_tile(0, 0);
 
     // Move the sprite to the center of the screen. 
-    move_sprite(0, SCREENWIDTH/2, SCREENHEIGHT/2);
+    move_sprite(0, SCREENWIDTH/2+4, SCREENHEIGHT/2+4);
 
     SHOW_SPRITES;
 }
