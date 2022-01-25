@@ -1,0 +1,372 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.1.6 #12539 (Linux)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module game
+                                      6 	.optsdcc -mgbz80
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _main
+                                     12 	.globl _draw
+                                     13 	.globl _logic
+                                     14 	.globl _input
+                                     15 	.globl _set_sprite_data
+                                     16 	.globl _wait_vbl_done
+                                     17 	.globl _joypad
+                                     18 	.globl _walkcycle
+                                     19 	.globl _heart
+                                     20 	.globl _y
+                                     21 	.globl _x
+                                     22 	.globl _dir
+                                     23 ;--------------------------------------------------------
+                                     24 ; special function registers
+                                     25 ;--------------------------------------------------------
+                                     26 ;--------------------------------------------------------
+                                     27 ; ram data
+                                     28 ;--------------------------------------------------------
+                                     29 	.area _DATA
+      000000                         30 _dir::
+      000000                         31 	.ds 1
+      000001                         32 _x::
+      000001                         33 	.ds 1
+      000002                         34 _y::
+      000002                         35 	.ds 1
+      000003                         36 _draw_frame_count_65536_109:
+      000003                         37 	.ds 2
+      000005                         38 _draw_anim_count_65536_109:
+      000005                         39 	.ds 2
+                                     40 ;--------------------------------------------------------
+                                     41 ; ram data
+                                     42 ;--------------------------------------------------------
+                                     43 	.area _INITIALIZED
+      000000                         44 _heart::
+      000000                         45 	.ds 32
+      000020                         46 _walkcycle::
+      000020                         47 	.ds 64
+                                     48 ;--------------------------------------------------------
+                                     49 ; absolute external ram data
+                                     50 ;--------------------------------------------------------
+                                     51 	.area _DABS (ABS)
+                                     52 ;--------------------------------------------------------
+                                     53 ; global & static initialisations
+                                     54 ;--------------------------------------------------------
+                                     55 	.area _HOME
+                                     56 	.area _GSINIT
+                                     57 	.area _GSFINAL
+                                     58 	.area _GSINIT
+                                     59 ;game.c:36: static int frame_count = 0;
+      000000 AF                      60 	xor	a, a
+      000001 21r03r00                61 	ld	hl, #_draw_frame_count_65536_109
+      000004 22                      62 	ld	(hl+), a
+      000005 77                      63 	ld	(hl), a
+                                     64 ;game.c:37: static int anim_count = 0;
+      000006 AF                      65 	xor	a, a
+      000007 21r05r00                66 	ld	hl, #_draw_anim_count_65536_109
+      00000A 22                      67 	ld	(hl+), a
+      00000B 77                      68 	ld	(hl), a
+                                     69 ;--------------------------------------------------------
+                                     70 ; Home
+                                     71 ;--------------------------------------------------------
+                                     72 	.area _HOME
+                                     73 	.area _HOME
+                                     74 ;--------------------------------------------------------
+                                     75 ; code
+                                     76 ;--------------------------------------------------------
+                                     77 	.area _CODE
+                                     78 ;game.c:14: void input() {
+                                     79 ;	---------------------------------
+                                     80 ; Function input
+                                     81 ; ---------------------------------
+      000000                         82 _input::
+                                     83 ;game.c:15: uint8_t j = joypad();
+      000000 CDr00r00                84 	call	_joypad
+      000003 4B                      85 	ld	c, e
+                                     86 ;game.c:17: if (j & J_UP)
+      000004 CB 51                   87 	bit	2, c
+      000006 28 0A                   88 	jr	Z, 00110$
+                                     89 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
+      000008 01r00r00                90 	ld	bc, #_shadow_OAM+0
+                                     91 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
+      00000B 0A                      92 	ld	a, (bc)
+      00000C 3D                      93 	dec	a
+      00000D 02                      94 	ld	(bc), a
+      00000E 03                      95 	inc	bc
+      00000F 0A                      96 	ld	a, (bc)
+      000010 02                      97 	ld	(bc), a
+                                     98 ;game.c:18: scroll_sprite(0, 0, -1);
+      000011 C9                      99 	ret
+      000012                        100 00110$:
+                                    101 ;game.c:19: else if (j & J_DOWN)
+      000012 CB 59                  102 	bit	3, c
+      000014 28 0A                  103 	jr	Z, 00107$
+                                    104 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
+      000016 01r00r00               105 	ld	bc, #_shadow_OAM+0
+                                    106 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
+      000019 0A                     107 	ld	a, (bc)
+      00001A 3C                     108 	inc	a
+      00001B 02                     109 	ld	(bc), a
+      00001C 03                     110 	inc	bc
+      00001D 0A                     111 	ld	a, (bc)
+      00001E 02                     112 	ld	(bc), a
+                                    113 ;game.c:20: scroll_sprite(0, 0, 1);
+      00001F C9                     114 	ret
+      000020                        115 00107$:
+                                    116 ;game.c:21: else if (j & J_LEFT)
+      000020 CB 49                  117 	bit	1, c
+      000022 28 0A                  118 	jr	Z, 00104$
+                                    119 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
+      000024 01r00r00               120 	ld	bc, #_shadow_OAM+0
+                                    121 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
+      000027 0A                     122 	ld	a, (bc)
+      000028 02                     123 	ld	(bc), a
+      000029 03                     124 	inc	bc
+      00002A 0A                     125 	ld	a, (bc)
+      00002B 3D                     126 	dec	a
+      00002C 02                     127 	ld	(bc), a
+                                    128 ;game.c:22: scroll_sprite(0, -1, 0);
+      00002D C9                     129 	ret
+      00002E                        130 00104$:
+                                    131 ;game.c:23: else if (j & J_RIGHT)
+      00002E CB 41                  132 	bit	0, c
+      000030 C8                     133 	ret	Z
+                                    134 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
+      000031 01r00r00               135 	ld	bc, #_shadow_OAM+0
+                                    136 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
+      000034 0A                     137 	ld	a, (bc)
+      000035 02                     138 	ld	(bc), a
+      000036 03                     139 	inc	bc
+      000037 0A                     140 	ld	a, (bc)
+      000038 3C                     141 	inc	a
+      000039 02                     142 	ld	(bc), a
+                                    143 ;game.c:24: scroll_sprite(0, 1, 0);
+                                    144 ;game.c:26: }
+      00003A C9                     145 	ret
+                                    146 ;game.c:28: void logic() {
+                                    147 ;	---------------------------------
+                                    148 ; Function logic
+                                    149 ; ---------------------------------
+      00003B                        150 _logic::
+                                    151 ;game.c:30: }
+      00003B C9                     152 	ret
+                                    153 ;game.c:34: void draw() {
+                                    154 ;	---------------------------------
+                                    155 ; Function draw
+                                    156 ; ---------------------------------
+      00003C                        157 _draw::
+      00003C 3B                     158 	dec	sp
+      00003D 3B                     159 	dec	sp
+                                    160 ;game.c:35: unsigned char anim_tiles[2] = {0, 1};
+      00003E F8 00                  161 	ldhl	sp,	#0
+      000040 4D                     162 	ld	c, l
+      000041 44                     163 	ld	b, h
+      000042 AF                     164 	xor	a, a
+      000043 02                     165 	ld	(bc), a
+      000044 69                     166 	ld	l, c
+                                    167 ;	spillPairReg hl
+                                    168 ;	spillPairReg hl
+      000045 60                     169 	ld	h, b
+                                    170 ;	spillPairReg hl
+                                    171 ;	spillPairReg hl
+      000046 23                     172 	inc	hl
+      000047 36 01                  173 	ld	(hl), #0x01
+                                    174 ;game.c:39: frame_count++;
+      000049 21r03r00               175 	ld	hl, #_draw_frame_count_65536_109
+      00004C 34                     176 	inc	(hl)
+      00004D 20 02                  177 	jr	NZ, 00111$
+      00004F 23                     178 	inc	hl
+      000050 34                     179 	inc	(hl)
+      000051                        180 00111$:
+                                    181 ;game.c:40: if (frame_count >= FRAMES_ANIM_UPDATE) {
+      000051 21r03r00               182 	ld	hl, #_draw_frame_count_65536_109
+      000054 2A                     183 	ld	a, (hl+)
+      000055 D6 0A                  184 	sub	a, #0x0a
+      000057 7E                     185 	ld	a, (hl)
+      000058 DE 00                  186 	sbc	a, #0x00
+      00005A 56                     187 	ld	d, (hl)
+      00005B 3E 00                  188 	ld	a, #0x00
+      00005D CB 7F                  189 	bit	7,a
+      00005F 28 07                  190 	jr	Z, 00112$
+      000061 CB 7A                  191 	bit	7, d
+      000063 20 08                  192 	jr	NZ, 00113$
+      000065 BF                     193 	cp	a, a
+      000066 18 05                  194 	jr	00113$
+      000068                        195 00112$:
+      000068 CB 7A                  196 	bit	7, d
+      00006A 28 01                  197 	jr	Z, 00113$
+      00006C 37                     198 	scf
+      00006D                        199 00113$:
+      00006D 38 20                  200 	jr	C, 00104$
+                                    201 ;game.c:41: frame_count = 0;
+      00006F AF                     202 	xor	a, a
+      000070 21r03r00               203 	ld	hl, #_draw_frame_count_65536_109
+      000073 22                     204 	ld	(hl+), a
+      000074 77                     205 	ld	(hl), a
+                                    206 ;game.c:42: anim_count = !anim_count;
+      000075 21r06r00               207 	ld	hl, #_draw_anim_count_65536_109 + 1
+      000078 3A                     208 	ld	a, (hl-)
+      000079 B6                     209 	or	a, (hl)
+      00007A D6 01                  210 	sub	a,#0x01
+      00007C 3E 00                  211 	ld	a, #0x00
+      00007E 17                     212 	rla
+      00007F 22                     213 	ld	(hl+), a
+                                    214 ;game.c:43: set_sprite_tile(0, anim_tiles[anim_count]);
+      000080 AF                     215 	xor	a, a
+      000081 32                     216 	ld	(hl-), a
+      000082 79                     217 	ld	a, c
+      000083 86                     218 	add	a, (hl)
+      000084 23                     219 	inc	hl
+      000085 4F                     220 	ld	c, a
+      000086 78                     221 	ld	a, b
+      000087 8E                     222 	adc	a, (hl)
+      000088 47                     223 	ld	b, a
+      000089 0A                     224 	ld	a, (bc)
+      00008A 4F                     225 	ld	c, a
+                                    226 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
+      00008B 21r02r00               227 	ld	hl, #(_shadow_OAM + 2)
+      00008E 71                     228 	ld	(hl), c
+                                    229 ;game.c:43: set_sprite_tile(0, anim_tiles[anim_count]);
+      00008F                        230 00104$:
+                                    231 ;game.c:45: }
+      00008F 33                     232 	inc	sp
+      000090 33                     233 	inc	sp
+      000091 C9                     234 	ret
+                                    235 ;game.c:47: void main() {
+                                    236 ;	---------------------------------
+                                    237 ; Function main
+                                    238 ; ---------------------------------
+      000092                        239 _main::
+                                    240 ;game.c:48: set_sprite_data(0, 2, heart);
+      000092 11r00r00               241 	ld	de, #_heart
+      000095 D5                     242 	push	de
+      000096 21 00 02               243 	ld	hl, #0x200
+      000099 E5                     244 	push	hl
+      00009A CDr00r00               245 	call	_set_sprite_data
+      00009D E8 04                  246 	add	sp, #4
+                                    247 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
+      00009F 21r02r00               248 	ld	hl, #(_shadow_OAM + 2)
+      0000A2 36 00                  249 	ld	(hl), #0x00
+                                    250 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1399: OAM_item_t * itm = &shadow_OAM[nb];
+      0000A4 21r00r00               251 	ld	hl, #_shadow_OAM
+                                    252 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1400: itm->y=y, itm->x=x;
+      0000A7 3E 4E                  253 	ld	a, #0x4e
+      0000A9 22                     254 	ld	(hl+), a
+      0000AA 36 58                  255 	ld	(hl), #0x58
+                                    256 ;game.c:53: SHOW_SPRITES;
+      0000AC F0r00                  257 	ldh	a, (_LCDC_REG + 0)
+      0000AE F6 02                  258 	or	a, #0x02
+      0000B0 E0r00                  259 	ldh	(_LCDC_REG + 0), a
+                                    260 ;game.c:55: while (true) {
+      0000B2                        261 00102$:
+                                    262 ;game.c:56: input();
+      0000B2 CDr00r00               263 	call	_input
+                                    264 ;game.c:57: logic();
+      0000B5 CDr3Br00               265 	call	_logic
+                                    266 ;game.c:58: draw();
+      0000B8 CDr3Cr00               267 	call	_draw
+                                    268 ;game.c:59: wait_vbl_done();
+      0000BB CDr00r00               269 	call	_wait_vbl_done
+                                    270 ;game.c:62: }
+      0000BE 18 F2                  271 	jr	00102$
+                                    272 	.area _CODE
+                                    273 	.area _INITIALIZER
+      000000                        274 __xinit__heart:
+      000000 6C                     275 	.db #0x6c	; 108	'l'
+      000001 6C                     276 	.db #0x6c	; 108	'l'
+      000002 9E                     277 	.db #0x9e	; 158
+      000003 F2                     278 	.db #0xf2	; 242
+      000004 86                     279 	.db #0x86	; 134
+      000005 FA                     280 	.db #0xfa	; 250
+      000006 44                     281 	.db #0x44	; 68	'D'
+      000007 7C                     282 	.db #0x7c	; 124
+      000008 28                     283 	.db #0x28	; 40
+      000009 38                     284 	.db #0x38	; 56	'8'
+      00000A 10                     285 	.db #0x10	; 16
+      00000B 10                     286 	.db #0x10	; 16
+      00000C 00                     287 	.db #0x00	; 0
+      00000D 00                     288 	.db #0x00	; 0
+      00000E 00                     289 	.db #0x00	; 0
+      00000F 00                     290 	.db #0x00	; 0
+      000010 6C                     291 	.db #0x6c	; 108	'l'
+      000011 6C                     292 	.db #0x6c	; 108	'l'
+      000012 92                     293 	.db #0x92	; 146
+      000013 F2                     294 	.db #0xf2	; 242
+      000014 82                     295 	.db #0x82	; 130
+      000015 F2                     296 	.db #0xf2	; 242
+      000016 44                     297 	.db #0x44	; 68	'D'
+      000017 74                     298 	.db #0x74	; 116	't'
+      000018 28                     299 	.db #0x28	; 40
+      000019 38                     300 	.db #0x38	; 56	'8'
+      00001A 10                     301 	.db #0x10	; 16
+      00001B 10                     302 	.db #0x10	; 16
+      00001C 00                     303 	.db #0x00	; 0
+      00001D 00                     304 	.db #0x00	; 0
+      00001E 00                     305 	.db #0x00	; 0
+      00001F 00                     306 	.db #0x00	; 0
+      000020                        307 __xinit__walkcycle:
+      000020 07                     308 	.db #0x07	; 7
+      000021 07                     309 	.db #0x07	; 7
+      000022 1F                     310 	.db #0x1f	; 31
+      000023 18                     311 	.db #0x18	; 24
+      000024 1F                     312 	.db #0x1f	; 31
+      000025 10                     313 	.db #0x10	; 16
+      000026 3F                     314 	.db #0x3f	; 63
+      000027 20                     315 	.db #0x20	; 32
+      000028 3F                     316 	.db #0x3f	; 63
+      000029 20                     317 	.db #0x20	; 32
+      00002A 3F                     318 	.db #0x3f	; 63
+      00002B 20                     319 	.db #0x20	; 32
+      00002C 3F                     320 	.db #0x3f	; 63
+      00002D 20                     321 	.db #0x20	; 32
+      00002E 1F                     322 	.db #0x1f	; 31
+      00002F 10                     323 	.db #0x10	; 16
+      000030 1F                     324 	.db #0x1f	; 31
+      000031 18                     325 	.db #0x18	; 24
+      000032 0F                     326 	.db #0x0f	; 15
+      000033 0F                     327 	.db #0x0f	; 15
+      000034 09                     328 	.db #0x09	; 9
+      000035 0F                     329 	.db #0x0f	; 15
+      000036 09                     330 	.db #0x09	; 9
+      000037 0F                     331 	.db #0x0f	; 15
+      000038 09                     332 	.db #0x09	; 9
+      000039 0F                     333 	.db #0x0f	; 15
+      00003A 07                     334 	.db #0x07	; 7
+      00003B 07                     335 	.db #0x07	; 7
+      00003C 08                     336 	.db #0x08	; 8
+      00003D 08                     337 	.db #0x08	; 8
+      00003E 1C                     338 	.db #0x1c	; 28
+      00003F 1C                     339 	.db #0x1c	; 28
+      000040 80                     340 	.db #0x80	; 128
+      000041 80                     341 	.db #0x80	; 128
+      000042 E0                     342 	.db #0xe0	; 224
+      000043 60                     343 	.db #0x60	; 96
+      000044 E0                     344 	.db #0xe0	; 224
+      000045 20                     345 	.db #0x20	; 32
+      000046 F0                     346 	.db #0xf0	; 240
+      000047 90                     347 	.db #0x90	; 144
+      000048 F0                     348 	.db #0xf0	; 240
+      000049 90                     349 	.db #0x90	; 144
+      00004A F0                     350 	.db #0xf0	; 240
+      00004B 10                     351 	.db #0x10	; 16
+      00004C F0                     352 	.db #0xf0	; 240
+      00004D 10                     353 	.db #0x10	; 16
+      00004E E0                     354 	.db #0xe0	; 224
+      00004F 20                     355 	.db #0x20	; 32
+      000050 E0                     356 	.db #0xe0	; 224
+      000051 60                     357 	.db #0x60	; 96
+      000052 C0                     358 	.db #0xc0	; 192
+      000053 C0                     359 	.db #0xc0	; 192
+      000054 40                     360 	.db #0x40	; 64
+      000055 C0                     361 	.db #0xc0	; 192
+      000056 40                     362 	.db #0x40	; 64
+      000057 C0                     363 	.db #0xc0	; 192
+      000058 40                     364 	.db #0x40	; 64
+      000059 C0                     365 	.db #0xc0	; 192
+      00005A A0                     366 	.db #0xa0	; 160
+      00005B A0                     367 	.db #0xa0	; 160
+      00005C 60                     368 	.db #0x60	; 96
+      00005D 60                     369 	.db #0x60	; 96
+      00005E C0                     370 	.db #0xc0	; 192
+      00005F C0                     371 	.db #0xc0	; 192
+                                    372 	.area _CABS (ABS)
