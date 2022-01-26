@@ -8,23 +8,29 @@ Symbol Table
     .__.CPU.                                                    =  000000 L
     .__.H$L.                                                    =  000000 L
     _LCDC_REG                                                      ****** GX
+    _WX_REG                                                        ****** GX
+    _WY_REG                                                        ****** GX
   7 __xinit__heart                                                 000000 R
+  7 __xinit__hud_data                                              000060 R
+  7 __xinit__hud_tilemap                                           0001A0 R
   7 __xinit__walkcycle                                             000020 R
-  1 _dir                                                           000000 GR
-  0 _draw                                                          00003C GR
-  1 _draw_anim_count_65536_109                                     000005 R
-  1 _draw_frame_count_65536_109                                    000003 R
+  0 _draw                                                          000038 GR
+  1 _draw_anim_count_65536_116                                     000002 R
+  1 _draw_frame_count_65536_116                                    000000 R
   2 _heart                                                         000000 GR
+  2 _hud_data                                                      000060 GR
+  2 _hud_tilemap                                                   0001A0 GR
   0 _input                                                         000000 GR
     _joypad                                                        ****** GX
-  0 _logic                                                         00003B GR
-  0 _main                                                          000092 GR
+  0 _logic                                                         000037 GR
+  0 _main                                                          000090 GR
     _set_sprite_data                                               ****** GX
+    _set_sprite_palette                                            ****** GX
+    _set_win_data                                                  ****** GX
+    _set_win_tiles                                                 ****** GX
     _shadow_OAM                                                    ****** GX
     _wait_vbl_done                                                 ****** GX
   2 _walkcycle                                                     000020 GR
-  1 _x                                                             000001 GR
-  1 _y                                                             000002 GR
 
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (GameBoy Z80-like CPU), page 2.
@@ -32,13 +38,13 @@ Hexadecimal [24-Bits]
 
 Area Table
 
-   0 _CODE                                      size     C0   flags    0
-   1 _DATA                                      size      7   flags    0
-   2 _INITIALIZED                               size     60   flags    0
+   0 _CODE                                      size    112   flags    0
+   1 _DATA                                      size      4   flags    0
+   2 _INITIALIZED                               size    1C8   flags    0
    3 _DABS                                      size      0   flags    8
    4 _HOME                                      size      0   flags    0
    5 _GSINIT                                    size      C   flags    0
    6 _GSFINAL                                   size      0   flags    0
-   7 _INITIALIZER                               size     60   flags    0
+   7 _INITIALIZER                               size    1C8   flags    0
    8 _CABS                                      size      0   flags    8
 

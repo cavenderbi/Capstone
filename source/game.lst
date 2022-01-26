@@ -12,39 +12,39 @@
                                      12 	.globl _draw
                                      13 	.globl _logic
                                      14 	.globl _input
-                                     15 	.globl _set_sprite_data
-                                     16 	.globl _wait_vbl_done
-                                     17 	.globl _joypad
-                                     18 	.globl _walkcycle
-                                     19 	.globl _heart
-                                     20 	.globl _y
-                                     21 	.globl _x
-                                     22 	.globl _dir
-                                     23 ;--------------------------------------------------------
-                                     24 ; special function registers
+                                     15 	.globl _set_sprite_palette
+                                     16 	.globl _set_sprite_data
+                                     17 	.globl _set_win_tiles
+                                     18 	.globl _set_win_data
+                                     19 	.globl _wait_vbl_done
+                                     20 	.globl _joypad
+                                     21 	.globl _hud_tilemap
+                                     22 	.globl _hud_data
+                                     23 	.globl _walkcycle
+                                     24 	.globl _heart
                                      25 ;--------------------------------------------------------
-                                     26 ;--------------------------------------------------------
-                                     27 ; ram data
+                                     26 ; special function registers
+                                     27 ;--------------------------------------------------------
                                      28 ;--------------------------------------------------------
-                                     29 	.area _DATA
-      000000                         30 _dir::
-      000000                         31 	.ds 1
-      000001                         32 _x::
-      000001                         33 	.ds 1
-      000002                         34 _y::
-      000002                         35 	.ds 1
-      000003                         36 _draw_frame_count_65536_109:
-      000003                         37 	.ds 2
-      000005                         38 _draw_anim_count_65536_109:
-      000005                         39 	.ds 2
-                                     40 ;--------------------------------------------------------
-                                     41 ; ram data
-                                     42 ;--------------------------------------------------------
-                                     43 	.area _INITIALIZED
-      000000                         44 _heart::
-      000000                         45 	.ds 32
-      000020                         46 _walkcycle::
-      000020                         47 	.ds 64
+                                     29 ; ram data
+                                     30 ;--------------------------------------------------------
+                                     31 	.area _DATA
+      000000                         32 _draw_frame_count_65536_116:
+      000000                         33 	.ds 2
+      000002                         34 _draw_anim_count_65536_116:
+      000002                         35 	.ds 2
+                                     36 ;--------------------------------------------------------
+                                     37 ; ram data
+                                     38 ;--------------------------------------------------------
+                                     39 	.area _INITIALIZED
+      000000                         40 _heart::
+      000000                         41 	.ds 32
+      000020                         42 _walkcycle::
+      000020                         43 	.ds 64
+      000060                         44 _hud_data::
+      000060                         45 	.ds 320
+      0001A0                         46 _hud_tilemap::
+      0001A0                         47 	.ds 40
                                      48 ;--------------------------------------------------------
                                      49 ; absolute external ram data
                                      50 ;--------------------------------------------------------
@@ -56,14 +56,14 @@
                                      56 	.area _GSINIT
                                      57 	.area _GSFINAL
                                      58 	.area _GSINIT
-                                     59 ;game.c:36: static int frame_count = 0;
+                                     59 ;game.c:39: static int frame_count = 0;
       000000 AF                      60 	xor	a, a
-      000001 21r03r00                61 	ld	hl, #_draw_frame_count_65536_109
+      000001 21r00r00                61 	ld	hl, #_draw_frame_count_65536_116
       000004 22                      62 	ld	(hl+), a
       000005 77                      63 	ld	(hl), a
-                                     64 ;game.c:37: static int anim_count = 0;
+                                     64 ;game.c:40: static int anim_count = 0;
       000006 AF                      65 	xor	a, a
-      000007 21r05r00                66 	ld	hl, #_draw_anim_count_65536_109
+      000007 21r02r00                66 	ld	hl, #_draw_anim_count_65536_116
       00000A 22                      67 	ld	(hl+), a
       00000B 77                      68 	ld	(hl), a
                                      69 ;--------------------------------------------------------
@@ -75,298 +75,728 @@
                                      75 ; code
                                      76 ;--------------------------------------------------------
                                      77 	.area _CODE
-                                     78 ;game.c:14: void input() {
+                                     78 ;game.c:18: void input() {
                                      79 ;	---------------------------------
                                      80 ; Function input
                                      81 ; ---------------------------------
       000000                         82 _input::
-                                     83 ;game.c:15: uint8_t j = joypad();
+                                     83 ;game.c:19: unsigned char j = joypad();
       000000 CDr00r00                84 	call	_joypad
-      000003 4B                      85 	ld	c, e
-                                     86 ;game.c:17: if (j & J_UP)
-      000004 CB 51                   87 	bit	2, c
-      000006 28 0A                   88 	jr	Z, 00110$
-                                     89 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
-      000008 01r00r00                90 	ld	bc, #_shadow_OAM+0
-                                     91 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
-      00000B 0A                      92 	ld	a, (bc)
-      00000C 3D                      93 	dec	a
-      00000D 02                      94 	ld	(bc), a
-      00000E 03                      95 	inc	bc
-      00000F 0A                      96 	ld	a, (bc)
-      000010 02                      97 	ld	(bc), a
-                                     98 ;game.c:18: scroll_sprite(0, 0, -1);
-      000011 C9                      99 	ret
-      000012                        100 00110$:
-                                    101 ;game.c:19: else if (j & J_DOWN)
-      000012 CB 59                  102 	bit	3, c
-      000014 28 0A                  103 	jr	Z, 00107$
-                                    104 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
-      000016 01r00r00               105 	ld	bc, #_shadow_OAM+0
-                                    106 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
-      000019 0A                     107 	ld	a, (bc)
-      00001A 3C                     108 	inc	a
-      00001B 02                     109 	ld	(bc), a
-      00001C 03                     110 	inc	bc
-      00001D 0A                     111 	ld	a, (bc)
-      00001E 02                     112 	ld	(bc), a
-                                    113 ;game.c:20: scroll_sprite(0, 0, 1);
-      00001F C9                     114 	ret
-      000020                        115 00107$:
-                                    116 ;game.c:21: else if (j & J_LEFT)
-      000020 CB 49                  117 	bit	1, c
-      000022 28 0A                  118 	jr	Z, 00104$
-                                    119 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
-      000024 01r00r00               120 	ld	bc, #_shadow_OAM+0
-                                    121 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
+                                     85 ;game.c:20: if (j & J_UP)
+      000003 CB 53                   86 	bit	2, e
+      000005 28 09                   87 	jr	Z, 00102$
+                                     88 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
+      000007 01r00r00                89 	ld	bc, #_shadow_OAM+0
+                                     90 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
+      00000A 0A                      91 	ld	a, (bc)
+      00000B 3D                      92 	dec	a
+      00000C 02                      93 	ld	(bc), a
+      00000D 03                      94 	inc	bc
+      00000E 0A                      95 	ld	a, (bc)
+      00000F 02                      96 	ld	(bc), a
+                                     97 ;game.c:21: scroll_sprite(0, 0, -1);
+      000010                         98 00102$:
+                                     99 ;game.c:22: if (j & J_DOWN)
+      000010 CB 5B                  100 	bit	3, e
+      000012 28 09                  101 	jr	Z, 00104$
+                                    102 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
+      000014 01r00r00               103 	ld	bc, #_shadow_OAM+0
+                                    104 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
+      000017 0A                     105 	ld	a, (bc)
+      000018 3C                     106 	inc	a
+      000019 02                     107 	ld	(bc), a
+      00001A 03                     108 	inc	bc
+      00001B 0A                     109 	ld	a, (bc)
+      00001C 02                     110 	ld	(bc), a
+                                    111 ;game.c:23: scroll_sprite(0, 0, 1);
+      00001D                        112 00104$:
+                                    113 ;game.c:24: if (j & J_LEFT)
+      00001D CB 4B                  114 	bit	1, e
+      00001F 28 09                  115 	jr	Z, 00106$
+                                    116 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
+      000021 01r00r00               117 	ld	bc, #_shadow_OAM+0
+                                    118 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
+      000024 0A                     119 	ld	a, (bc)
+      000025 02                     120 	ld	(bc), a
+      000026 03                     121 	inc	bc
       000027 0A                     122 	ld	a, (bc)
-      000028 02                     123 	ld	(bc), a
-      000029 03                     124 	inc	bc
-      00002A 0A                     125 	ld	a, (bc)
-      00002B 3D                     126 	dec	a
-      00002C 02                     127 	ld	(bc), a
-                                    128 ;game.c:22: scroll_sprite(0, -1, 0);
-      00002D C9                     129 	ret
-      00002E                        130 00104$:
-                                    131 ;game.c:23: else if (j & J_RIGHT)
-      00002E CB 41                  132 	bit	0, c
-      000030 C8                     133 	ret	Z
-                                    134 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
-      000031 01r00r00               135 	ld	bc, #_shadow_OAM+0
-                                    136 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
-      000034 0A                     137 	ld	a, (bc)
+      000028 3D                     123 	dec	a
+      000029 02                     124 	ld	(bc), a
+                                    125 ;game.c:25: scroll_sprite(0, -1, 0);
+      00002A                        126 00106$:
+                                    127 ;game.c:26: if (j & J_RIGHT)
+      00002A CB 43                  128 	bit	0, e
+      00002C C8                     129 	ret	Z
+                                    130 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
+      00002D 01r00r00               131 	ld	bc, #_shadow_OAM+0
+                                    132 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
+      000030 0A                     133 	ld	a, (bc)
+      000031 02                     134 	ld	(bc), a
+      000032 03                     135 	inc	bc
+      000033 0A                     136 	ld	a, (bc)
+      000034 3C                     137 	inc	a
       000035 02                     138 	ld	(bc), a
-      000036 03                     139 	inc	bc
-      000037 0A                     140 	ld	a, (bc)
-      000038 3C                     141 	inc	a
-      000039 02                     142 	ld	(bc), a
-                                    143 ;game.c:24: scroll_sprite(0, 1, 0);
-                                    144 ;game.c:26: }
-      00003A C9                     145 	ret
-                                    146 ;game.c:28: void logic() {
-                                    147 ;	---------------------------------
-                                    148 ; Function logic
-                                    149 ; ---------------------------------
-      00003B                        150 _logic::
-                                    151 ;game.c:30: }
-      00003B C9                     152 	ret
-                                    153 ;game.c:34: void draw() {
-                                    154 ;	---------------------------------
-                                    155 ; Function draw
-                                    156 ; ---------------------------------
-      00003C                        157 _draw::
-      00003C 3B                     158 	dec	sp
-      00003D 3B                     159 	dec	sp
-                                    160 ;game.c:35: unsigned char anim_tiles[2] = {0, 1};
-      00003E F8 00                  161 	ldhl	sp,	#0
-      000040 4D                     162 	ld	c, l
-      000041 44                     163 	ld	b, h
-      000042 AF                     164 	xor	a, a
-      000043 02                     165 	ld	(bc), a
-      000044 69                     166 	ld	l, c
+                                    139 ;game.c:27: scroll_sprite(0, 1, 0);
+                                    140 ;game.c:29: }
+      000036 C9                     141 	ret
+                                    142 ;game.c:31: void logic() {
+                                    143 ;	---------------------------------
+                                    144 ; Function logic
+                                    145 ; ---------------------------------
+      000037                        146 _logic::
+                                    147 ;game.c:33: }
+      000037 C9                     148 	ret
+                                    149 ;game.c:37: void draw() {
+                                    150 ;	---------------------------------
+                                    151 ; Function draw
+                                    152 ; ---------------------------------
+      000038                        153 _draw::
+      000038 3B                     154 	dec	sp
+      000039 3B                     155 	dec	sp
+                                    156 ;game.c:38: unsigned char anim_tiles[2] = {0, 1};
+      00003A F8 00                  157 	ldhl	sp,	#0
+      00003C 4D                     158 	ld	c, l
+      00003D 44                     159 	ld	b, h
+      00003E AF                     160 	xor	a, a
+      00003F 02                     161 	ld	(bc), a
+      000040 69                     162 	ld	l, c
+                                    163 ;	spillPairReg hl
+                                    164 ;	spillPairReg hl
+      000041 60                     165 	ld	h, b
+                                    166 ;	spillPairReg hl
                                     167 ;	spillPairReg hl
-                                    168 ;	spillPairReg hl
-      000045 60                     169 	ld	h, b
-                                    170 ;	spillPairReg hl
-                                    171 ;	spillPairReg hl
-      000046 23                     172 	inc	hl
-      000047 36 01                  173 	ld	(hl), #0x01
-                                    174 ;game.c:39: frame_count++;
-      000049 21r03r00               175 	ld	hl, #_draw_frame_count_65536_109
-      00004C 34                     176 	inc	(hl)
-      00004D 20 02                  177 	jr	NZ, 00111$
-      00004F 23                     178 	inc	hl
-      000050 34                     179 	inc	(hl)
-      000051                        180 00111$:
-                                    181 ;game.c:40: if (frame_count >= FRAMES_ANIM_UPDATE) {
-      000051 21r03r00               182 	ld	hl, #_draw_frame_count_65536_109
-      000054 2A                     183 	ld	a, (hl+)
-      000055 D6 0A                  184 	sub	a, #0x0a
-      000057 7E                     185 	ld	a, (hl)
-      000058 DE 00                  186 	sbc	a, #0x00
-      00005A 56                     187 	ld	d, (hl)
-      00005B 3E 00                  188 	ld	a, #0x00
-      00005D CB 7F                  189 	bit	7,a
-      00005F 28 07                  190 	jr	Z, 00112$
-      000061 CB 7A                  191 	bit	7, d
-      000063 20 08                  192 	jr	NZ, 00113$
-      000065 BF                     193 	cp	a, a
-      000066 18 05                  194 	jr	00113$
-      000068                        195 00112$:
-      000068 CB 7A                  196 	bit	7, d
-      00006A 28 01                  197 	jr	Z, 00113$
-      00006C 37                     198 	scf
-      00006D                        199 00113$:
-      00006D 38 20                  200 	jr	C, 00104$
-                                    201 ;game.c:41: frame_count = 0;
-      00006F AF                     202 	xor	a, a
-      000070 21r03r00               203 	ld	hl, #_draw_frame_count_65536_109
-      000073 22                     204 	ld	(hl+), a
-      000074 77                     205 	ld	(hl), a
-                                    206 ;game.c:42: anim_count = !anim_count;
-      000075 21r06r00               207 	ld	hl, #_draw_anim_count_65536_109 + 1
-      000078 3A                     208 	ld	a, (hl-)
-      000079 B6                     209 	or	a, (hl)
-      00007A D6 01                  210 	sub	a,#0x01
-      00007C 3E 00                  211 	ld	a, #0x00
-      00007E 17                     212 	rla
-      00007F 22                     213 	ld	(hl+), a
-                                    214 ;game.c:43: set_sprite_tile(0, anim_tiles[anim_count]);
-      000080 AF                     215 	xor	a, a
-      000081 32                     216 	ld	(hl-), a
-      000082 79                     217 	ld	a, c
-      000083 86                     218 	add	a, (hl)
-      000084 23                     219 	inc	hl
-      000085 4F                     220 	ld	c, a
-      000086 78                     221 	ld	a, b
-      000087 8E                     222 	adc	a, (hl)
-      000088 47                     223 	ld	b, a
-      000089 0A                     224 	ld	a, (bc)
-      00008A 4F                     225 	ld	c, a
-                                    226 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
-      00008B 21r02r00               227 	ld	hl, #(_shadow_OAM + 2)
-      00008E 71                     228 	ld	(hl), c
-                                    229 ;game.c:43: set_sprite_tile(0, anim_tiles[anim_count]);
-      00008F                        230 00104$:
-                                    231 ;game.c:45: }
-      00008F 33                     232 	inc	sp
-      000090 33                     233 	inc	sp
-      000091 C9                     234 	ret
-                                    235 ;game.c:47: void main() {
-                                    236 ;	---------------------------------
-                                    237 ; Function main
-                                    238 ; ---------------------------------
-      000092                        239 _main::
-                                    240 ;game.c:48: set_sprite_data(0, 2, heart);
-      000092 11r00r00               241 	ld	de, #_heart
-      000095 D5                     242 	push	de
-      000096 21 00 02               243 	ld	hl, #0x200
-      000099 E5                     244 	push	hl
-      00009A CDr00r00               245 	call	_set_sprite_data
-      00009D E8 04                  246 	add	sp, #4
-                                    247 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
-      00009F 21r02r00               248 	ld	hl, #(_shadow_OAM + 2)
-      0000A2 36 00                  249 	ld	(hl), #0x00
-                                    250 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1399: OAM_item_t * itm = &shadow_OAM[nb];
-      0000A4 21r00r00               251 	ld	hl, #_shadow_OAM
-                                    252 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1400: itm->y=y, itm->x=x;
-      0000A7 3E 4E                  253 	ld	a, #0x4e
-      0000A9 22                     254 	ld	(hl+), a
-      0000AA 36 58                  255 	ld	(hl), #0x58
-                                    256 ;game.c:53: SHOW_SPRITES;
-      0000AC F0r00                  257 	ldh	a, (_LCDC_REG + 0)
-      0000AE F6 02                  258 	or	a, #0x02
-      0000B0 E0r00                  259 	ldh	(_LCDC_REG + 0), a
-                                    260 ;game.c:55: while (true) {
-      0000B2                        261 00102$:
-                                    262 ;game.c:56: input();
-      0000B2 CDr00r00               263 	call	_input
-                                    264 ;game.c:57: logic();
-      0000B5 CDr3Br00               265 	call	_logic
-                                    266 ;game.c:58: draw();
-      0000B8 CDr3Cr00               267 	call	_draw
-                                    268 ;game.c:59: wait_vbl_done();
-      0000BB CDr00r00               269 	call	_wait_vbl_done
-                                    270 ;game.c:62: }
-      0000BE 18 F2                  271 	jr	00102$
-                                    272 	.area _CODE
-                                    273 	.area _INITIALIZER
-      000000                        274 __xinit__heart:
-      000000 6C                     275 	.db #0x6c	; 108	'l'
-      000001 6C                     276 	.db #0x6c	; 108	'l'
-      000002 9E                     277 	.db #0x9e	; 158
-      000003 F2                     278 	.db #0xf2	; 242
-      000004 86                     279 	.db #0x86	; 134
-      000005 FA                     280 	.db #0xfa	; 250
-      000006 44                     281 	.db #0x44	; 68	'D'
-      000007 7C                     282 	.db #0x7c	; 124
-      000008 28                     283 	.db #0x28	; 40
-      000009 38                     284 	.db #0x38	; 56	'8'
-      00000A 10                     285 	.db #0x10	; 16
-      00000B 10                     286 	.db #0x10	; 16
-      00000C 00                     287 	.db #0x00	; 0
-      00000D 00                     288 	.db #0x00	; 0
-      00000E 00                     289 	.db #0x00	; 0
-      00000F 00                     290 	.db #0x00	; 0
-      000010 6C                     291 	.db #0x6c	; 108	'l'
-      000011 6C                     292 	.db #0x6c	; 108	'l'
-      000012 92                     293 	.db #0x92	; 146
-      000013 F2                     294 	.db #0xf2	; 242
-      000014 82                     295 	.db #0x82	; 130
-      000015 F2                     296 	.db #0xf2	; 242
-      000016 44                     297 	.db #0x44	; 68	'D'
-      000017 74                     298 	.db #0x74	; 116	't'
-      000018 28                     299 	.db #0x28	; 40
-      000019 38                     300 	.db #0x38	; 56	'8'
-      00001A 10                     301 	.db #0x10	; 16
-      00001B 10                     302 	.db #0x10	; 16
-      00001C 00                     303 	.db #0x00	; 0
-      00001D 00                     304 	.db #0x00	; 0
-      00001E 00                     305 	.db #0x00	; 0
-      00001F 00                     306 	.db #0x00	; 0
-      000020                        307 __xinit__walkcycle:
-      000020 07                     308 	.db #0x07	; 7
-      000021 07                     309 	.db #0x07	; 7
-      000022 1F                     310 	.db #0x1f	; 31
-      000023 18                     311 	.db #0x18	; 24
-      000024 1F                     312 	.db #0x1f	; 31
-      000025 10                     313 	.db #0x10	; 16
-      000026 3F                     314 	.db #0x3f	; 63
-      000027 20                     315 	.db #0x20	; 32
-      000028 3F                     316 	.db #0x3f	; 63
-      000029 20                     317 	.db #0x20	; 32
-      00002A 3F                     318 	.db #0x3f	; 63
-      00002B 20                     319 	.db #0x20	; 32
-      00002C 3F                     320 	.db #0x3f	; 63
-      00002D 20                     321 	.db #0x20	; 32
-      00002E 1F                     322 	.db #0x1f	; 31
-      00002F 10                     323 	.db #0x10	; 16
-      000030 1F                     324 	.db #0x1f	; 31
-      000031 18                     325 	.db #0x18	; 24
-      000032 0F                     326 	.db #0x0f	; 15
-      000033 0F                     327 	.db #0x0f	; 15
-      000034 09                     328 	.db #0x09	; 9
-      000035 0F                     329 	.db #0x0f	; 15
-      000036 09                     330 	.db #0x09	; 9
-      000037 0F                     331 	.db #0x0f	; 15
-      000038 09                     332 	.db #0x09	; 9
-      000039 0F                     333 	.db #0x0f	; 15
-      00003A 07                     334 	.db #0x07	; 7
-      00003B 07                     335 	.db #0x07	; 7
-      00003C 08                     336 	.db #0x08	; 8
-      00003D 08                     337 	.db #0x08	; 8
-      00003E 1C                     338 	.db #0x1c	; 28
-      00003F 1C                     339 	.db #0x1c	; 28
-      000040 80                     340 	.db #0x80	; 128
-      000041 80                     341 	.db #0x80	; 128
-      000042 E0                     342 	.db #0xe0	; 224
-      000043 60                     343 	.db #0x60	; 96
-      000044 E0                     344 	.db #0xe0	; 224
-      000045 20                     345 	.db #0x20	; 32
-      000046 F0                     346 	.db #0xf0	; 240
-      000047 90                     347 	.db #0x90	; 144
-      000048 F0                     348 	.db #0xf0	; 240
-      000049 90                     349 	.db #0x90	; 144
-      00004A F0                     350 	.db #0xf0	; 240
-      00004B 10                     351 	.db #0x10	; 16
-      00004C F0                     352 	.db #0xf0	; 240
-      00004D 10                     353 	.db #0x10	; 16
-      00004E E0                     354 	.db #0xe0	; 224
-      00004F 20                     355 	.db #0x20	; 32
-      000050 E0                     356 	.db #0xe0	; 224
-      000051 60                     357 	.db #0x60	; 96
-      000052 C0                     358 	.db #0xc0	; 192
-      000053 C0                     359 	.db #0xc0	; 192
-      000054 40                     360 	.db #0x40	; 64
-      000055 C0                     361 	.db #0xc0	; 192
-      000056 40                     362 	.db #0x40	; 64
-      000057 C0                     363 	.db #0xc0	; 192
-      000058 40                     364 	.db #0x40	; 64
-      000059 C0                     365 	.db #0xc0	; 192
-      00005A A0                     366 	.db #0xa0	; 160
-      00005B A0                     367 	.db #0xa0	; 160
-      00005C 60                     368 	.db #0x60	; 96
-      00005D 60                     369 	.db #0x60	; 96
-      00005E C0                     370 	.db #0xc0	; 192
-      00005F C0                     371 	.db #0xc0	; 192
-                                    372 	.area _CABS (ABS)
+      000042 23                     168 	inc	hl
+      000043 36 01                  169 	ld	(hl), #0x01
+                                    170 ;game.c:42: frame_count++;
+      000045 21r00r00               171 	ld	hl, #_draw_frame_count_65536_116
+      000048 34                     172 	inc	(hl)
+      000049 20 02                  173 	jr	NZ, 00111$
+      00004B 23                     174 	inc	hl
+      00004C 34                     175 	inc	(hl)
+      00004D                        176 00111$:
+                                    177 ;game.c:43: if (frame_count >= FRAMES_ANIM_UPDATE) {
+      00004D 21r00r00               178 	ld	hl, #_draw_frame_count_65536_116
+      000050 2A                     179 	ld	a, (hl+)
+      000051 D6 0A                  180 	sub	a, #0x0a
+      000053 7E                     181 	ld	a, (hl)
+      000054 DE 00                  182 	sbc	a, #0x00
+      000056 56                     183 	ld	d, (hl)
+      000057 3E 00                  184 	ld	a, #0x00
+      000059 CB 7F                  185 	bit	7,a
+      00005B 28 07                  186 	jr	Z, 00112$
+      00005D CB 7A                  187 	bit	7, d
+      00005F 20 08                  188 	jr	NZ, 00113$
+      000061 BF                     189 	cp	a, a
+      000062 18 05                  190 	jr	00113$
+      000064                        191 00112$:
+      000064 CB 7A                  192 	bit	7, d
+      000066 28 01                  193 	jr	Z, 00113$
+      000068 37                     194 	scf
+      000069                        195 00113$:
+      000069 38 20                  196 	jr	C, 00102$
+                                    197 ;game.c:44: frame_count = 0;
+      00006B AF                     198 	xor	a, a
+      00006C 21r00r00               199 	ld	hl, #_draw_frame_count_65536_116
+      00006F 22                     200 	ld	(hl+), a
+      000070 77                     201 	ld	(hl), a
+                                    202 ;game.c:45: anim_count = !anim_count;
+      000071 21r03r00               203 	ld	hl, #_draw_anim_count_65536_116 + 1
+      000074 3A                     204 	ld	a, (hl-)
+      000075 B6                     205 	or	a, (hl)
+      000076 D6 01                  206 	sub	a,#0x01
+      000078 3E 00                  207 	ld	a, #0x00
+      00007A 17                     208 	rla
+      00007B 22                     209 	ld	(hl+), a
+                                    210 ;game.c:46: set_sprite_tile(0, anim_tiles[anim_count]);
+      00007C AF                     211 	xor	a, a
+      00007D 32                     212 	ld	(hl-), a
+      00007E 79                     213 	ld	a, c
+      00007F 86                     214 	add	a, (hl)
+      000080 23                     215 	inc	hl
+      000081 4F                     216 	ld	c, a
+      000082 78                     217 	ld	a, b
+      000083 8E                     218 	adc	a, (hl)
+      000084 47                     219 	ld	b, a
+      000085 0A                     220 	ld	a, (bc)
+      000086 4F                     221 	ld	c, a
+                                    222 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
+      000087 21r02r00               223 	ld	hl, #(_shadow_OAM + 2)
+      00008A 71                     224 	ld	(hl), c
+                                    225 ;game.c:46: set_sprite_tile(0, anim_tiles[anim_count]);
+      00008B                        226 00102$:
+                                    227 ;game.c:49: wait_vbl_done();
+                                    228 ;game.c:50: }
+      00008B CDr00r00               229 	call	_wait_vbl_done
+      00008E E1                     230 	pop	hl
+      00008F C9                     231 	ret
+                                    232 ;game.c:52: void main() {
+                                    233 ;	---------------------------------
+                                    234 ; Function main
+                                    235 ; ---------------------------------
+      000090                        236 _main::
+      000090 E8 FC                  237 	add	sp, #-4
+                                    238 ;game.c:53: unsigned char heart_palette[] =  {0, RGB_PINK, RGB_RED, RGB_DARKRED};
+      000092 F8 00                  239 	ldhl	sp,	#0
+      000094 4D                     240 	ld	c, l
+      000095 44                     241 	ld	b, h
+      000096 AF                     242 	xor	a, a
+      000097 02                     243 	ld	(bc), a
+      000098 69                     244 	ld	l, c
+                                    245 ;	spillPairReg hl
+                                    246 ;	spillPairReg hl
+      000099 60                     247 	ld	h, b
+                                    248 ;	spillPairReg hl
+                                    249 ;	spillPairReg hl
+      00009A 23                     250 	inc	hl
+      00009B 36 1F                  251 	ld	(hl), #0x1f
+      00009D 69                     252 	ld	l, c
+                                    253 ;	spillPairReg hl
+                                    254 ;	spillPairReg hl
+      00009E 60                     255 	ld	h, b
+                                    256 ;	spillPairReg hl
+                                    257 ;	spillPairReg hl
+      00009F 23                     258 	inc	hl
+      0000A0 23                     259 	inc	hl
+      0000A1 36 1F                  260 	ld	(hl), #0x1f
+      0000A3 69                     261 	ld	l, c
+                                    262 ;	spillPairReg hl
+                                    263 ;	spillPairReg hl
+      0000A4 60                     264 	ld	h, b
+                                    265 ;	spillPairReg hl
+                                    266 ;	spillPairReg hl
+      0000A5 23                     267 	inc	hl
+      0000A6 23                     268 	inc	hl
+      0000A7 23                     269 	inc	hl
+      0000A8 36 0F                  270 	ld	(hl), #0x0f
+                                    271 ;game.c:54: set_sprite_palette(0, 1, heart_palette);
+      0000AA C5                     272 	push	bc
+      0000AB AF                     273 	xor	a, a
+      0000AC 3C                     274 	inc	a
+      0000AD F5                     275 	push	af
+      0000AE CDr00r00               276 	call	_set_sprite_palette
+      0000B1 E8 04                  277 	add	sp, #4
+                                    278 ;game.c:55: set_sprite_data(0, 2, heart);
+      0000B3 11r00r00               279 	ld	de, #_heart
+      0000B6 D5                     280 	push	de
+      0000B7 21 00 02               281 	ld	hl, #0x200
+      0000BA E5                     282 	push	hl
+      0000BB CDr00r00               283 	call	_set_sprite_data
+      0000BE E8 04                  284 	add	sp, #4
+                                    285 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
+      0000C0 21r02r00               286 	ld	hl, #(_shadow_OAM + 2)
+      0000C3 36 00                  287 	ld	(hl), #0x00
+                                    288 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1399: OAM_item_t * itm = &shadow_OAM[nb];
+      0000C5 21r00r00               289 	ld	hl, #_shadow_OAM
+                                    290 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1400: itm->y=y, itm->x=x;
+      0000C8 3E 4E                  291 	ld	a, #0x4e
+      0000CA 22                     292 	ld	(hl+), a
+      0000CB 36 58                  293 	ld	(hl), #0x58
+                                    294 ;game.c:60: set_win_data(0, 20, hud_data);
+      0000CD 11r60r00               295 	ld	de, #_hud_data
+      0000D0 D5                     296 	push	de
+      0000D1 21 00 14               297 	ld	hl, #0x1400
+      0000D4 E5                     298 	push	hl
+      0000D5 CDr00r00               299 	call	_set_win_data
+      0000D8 E8 04                  300 	add	sp, #4
+                                    301 ;game.c:61: set_win_tiles(0, 0, hud_tilemapWidth, hud_tilemapHeight, hud_tilemap);
+      0000DA 11rA0r01               302 	ld	de, #_hud_tilemap
+      0000DD D5                     303 	push	de
+      0000DE 21 14 02               304 	ld	hl, #0x214
+      0000E1 E5                     305 	push	hl
+      0000E2 AF                     306 	xor	a, a
+      0000E3 0F                     307 	rrca
+      0000E4 F5                     308 	push	af
+      0000E5 CDr00r00               309 	call	_set_win_tiles
+      0000E8 E8 06                  310 	add	sp, #6
+                                    311 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1195: WX_REG=x, WY_REG=y;
+      0000EA 3E 08                  312 	ld	a, #0x08
+      0000EC E0r00                  313 	ldh	(_WX_REG + 0), a
+      0000EE 3E 80                  314 	ld	a, #0x80
+      0000F0 E0r00                  315 	ldh	(_WY_REG + 0), a
+                                    316 ;game.c:64: SHOW_SPRITES;
+      0000F2 F0r00                  317 	ldh	a, (_LCDC_REG + 0)
+      0000F4 F6 02                  318 	or	a, #0x02
+      0000F6 E0r00                  319 	ldh	(_LCDC_REG + 0), a
+                                    320 ;game.c:65: SHOW_WIN;
+      0000F8 F0r00                  321 	ldh	a, (_LCDC_REG + 0)
+      0000FA F6 20                  322 	or	a, #0x20
+      0000FC E0r00                  323 	ldh	(_LCDC_REG + 0), a
+                                    324 ;game.c:66: DISPLAY_ON;
+      0000FE F0r00                  325 	ldh	a, (_LCDC_REG + 0)
+      000100 F6 80                  326 	or	a, #0x80
+      000102 E0r00                  327 	ldh	(_LCDC_REG + 0), a
+                                    328 ;game.c:68: while (true) {
+      000104                        329 00102$:
+                                    330 ;game.c:69: input();
+      000104 CDr00r00               331 	call	_input
+                                    332 ;game.c:70: logic();
+      000107 CDr37r00               333 	call	_logic
+                                    334 ;game.c:71: draw();
+      00010A CDr38r00               335 	call	_draw
+      00010D 18 F5                  336 	jr	00102$
+                                    337 ;game.c:73: }
+      00010F E8 04                  338 	add	sp, #4
+      000111 C9                     339 	ret
+                                    340 	.area _CODE
+                                    341 	.area _INITIALIZER
+      000000                        342 __xinit__heart:
+      000000 6C                     343 	.db #0x6c	; 108	'l'
+      000001 6C                     344 	.db #0x6c	; 108	'l'
+      000002 9E                     345 	.db #0x9e	; 158
+      000003 F2                     346 	.db #0xf2	; 242
+      000004 86                     347 	.db #0x86	; 134
+      000005 FA                     348 	.db #0xfa	; 250
+      000006 44                     349 	.db #0x44	; 68	'D'
+      000007 7C                     350 	.db #0x7c	; 124
+      000008 28                     351 	.db #0x28	; 40
+      000009 38                     352 	.db #0x38	; 56	'8'
+      00000A 10                     353 	.db #0x10	; 16
+      00000B 10                     354 	.db #0x10	; 16
+      00000C 00                     355 	.db #0x00	; 0
+      00000D 00                     356 	.db #0x00	; 0
+      00000E 00                     357 	.db #0x00	; 0
+      00000F 00                     358 	.db #0x00	; 0
+      000010 6C                     359 	.db #0x6c	; 108	'l'
+      000011 6C                     360 	.db #0x6c	; 108	'l'
+      000012 92                     361 	.db #0x92	; 146
+      000013 F2                     362 	.db #0xf2	; 242
+      000014 82                     363 	.db #0x82	; 130
+      000015 F2                     364 	.db #0xf2	; 242
+      000016 44                     365 	.db #0x44	; 68	'D'
+      000017 74                     366 	.db #0x74	; 116	't'
+      000018 28                     367 	.db #0x28	; 40
+      000019 38                     368 	.db #0x38	; 56	'8'
+      00001A 10                     369 	.db #0x10	; 16
+      00001B 10                     370 	.db #0x10	; 16
+      00001C 00                     371 	.db #0x00	; 0
+      00001D 00                     372 	.db #0x00	; 0
+      00001E 00                     373 	.db #0x00	; 0
+      00001F 00                     374 	.db #0x00	; 0
+      000020                        375 __xinit__walkcycle:
+      000020 07                     376 	.db #0x07	; 7
+      000021 07                     377 	.db #0x07	; 7
+      000022 1F                     378 	.db #0x1f	; 31
+      000023 18                     379 	.db #0x18	; 24
+      000024 1F                     380 	.db #0x1f	; 31
+      000025 10                     381 	.db #0x10	; 16
+      000026 3F                     382 	.db #0x3f	; 63
+      000027 20                     383 	.db #0x20	; 32
+      000028 3F                     384 	.db #0x3f	; 63
+      000029 20                     385 	.db #0x20	; 32
+      00002A 3F                     386 	.db #0x3f	; 63
+      00002B 20                     387 	.db #0x20	; 32
+      00002C 3F                     388 	.db #0x3f	; 63
+      00002D 20                     389 	.db #0x20	; 32
+      00002E 1F                     390 	.db #0x1f	; 31
+      00002F 10                     391 	.db #0x10	; 16
+      000030 1F                     392 	.db #0x1f	; 31
+      000031 18                     393 	.db #0x18	; 24
+      000032 0F                     394 	.db #0x0f	; 15
+      000033 0F                     395 	.db #0x0f	; 15
+      000034 09                     396 	.db #0x09	; 9
+      000035 0F                     397 	.db #0x0f	; 15
+      000036 09                     398 	.db #0x09	; 9
+      000037 0F                     399 	.db #0x0f	; 15
+      000038 09                     400 	.db #0x09	; 9
+      000039 0F                     401 	.db #0x0f	; 15
+      00003A 07                     402 	.db #0x07	; 7
+      00003B 07                     403 	.db #0x07	; 7
+      00003C 08                     404 	.db #0x08	; 8
+      00003D 08                     405 	.db #0x08	; 8
+      00003E 1C                     406 	.db #0x1c	; 28
+      00003F 1C                     407 	.db #0x1c	; 28
+      000040 80                     408 	.db #0x80	; 128
+      000041 80                     409 	.db #0x80	; 128
+      000042 E0                     410 	.db #0xe0	; 224
+      000043 60                     411 	.db #0x60	; 96
+      000044 E0                     412 	.db #0xe0	; 224
+      000045 20                     413 	.db #0x20	; 32
+      000046 F0                     414 	.db #0xf0	; 240
+      000047 90                     415 	.db #0x90	; 144
+      000048 F0                     416 	.db #0xf0	; 240
+      000049 90                     417 	.db #0x90	; 144
+      00004A F0                     418 	.db #0xf0	; 240
+      00004B 10                     419 	.db #0x10	; 16
+      00004C F0                     420 	.db #0xf0	; 240
+      00004D 10                     421 	.db #0x10	; 16
+      00004E E0                     422 	.db #0xe0	; 224
+      00004F 20                     423 	.db #0x20	; 32
+      000050 E0                     424 	.db #0xe0	; 224
+      000051 60                     425 	.db #0x60	; 96
+      000052 C0                     426 	.db #0xc0	; 192
+      000053 C0                     427 	.db #0xc0	; 192
+      000054 40                     428 	.db #0x40	; 64
+      000055 C0                     429 	.db #0xc0	; 192
+      000056 40                     430 	.db #0x40	; 64
+      000057 C0                     431 	.db #0xc0	; 192
+      000058 40                     432 	.db #0x40	; 64
+      000059 C0                     433 	.db #0xc0	; 192
+      00005A A0                     434 	.db #0xa0	; 160
+      00005B A0                     435 	.db #0xa0	; 160
+      00005C 60                     436 	.db #0x60	; 96
+      00005D 60                     437 	.db #0x60	; 96
+      00005E C0                     438 	.db #0xc0	; 192
+      00005F C0                     439 	.db #0xc0	; 192
+      000060                        440 __xinit__hud_data:
+      000060 00                     441 	.db #0x00	; 0
+      000061 00                     442 	.db #0x00	; 0
+      000062 00                     443 	.db #0x00	; 0
+      000063 00                     444 	.db #0x00	; 0
+      000064 00                     445 	.db #0x00	; 0
+      000065 00                     446 	.db #0x00	; 0
+      000066 00                     447 	.db #0x00	; 0
+      000067 00                     448 	.db #0x00	; 0
+      000068 00                     449 	.db #0x00	; 0
+      000069 00                     450 	.db #0x00	; 0
+      00006A 00                     451 	.db #0x00	; 0
+      00006B 00                     452 	.db #0x00	; 0
+      00006C 00                     453 	.db #0x00	; 0
+      00006D 00                     454 	.db #0x00	; 0
+      00006E 00                     455 	.db #0x00	; 0
+      00006F 00                     456 	.db #0x00	; 0
+      000070 6C                     457 	.db #0x6c	; 108	'l'
+      000071 6C                     458 	.db #0x6c	; 108	'l'
+      000072 9E                     459 	.db #0x9e	; 158
+      000073 F2                     460 	.db #0xf2	; 242
+      000074 86                     461 	.db #0x86	; 134
+      000075 FA                     462 	.db #0xfa	; 250
+      000076 44                     463 	.db #0x44	; 68	'D'
+      000077 7C                     464 	.db #0x7c	; 124
+      000078 28                     465 	.db #0x28	; 40
+      000079 38                     466 	.db #0x38	; 56	'8'
+      00007A 10                     467 	.db #0x10	; 16
+      00007B 10                     468 	.db #0x10	; 16
+      00007C 00                     469 	.db #0x00	; 0
+      00007D 00                     470 	.db #0x00	; 0
+      00007E 00                     471 	.db #0x00	; 0
+      00007F 00                     472 	.db #0x00	; 0
+      000080 00                     473 	.db #0x00	; 0
+      000081 00                     474 	.db #0x00	; 0
+      000082 38                     475 	.db #0x38	; 56	'8'
+      000083 38                     476 	.db #0x38	; 56	'8'
+      000084 24                     477 	.db #0x24	; 36
+      000085 24                     478 	.db #0x24	; 36
+      000086 24                     479 	.db #0x24	; 36
+      000087 24                     480 	.db #0x24	; 36
+      000088 38                     481 	.db #0x38	; 56	'8'
+      000089 38                     482 	.db #0x38	; 56	'8'
+      00008A 24                     483 	.db #0x24	; 36
+      00008B 24                     484 	.db #0x24	; 36
+      00008C 24                     485 	.db #0x24	; 36
+      00008D 24                     486 	.db #0x24	; 36
+      00008E 38                     487 	.db #0x38	; 56	'8'
+      00008F 38                     488 	.db #0x38	; 56	'8'
+      000090 00                     489 	.db #0x00	; 0
+      000091 00                     490 	.db #0x00	; 0
+      000092 18                     491 	.db #0x18	; 24
+      000093 18                     492 	.db #0x18	; 24
+      000094 24                     493 	.db #0x24	; 36
+      000095 24                     494 	.db #0x24	; 36
+      000096 24                     495 	.db #0x24	; 36
+      000097 24                     496 	.db #0x24	; 36
+      000098 3C                     497 	.db #0x3c	; 60
+      000099 3C                     498 	.db #0x3c	; 60
+      00009A 24                     499 	.db #0x24	; 36
+      00009B 24                     500 	.db #0x24	; 36
+      00009C 24                     501 	.db #0x24	; 36
+      00009D 24                     502 	.db #0x24	; 36
+      00009E 24                     503 	.db #0x24	; 36
+      00009F 24                     504 	.db #0x24	; 36
+      0000A0 00                     505 	.db #0x00	; 0
+      0000A1 00                     506 	.db #0x00	; 0
+      0000A2 60                     507 	.db #0x60	; 96
+      0000A3 60                     508 	.db #0x60	; 96
+      0000A4 40                     509 	.db #0x40	; 64
+      0000A5 40                     510 	.db #0x40	; 64
+      0000A6 40                     511 	.db #0x40	; 64
+      0000A7 40                     512 	.db #0x40	; 64
+      0000A8 40                     513 	.db #0x40	; 64
+      0000A9 40                     514 	.db #0x40	; 64
+      0000AA 40                     515 	.db #0x40	; 64
+      0000AB 40                     516 	.db #0x40	; 64
+      0000AC 40                     517 	.db #0x40	; 64
+      0000AD 40                     518 	.db #0x40	; 64
+      0000AE 40                     519 	.db #0x40	; 64
+      0000AF 40                     520 	.db #0x40	; 64
+      0000B0 40                     521 	.db #0x40	; 64
+      0000B1 40                     522 	.db #0x40	; 64
+      0000B2 40                     523 	.db #0x40	; 64
+      0000B3 40                     524 	.db #0x40	; 64
+      0000B4 40                     525 	.db #0x40	; 64
+      0000B5 40                     526 	.db #0x40	; 64
+      0000B6 40                     527 	.db #0x40	; 64
+      0000B7 40                     528 	.db #0x40	; 64
+      0000B8 40                     529 	.db #0x40	; 64
+      0000B9 40                     530 	.db #0x40	; 64
+      0000BA 40                     531 	.db #0x40	; 64
+      0000BB 40                     532 	.db #0x40	; 64
+      0000BC 60                     533 	.db #0x60	; 96
+      0000BD 60                     534 	.db #0x60	; 96
+      0000BE 00                     535 	.db #0x00	; 0
+      0000BF 00                     536 	.db #0x00	; 0
+      0000C0 00                     537 	.db #0x00	; 0
+      0000C1 00                     538 	.db #0x00	; 0
+      0000C2 06                     539 	.db #0x06	; 6
+      0000C3 06                     540 	.db #0x06	; 6
+      0000C4 02                     541 	.db #0x02	; 2
+      0000C5 02                     542 	.db #0x02	; 2
+      0000C6 02                     543 	.db #0x02	; 2
+      0000C7 02                     544 	.db #0x02	; 2
+      0000C8 02                     545 	.db #0x02	; 2
+      0000C9 02                     546 	.db #0x02	; 2
+      0000CA 02                     547 	.db #0x02	; 2
+      0000CB 02                     548 	.db #0x02	; 2
+      0000CC 02                     549 	.db #0x02	; 2
+      0000CD 02                     550 	.db #0x02	; 2
+      0000CE 02                     551 	.db #0x02	; 2
+      0000CF 02                     552 	.db #0x02	; 2
+      0000D0 02                     553 	.db #0x02	; 2
+      0000D1 02                     554 	.db #0x02	; 2
+      0000D2 02                     555 	.db #0x02	; 2
+      0000D3 02                     556 	.db #0x02	; 2
+      0000D4 02                     557 	.db #0x02	; 2
+      0000D5 02                     558 	.db #0x02	; 2
+      0000D6 02                     559 	.db #0x02	; 2
+      0000D7 02                     560 	.db #0x02	; 2
+      0000D8 02                     561 	.db #0x02	; 2
+      0000D9 02                     562 	.db #0x02	; 2
+      0000DA 02                     563 	.db #0x02	; 2
+      0000DB 02                     564 	.db #0x02	; 2
+      0000DC 06                     565 	.db #0x06	; 6
+      0000DD 06                     566 	.db #0x06	; 6
+      0000DE 00                     567 	.db #0x00	; 0
+      0000DF 00                     568 	.db #0x00	; 0
+      0000E0 00                     569 	.db #0x00	; 0
+      0000E1 00                     570 	.db #0x00	; 0
+      0000E2 00                     571 	.db #0x00	; 0
+      0000E3 20                     572 	.db #0x20	; 32
+      0000E4 00                     573 	.db #0x00	; 0
+      0000E5 60                     574 	.db #0x60	; 96
+      0000E6 3F                     575 	.db #0x3f	; 63
+      0000E7 FF                     576 	.db #0xff	; 255
+      0000E8 00                     577 	.db #0x00	; 0
+      0000E9 60                     578 	.db #0x60	; 96
+      0000EA 00                     579 	.db #0x00	; 0
+      0000EB 20                     580 	.db #0x20	; 32
+      0000EC 00                     581 	.db #0x00	; 0
+      0000ED 00                     582 	.db #0x00	; 0
+      0000EE 00                     583 	.db #0x00	; 0
+      0000EF 00                     584 	.db #0x00	; 0
+      0000F0 00                     585 	.db #0x00	; 0
+      0000F1 00                     586 	.db #0x00	; 0
+      0000F2 0A                     587 	.db #0x0a	; 10
+      0000F3 00                     588 	.db #0x00	; 0
+      0000F4 14                     589 	.db #0x14	; 20
+      0000F5 00                     590 	.db #0x00	; 0
+      0000F6 FC                     591 	.db #0xfc	; 252
+      0000F7 FC                     592 	.db #0xfc	; 252
+      0000F8 14                     593 	.db #0x14	; 20
+      0000F9 00                     594 	.db #0x00	; 0
+      0000FA 0A                     595 	.db #0x0a	; 10
+      0000FB 00                     596 	.db #0x00	; 0
+      0000FC 00                     597 	.db #0x00	; 0
+      0000FD 00                     598 	.db #0x00	; 0
+      0000FE 00                     599 	.db #0x00	; 0
+      0000FF 00                     600 	.db #0x00	; 0
+      000100 00                     601 	.db #0x00	; 0
+      000101 00                     602 	.db #0x00	; 0
+      000102 18                     603 	.db #0x18	; 24
+      000103 18                     604 	.db #0x18	; 24
+      000104 24                     605 	.db #0x24	; 36
+      000105 24                     606 	.db #0x24	; 36
+      000106 2C                     607 	.db #0x2c	; 44
+      000107 2C                     608 	.db #0x2c	; 44
+      000108 34                     609 	.db #0x34	; 52	'4'
+      000109 34                     610 	.db #0x34	; 52	'4'
+      00010A 24                     611 	.db #0x24	; 36
+      00010B 24                     612 	.db #0x24	; 36
+      00010C 18                     613 	.db #0x18	; 24
+      00010D 18                     614 	.db #0x18	; 24
+      00010E 00                     615 	.db #0x00	; 0
+      00010F 00                     616 	.db #0x00	; 0
+      000110 00                     617 	.db #0x00	; 0
+      000111 00                     618 	.db #0x00	; 0
+      000112 08                     619 	.db #0x08	; 8
+      000113 08                     620 	.db #0x08	; 8
+      000114 18                     621 	.db #0x18	; 24
+      000115 18                     622 	.db #0x18	; 24
+      000116 08                     623 	.db #0x08	; 8
+      000117 08                     624 	.db #0x08	; 8
+      000118 08                     625 	.db #0x08	; 8
+      000119 08                     626 	.db #0x08	; 8
+      00011A 08                     627 	.db #0x08	; 8
+      00011B 08                     628 	.db #0x08	; 8
+      00011C 1C                     629 	.db #0x1c	; 28
+      00011D 1C                     630 	.db #0x1c	; 28
+      00011E 00                     631 	.db #0x00	; 0
+      00011F 00                     632 	.db #0x00	; 0
+      000120 00                     633 	.db #0x00	; 0
+      000121 00                     634 	.db #0x00	; 0
+      000122 18                     635 	.db #0x18	; 24
+      000123 18                     636 	.db #0x18	; 24
+      000124 24                     637 	.db #0x24	; 36
+      000125 24                     638 	.db #0x24	; 36
+      000126 04                     639 	.db #0x04	; 4
+      000127 04                     640 	.db #0x04	; 4
+      000128 18                     641 	.db #0x18	; 24
+      000129 18                     642 	.db #0x18	; 24
+      00012A 20                     643 	.db #0x20	; 32
+      00012B 20                     644 	.db #0x20	; 32
+      00012C 3C                     645 	.db #0x3c	; 60
+      00012D 3C                     646 	.db #0x3c	; 60
+      00012E 00                     647 	.db #0x00	; 0
+      00012F 00                     648 	.db #0x00	; 0
+      000130 00                     649 	.db #0x00	; 0
+      000131 00                     650 	.db #0x00	; 0
+      000132 18                     651 	.db #0x18	; 24
+      000133 18                     652 	.db #0x18	; 24
+      000134 24                     653 	.db #0x24	; 36
+      000135 24                     654 	.db #0x24	; 36
+      000136 08                     655 	.db #0x08	; 8
+      000137 08                     656 	.db #0x08	; 8
+      000138 04                     657 	.db #0x04	; 4
+      000139 04                     658 	.db #0x04	; 4
+      00013A 24                     659 	.db #0x24	; 36
+      00013B 24                     660 	.db #0x24	; 36
+      00013C 18                     661 	.db #0x18	; 24
+      00013D 18                     662 	.db #0x18	; 24
+      00013E 00                     663 	.db #0x00	; 0
+      00013F 00                     664 	.db #0x00	; 0
+      000140 00                     665 	.db #0x00	; 0
+      000141 00                     666 	.db #0x00	; 0
+      000142 24                     667 	.db #0x24	; 36
+      000143 24                     668 	.db #0x24	; 36
+      000144 24                     669 	.db #0x24	; 36
+      000145 24                     670 	.db #0x24	; 36
+      000146 24                     671 	.db #0x24	; 36
+      000147 24                     672 	.db #0x24	; 36
+      000148 1C                     673 	.db #0x1c	; 28
+      000149 1C                     674 	.db #0x1c	; 28
+      00014A 04                     675 	.db #0x04	; 4
+      00014B 04                     676 	.db #0x04	; 4
+      00014C 04                     677 	.db #0x04	; 4
+      00014D 04                     678 	.db #0x04	; 4
+      00014E 00                     679 	.db #0x00	; 0
+      00014F 00                     680 	.db #0x00	; 0
+      000150 00                     681 	.db #0x00	; 0
+      000151 00                     682 	.db #0x00	; 0
+      000152 3C                     683 	.db #0x3c	; 60
+      000153 3C                     684 	.db #0x3c	; 60
+      000154 20                     685 	.db #0x20	; 32
+      000155 20                     686 	.db #0x20	; 32
+      000156 38                     687 	.db #0x38	; 56	'8'
+      000157 38                     688 	.db #0x38	; 56	'8'
+      000158 04                     689 	.db #0x04	; 4
+      000159 04                     690 	.db #0x04	; 4
+      00015A 24                     691 	.db #0x24	; 36
+      00015B 24                     692 	.db #0x24	; 36
+      00015C 18                     693 	.db #0x18	; 24
+      00015D 18                     694 	.db #0x18	; 24
+      00015E 00                     695 	.db #0x00	; 0
+      00015F 00                     696 	.db #0x00	; 0
+      000160 00                     697 	.db #0x00	; 0
+      000161 00                     698 	.db #0x00	; 0
+      000162 18                     699 	.db #0x18	; 24
+      000163 18                     700 	.db #0x18	; 24
+      000164 20                     701 	.db #0x20	; 32
+      000165 20                     702 	.db #0x20	; 32
+      000166 38                     703 	.db #0x38	; 56	'8'
+      000167 38                     704 	.db #0x38	; 56	'8'
+      000168 24                     705 	.db #0x24	; 36
+      000169 24                     706 	.db #0x24	; 36
+      00016A 24                     707 	.db #0x24	; 36
+      00016B 24                     708 	.db #0x24	; 36
+      00016C 18                     709 	.db #0x18	; 24
+      00016D 18                     710 	.db #0x18	; 24
+      00016E 00                     711 	.db #0x00	; 0
+      00016F 00                     712 	.db #0x00	; 0
+      000170 00                     713 	.db #0x00	; 0
+      000171 00                     714 	.db #0x00	; 0
+      000172 3C                     715 	.db #0x3c	; 60
+      000173 3C                     716 	.db #0x3c	; 60
+      000174 04                     717 	.db #0x04	; 4
+      000175 04                     718 	.db #0x04	; 4
+      000176 08                     719 	.db #0x08	; 8
+      000177 08                     720 	.db #0x08	; 8
+      000178 10                     721 	.db #0x10	; 16
+      000179 10                     722 	.db #0x10	; 16
+      00017A 10                     723 	.db #0x10	; 16
+      00017B 10                     724 	.db #0x10	; 16
+      00017C 10                     725 	.db #0x10	; 16
+      00017D 10                     726 	.db #0x10	; 16
+      00017E 00                     727 	.db #0x00	; 0
+      00017F 00                     728 	.db #0x00	; 0
+      000180 00                     729 	.db #0x00	; 0
+      000181 00                     730 	.db #0x00	; 0
+      000182 18                     731 	.db #0x18	; 24
+      000183 18                     732 	.db #0x18	; 24
+      000184 24                     733 	.db #0x24	; 36
+      000185 24                     734 	.db #0x24	; 36
+      000186 18                     735 	.db #0x18	; 24
+      000187 18                     736 	.db #0x18	; 24
+      000188 24                     737 	.db #0x24	; 36
+      000189 24                     738 	.db #0x24	; 36
+      00018A 24                     739 	.db #0x24	; 36
+      00018B 24                     740 	.db #0x24	; 36
+      00018C 18                     741 	.db #0x18	; 24
+      00018D 18                     742 	.db #0x18	; 24
+      00018E 00                     743 	.db #0x00	; 0
+      00018F 00                     744 	.db #0x00	; 0
+      000190 00                     745 	.db #0x00	; 0
+      000191 00                     746 	.db #0x00	; 0
+      000192 18                     747 	.db #0x18	; 24
+      000193 18                     748 	.db #0x18	; 24
+      000194 24                     749 	.db #0x24	; 36
+      000195 24                     750 	.db #0x24	; 36
+      000196 24                     751 	.db #0x24	; 36
+      000197 24                     752 	.db #0x24	; 36
+      000198 1C                     753 	.db #0x1c	; 28
+      000199 1C                     754 	.db #0x1c	; 28
+      00019A 04                     755 	.db #0x04	; 4
+      00019B 04                     756 	.db #0x04	; 4
+      00019C 04                     757 	.db #0x04	; 4
+      00019D 04                     758 	.db #0x04	; 4
+      00019E 00                     759 	.db #0x00	; 0
+      00019F 00                     760 	.db #0x00	; 0
+      0001A0                        761 __xinit__hud_tilemap:
+      0001A0 01                     762 	.db #0x01	; 1
+      0001A1 01                     763 	.db #0x01	; 1
+      0001A2 01                     764 	.db #0x01	; 1
+      0001A3 00                     765 	.db #0x00	; 0
+      0001A4 00                     766 	.db #0x00	; 0
+      0001A5 08                     767 	.db #0x08	; 8
+      0001A6 09                     768 	.db #0x09	; 9
+      0001A7 00                     769 	.db #0x00	; 0
+      0001A8 00                     770 	.db #0x00	; 0
+      0001A9 00                     771 	.db #0x00	; 0
+      0001AA 00                     772 	.db #0x00	; 0
+      0001AB 00                     773 	.db #0x00	; 0
+      0001AC 03                     774 	.db #0x03	; 3
+      0001AD 04                     775 	.db #0x04	; 4
+      0001AE 00                     776 	.db #0x00	; 0
+      0001AF 06                     777 	.db #0x06	; 6
+      0001B0 02                     778 	.db #0x02	; 2
+      0001B1 04                     779 	.db #0x04	; 4
+      0001B2 00                     780 	.db #0x00	; 0
+      0001B3 06                     781 	.db #0x06	; 6
+      0001B4 01                     782 	.db #0x01	; 1
+      0001B5 01                     783 	.db #0x01	; 1
+      0001B6 01                     784 	.db #0x01	; 1
+      0001B7 00                     785 	.db #0x00	; 0
+      0001B8 00                     786 	.db #0x00	; 0
+      0001B9 10                     787 	.db #0x10	; 16
+      0001BA 0E                     788 	.db #0x0e	; 14
+      0001BB 00                     789 	.db #0x00	; 0
+      0001BC 00                     790 	.db #0x00	; 0
+      0001BD 00                     791 	.db #0x00	; 0
+      0001BE 00                     792 	.db #0x00	; 0
+      0001BF 00                     793 	.db #0x00	; 0
+      0001C0 00                     794 	.db #0x00	; 0
+      0001C1 05                     795 	.db #0x05	; 5
+      0001C2 00                     796 	.db #0x00	; 0
+      0001C3 07                     797 	.db #0x07	; 7
+      0001C4 00                     798 	.db #0x00	; 0
+      0001C5 05                     799 	.db #0x05	; 5
+      0001C6 00                     800 	.db #0x00	; 0
+      0001C7 07                     801 	.db #0x07	; 7
+                                    802 	.area _CABS (ABS)
