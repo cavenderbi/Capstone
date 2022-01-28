@@ -24,48 +24,29 @@ enum Direction { UP, DOWN, LEFT, RIGHT, NONE } dir = NONE;
 // Reads the user input and responds apropriately. 
 void input() {
     unsigned char j = joypad();
-    if (j & J_UP)
+    if (j & J_UP) {
         dir = UP;
-    else if (j & J_DOWN)
+        scroll_sprite(0, 0, -1);
+    } else if (j & J_DOWN) {
         dir = DOWN;
-    else if (j & J_LEFT)
+        scroll_sprite(0, 0, 1);
+    } else if (j & J_LEFT) {
         dir = LEFT;
-    else if (j & J_RIGHT)
+        scroll_sprite(0, -1, 0);
+    } else if (j & J_RIGHT) {
         dir = RIGHT;
+        scroll_sprite(0, 1, 0);
+    }
     
 }
 
 void logic() {
-    switch (dir) {
-        case UP:
-            dir = NONE;
-            set_sprite_tile(0, 0);
-            scroll_sprite(0, 0, -1);
-            break;
-        case DOWN:
-            dir = NONE;
-            set_sprite_tile(0, 2);
-            scroll_sprite(0, 0, 1);
-            break;
-        case LEFT:
-            dir = NONE;
-            set_sprite_tile(0, 3);
-            scroll_sprite(0, -1, 0);
-            break;
-        case RIGHT:
-            dir = NONE;
-            set_sprite_tile(0, 1);
-            scroll_sprite(0, 1, 0);
-            break;
-        case NONE: 
-            break;           
-    }
+    ;
 }
 
 // Every ten frames, update the animation. 
 #define FRAMES_ANIM_UPDATE 10
 void draw() {
-    /*
     unsigned char anim_tiles[2] = {0, 1};
     static int frame_count = 0;
     static int anim_count = 0;
@@ -74,8 +55,25 @@ void draw() {
     if (frame_count >= FRAMES_ANIM_UPDATE) {
         frame_count = 0;
         anim_count = !anim_count;
-        set_sprite_tile(0, anim_tiles[anim_count]);
-    }*/
+    }
+    switch (dir) {
+        case UP:
+            dir = NONE;
+            set_sprite_tile(0, anim_count);
+            break;
+        case DOWN:
+            dir = NONE;
+            set_sprite_tile(0, anim_count + 4);
+            break;
+        case LEFT:
+            dir = NONE;
+            set_sprite_tile(0, anim_count + 6);
+            break;
+        case RIGHT:
+            dir = NONE;
+            set_sprite_tile(0, anim_count + 2);
+            break;
+    }
     // Wait until we're done drawing to the screen.
     wait_vbl_done();
 }
@@ -83,9 +81,9 @@ void draw() {
 void main() {
     show_title();
 
-    unsigned char arrow_palette[] =  {0, RGB_PINK, RGB_DARKGRAY, RGB_BLACK};
-    set_sprite_palette(0, 4, arrow_palette);
-    set_sprite_data(0, 4, arrow);
+    unsigned char arrow_palette[] =  {0, RGB_RED, RGB_BLUE, RGB_BLACK};
+    set_sprite_palette(0, 8, arrow_palette);
+    set_sprite_data(0, 8, arrow);
     set_sprite_tile(0, 0);
 
     move_sprite(0, 88, 78);
