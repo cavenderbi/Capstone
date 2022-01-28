@@ -4,7 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "~/Downloads/gbdk/include/**"
+                "~/Downloads/gbdk/include/**",
+                "/home/cavenderbi/Downloads/gbdk/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

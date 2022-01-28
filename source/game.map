@@ -24,17 +24,17 @@ Area                       Addr        Size        Decimal Bytes (Attributes)
      00000002  l__HEADER |    00000002  l__HEADER |    00000002  l__HEADER
      00000003  l__HEADER |    00000003  l__HRAM12 |    00000005  l__HEADER
      00000006  l__HEADER |    00000007  l__HEADER |    00000008  l__HEADER
-     00000018  l__GSINIT |    0000001D  l__DATA   |    00000030  l__HEADER
-     0000004E  l__HEADER |    00000082  l__HEADER |    0000015D  l__CODE  
-     0000017B  l__HOME   |    000001C8  l__INITIA |    000001C8  l__INITIA
-     00000200  s__CODE   |    0000035D  s__HOME   |    000004D8  s__BASE  
-     000004D8  s__CODE_0 |    000004D8  s__INITIA |    000004D8  s__LIT   
-     000006A0  s__GSINIT |    000006B8  s__GSFINA |    00002000  _rROMB0  
+     0000000C  l__GSINIT |    00000019  l__DATA   |    00000030  l__HEADER
+     0000004E  l__HEADER |    00000082  l__HEADER |    0000018F  l__HOME  
+     00000200  s__CODE   |    00000379  l__INITIA |    00000379  l__INITIA
+     00000BB5  l__CODE   |    00000DB5  s__HOME   |    00000F44  s__BASE  
+     00000F44  s__CODE_0 |    00000F44  s__INITIA |    00000F44  s__LIT   
+     000012BD  s__GSINIT |    000012C9  s__GSFINA |    00002000  _rROMB0  
      00003000  _rROMB1   |    00004000  _rRAMB    |    00008000  __VRAM   
      00008000  __VRAM800 |    00008800  __VRAM880 |    00009000  __VRAM900
      00009800  __SCRN0   |    00009C00  __SCRN1   |    0000A000  __SRAM   
      0000C000  __RAM     |    0000C000  _shadow_O |    0000C0A0  s__DATA  
-     0000C0BD  s__BSS    |    0000C0BD  s__INITIA |    0000C285  s__HEAP  
+     0000C0B9  s__BSS    |    0000C0B9  s__INITIA |    0000C432  s__HEAP  
      0000D000  __RAMBANK |    0000E000  .STACK    |    0000FE00  __OAMRAM 
      0000FF00  _P1_REG   |    0000FF00  __IO      |    0000FF01  _SB_REG  
      0000FF02  _SC_REG   |    0000FF04  _DIV_REG  |    0000FF05  _TIMA_REG
@@ -62,14 +62,15 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_CODE                  00000200    0000015D =         349. bytes (REL,CON)
+_CODE                  00000200    00000BB5 =        2997. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
-     00000200  _input    |    00000237  _logic    |    00000238  _draw    
-     00000290  _main     |    00000312  _set_spri |    00000317  _set_bkg_
-     0000031A  .set_pale |    00000339  _set_spri |    0000033E  _set_bkg_
-     00000341  .set_pale
+     00000200  _show_tit |    00000232  _test_tit |    00000AC2  _test_tit
+     00000C2A  _input    |    00000C54  _logic    |    00000CC4  _draw    
+     00000CC7  _main     |    00000D6A  _set_spri |    00000D6F  _set_bkg_
+     00000D72  .set_pale |    00000D91  _set_spri |    00000D96  _set_bkg_
+     00000D99  .set_pale
 ASxxxx Linker V03.00 + NoICE + sdld,  page 3.
 Hexadecimal  [32-Bits]
 
@@ -244,25 +245,25 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_HOME                  0000035D    0000017B =         379. bytes (REL,CON)
+_HOME                  00000DB5    0000018F =         399. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
-     0000035D  .memset_s |    00000366  .memcpy_s |    00000383  .remove_V
-     00000386  .remove_i |    000003A3  .add_VBL  |    000003A6  .add_int 
-     000003B1  .wait_vbl |    000003B1  _wait_vbl |    000003C1  .display_
-     000003C1  _display_ |    000003D9  _remove_V |    000003E4  _add_VBL 
-     000003EF  _set_tile |    000003F4  _set_bkg_ |    000003F4  _set_win_
-     000003FC  _set_spri |    0000042C  _set_win_ |    00000440  .padup   
-     00000440  _waitpadu |    00000450  .jpad     |    00000450  _joypad  
-     00000478  _waitpad  |    0000047B  .wait_pad |    00000482  .set_xy_w
-     0000048B  .set_xy_b |    0000049A  .set_xy_t
+     00000DB5  .memset_s |    00000DBE  .memcpy_s |    00000DDB  .remove_V
+     00000DDE  .remove_i |    00000DFB  .add_VBL  |    00000DFE  .add_int 
+     00000E09  .wait_vbl |    00000E09  _wait_vbl |    00000E19  .display_
+     00000E19  _display_ |    00000E31  _remove_V |    00000E3C  _add_VBL 
+     00000E47  .padup    |    00000E47  _waitpadu |    00000E57  .jpad    
+     00000E57  _joypad   |    00000E7F  _waitpad  |    00000E82  .wait_pad
+     00000E89  _set_tile |    00000E8E  _set_bkg_ |    00000E8E  _set_win_
+     00000E96  _set_spri |    00000EC6  _set_win_ |    00000EDA  _set_bkg_
+     00000EEE  .set_xy_w |    00000EF7  .set_xy_b |    00000F06  .set_xy_t
 ASxxxx Linker V03.00 + NoICE + sdld,  page 22.
 Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_INITIALIZER           000004D8    000001C8 =         456. bytes (REL,CON)
+_INITIALIZER           00000F44    00000379 =         889. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
@@ -271,17 +272,17 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_GSINIT                000006A0    00000018 =          24. bytes (REL,CON)
+_GSINIT                000012BD    0000000C =          12. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
-     000006A0  gsinit   
+     000012BD  gsinit   
 ASxxxx Linker V03.00 + NoICE + sdld,  page 24.
 Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_GSFINAL               000006B8    00000001 =           1. bytes (REL,CON)
+_GSFINAL               000012C9    00000001 =           1. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
@@ -290,7 +291,7 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_DATA                  0000C0A0    0000001D =          29. bytes (REL,CON)
+_DATA                  0000C0A0    00000019 =          25. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
@@ -301,12 +302,12 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_INITIALIZED           0000C0BD    000001C8 =         456. bytes (REL,CON)
+_INITIALIZED           0000C0B9    00000379 =         889. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
-     0000C0BD  _heart    |    0000C0DD  _walkcycl |    0000C11D  _hud_data
-     0000C25D  _hud_tile
+     0000C0B9  _arrow    |    0000C0F9  _hud_data |    0000C239  _hud_tile
+     0000C261  _test_dat |    0000C2F1  _test_til |    0000C431  _dir     
 ASxxxx Linker V03.00 + NoICE + sdld,  page 27.
 Hexadecimal  [32-Bits]
 
@@ -329,15 +330,17 @@ game.o                                    [ game ]
 Libraries Linked                          [ object file ]
 
 /home/cavenderbi/Downloads/gbdk/lib/small/asxxxx/gb/gb.lib
+                                          [ pad.o ]
+/home/cavenderbi/Downloads/gbdk/lib/small/asxxxx/gb/gb.lib
                                           [ sfr.o ]
 /home/cavenderbi/Downloads/gbdk/lib/small/asxxxx/gb/gb.lib
                                           [ set_data.o ]
 /home/cavenderbi/Downloads/gbdk/lib/small/asxxxx/gb/gb.lib
                                           [ set_wi_t.o ]
 /home/cavenderbi/Downloads/gbdk/lib/small/asxxxx/gb/gb.lib
-                                          [ pad.o ]
-/home/cavenderbi/Downloads/gbdk/lib/small/asxxxx/gb/gb.lib
                                           [ cgb_palettes.o ]
+/home/cavenderbi/Downloads/gbdk/lib/small/asxxxx/gb/gb.lib
+                                          [ set_bk_t.o ]
 /home/cavenderbi/Downloads/gbdk/lib/small/asxxxx/gb/gb.lib
                                           [ set_xy_t.o ]
 
