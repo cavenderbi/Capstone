@@ -18,24 +18,45 @@
 
 #include "../sprites/test.c"
 #include "../tilemaps/test.c"
+typedef enum Direction { UP, DOWN, LEFT, RIGHT, NONE } Direction;
+// Using a player struct to clean up the code a bit.
+struct Player {
+    // x and y positions
+    uint8_t x;
+    uint8_t y;
+    // player direction
+    Direction dir;
+    // health values
+    uint8_t maxHealth;
+    uint8_t health;
+    // is player alive?
+    bool alive;
+} player;
 
-enum Direction { UP, DOWN, LEFT, RIGHT, NONE } dir = NONE;
+void initPlayer() {
+    player.x = 88;
+    player.y = 78;
+    player.dir = NONE;
+    player.maxHealth = 4;
+    player.health = 4;
+    player.alive = true;
+}
 
 // Reads the user input and responds apropriately. 
 void input() {
     unsigned char j = joypad();
     if (j & J_UP) {
-        dir = UP;
-        scroll_sprite(0, 0, -1);
+        player.dir = UP;
+        player.y--;
     } else if (j & J_DOWN) {
-        dir = DOWN;
-        scroll_sprite(0, 0, 1);
+        player.dir = DOWN;
+        player.y++;
     } else if (j & J_LEFT) {
-        dir = LEFT;
-        scroll_sprite(0, -1, 0);
+        player.dir = LEFT;
+        player.x--;
     } else if (j & J_RIGHT) {
-        dir = RIGHT;
-        scroll_sprite(0, 1, 0);
+        player.dir = RIGHT;
+        player.x++;
     }
     
 }
@@ -56,37 +77,40 @@ void draw() {
         frame_count = 0;
         anim_count = !anim_count;
     }
-    switch (dir) {
+    switch (player.dir) {
         case UP:
-            dir = NONE;
+            player.dir = NONE;
             set_sprite_tile(0, anim_count);
             break;
         case DOWN:
-            dir = NONE;
+            player.dir = NONE;
             set_sprite_tile(0, anim_count + 4);
             break;
         case LEFT:
-            dir = NONE;
+            player.dir = NONE;
             set_sprite_tile(0, anim_count + 6);
             break;
         case RIGHT:
-            dir = NONE;
+            player.dir = NONE;
             set_sprite_tile(0, anim_count + 2);
             break;
     }
+    move_sprite(0, player.x, player.y);
     // Wait until we're done drawing to the screen.
     wait_vbl_done();
 }
 
 void main() {
     show_title();
+    fadeout();
 
-    unsigned char arrow_palette[] =  {0, RGB_RED, RGB_BLUE, RGB_BLACK};
+    unsigned char arrow_palette[] =  {0, RGB_RED, RGB_LIGHTGRAY, RGB_BLACK};
     set_sprite_palette(0, 8, arrow_palette);
     set_sprite_data(0, 8, arrow);
     set_sprite_tile(0, 0);
 
-    move_sprite(0, 88, 78);
+    initPlayer();
+    move_sprite(0, player.x, player.y);
 
     set_bkg_data(21, 9, test_data);
     set_bkg_tiles(0, 0, test_tilemapWidth, test_tilemapHeight, test_tilemap);
@@ -96,8 +120,11 @@ void main() {
     move_win(8, 128);
 
     SHOW_SPRITES;
+    SHOW_BKG;
     SHOW_WIN;
     DISPLAY_ON;
+
+    fadein();
     
     while (true) {
         input();

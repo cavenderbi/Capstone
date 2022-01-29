@@ -12,6 +12,9 @@
 	.globl _draw
 	.globl _logic
 	.globl _input
+	.globl _initPlayer
+	.globl _fadein
+	.globl _fadeout
 	.globl _show_title
 	.globl _set_sprite_palette
 	.globl _set_sprite_data
@@ -22,12 +25,12 @@
 	.globl _wait_vbl_done
 	.globl _waitpad
 	.globl _joypad
-	.globl _dir
 	.globl _test_tilemap
 	.globl _test_data
 	.globl _hud_tilemap
 	.globl _hud_data
 	.globl _arrow
+	.globl _player
 	.globl _test_title_map
 	.globl _test_title_data
 ;--------------------------------------------------------
@@ -37,9 +40,11 @@
 ; ram data
 ;--------------------------------------------------------
 	.area _DATA
-_draw_frame_count_65536_121:
+_player::
+	.ds 6
+_draw_frame_count_65536_120:
 	.ds 2
-_draw_anim_count_65536_121:
+_draw_anim_count_65536_120:
 	.ds 2
 ;--------------------------------------------------------
 ; ram data
@@ -55,8 +60,6 @@ _test_data::
 	.ds 144
 _test_tilemap::
 	.ds 320
-_dir::
-	.ds 1
 ;--------------------------------------------------------
 ; absolute external ram data
 ;--------------------------------------------------------
@@ -68,14 +71,14 @@ _dir::
 	.area _GSINIT
 	.area _GSFINAL
 	.area _GSINIT
-;game.c:51: static int frame_count = 0;
+;game.c:72: static int frame_count = 0;
 	xor	a, a
-	ld	hl, #_draw_frame_count_65536_121
+	ld	hl, #_draw_frame_count_65536_120
 	ld	(hl+), a
 	ld	(hl), a
-;game.c:52: static int anim_count = 0;
+;game.c:73: static int anim_count = 0;
 	xor	a, a
-	ld	hl, #_draw_anim_count_65536_121
+	ld	hl, #_draw_anim_count_65536_120
 	ld	(hl+), a
 	ld	(hl), a
 ;--------------------------------------------------------
@@ -2679,101 +2682,229 @@ _test_title_map:
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
-;game.c:25: void input() {
+;title_screen.c:17: void fadeout() {
+;	---------------------------------
+; Function fadeout
+; ---------------------------------
+_fadeout::
+;title_screen.c:18: for (uint8_t i = 0; i < 4; i++) { 
+	ld	c, #0x00
+00112$:
+;title_screen.c:19: switch (i) {
+	ld	a,c
+	cp	a,#0x04
+	ret	NC
+	or	a, a
+	jr	Z, 00101$
+	ld	a, c
+	dec	a
+	jr	Z, 00102$
+	ld	a,c
+	cp	a,#0x02
+	jr	Z, 00103$
+	sub	a, #0x03
+	jr	Z, 00104$
+	jr	00122$
+;title_screen.c:20: case 0: 
+00101$:
+;title_screen.c:21: BGP_REG = 0xE4;
+	ld	a, #0xe4
+	ldh	(_BGP_REG + 0), a
+;title_screen.c:22: break;
+	jr	00122$
+;title_screen.c:23: case 1:
+00102$:
+;title_screen.c:24: BGP_REG = 0xF9;
+	ld	a, #0xf9
+	ldh	(_BGP_REG + 0), a
+;title_screen.c:25: break;
+	jr	00122$
+;title_screen.c:26: case 2:
+00103$:
+;title_screen.c:27: BGP_REG = 0xFE;
+	ld	a, #0xfe
+	ldh	(_BGP_REG + 0), a
+;title_screen.c:28: break;
+	jr	00122$
+;title_screen.c:29: case 3:
+00104$:
+;title_screen.c:30: BGP_REG = 0xFF;
+	ld	a, #0xff
+	ldh	(_BGP_REG + 0), a
+;title_screen.c:33: for (uint8_t i = 0; i < 20; i++)
+00122$:
+	ld	b, #0x00
+00109$:
+	ld	a, b
+	sub	a, #0x14
+	jr	NC, 00113$
+;title_screen.c:34: wait_vbl_done();
+	call	_wait_vbl_done
+;title_screen.c:33: for (uint8_t i = 0; i < 20; i++)
+	inc	b
+	jr	00109$
+00113$:
+;title_screen.c:18: for (uint8_t i = 0; i < 4; i++) { 
+	inc	c
+;title_screen.c:36: }
+	jr	00112$
+;title_screen.c:38: void fadein() {
+;	---------------------------------
+; Function fadein
+; ---------------------------------
+_fadein::
+;title_screen.c:39: for (uint8_t i = 0; i < 3; i++) {
+	ld	c, #0x00
+00111$:
+;title_screen.c:40: switch (i) {
+	ld	a,c
+	cp	a,#0x03
+	ret	NC
+	or	a, a
+	jr	Z, 00101$
+	ld	a, c
+	dec	a
+	jr	Z, 00102$
+	ld	a, c
+	sub	a, #0x02
+	jr	Z, 00103$
+	jr	00120$
+;title_screen.c:41: case 0: 
+00101$:
+;title_screen.c:42: BGP_REG = 0xFE;
+	ld	a, #0xfe
+	ldh	(_BGP_REG + 0), a
+;title_screen.c:43: break;
+	jr	00120$
+;title_screen.c:44: case 1:
+00102$:
+;title_screen.c:45: BGP_REG = 0xF9;
+	ld	a, #0xf9
+	ldh	(_BGP_REG + 0), a
+;title_screen.c:46: break;
+	jr	00120$
+;title_screen.c:47: case 2:
+00103$:
+;title_screen.c:48: BGP_REG = 0xE4;
+	ld	a, #0xe4
+	ldh	(_BGP_REG + 0), a
+;title_screen.c:51: for (uint8_t i = 0; i < 20; i++)
+00120$:
+	ld	b, #0x00
+00108$:
+	ld	a, b
+	sub	a, #0x14
+	jr	NC, 00112$
+;title_screen.c:52: wait_vbl_done();
+	call	_wait_vbl_done
+;title_screen.c:51: for (uint8_t i = 0; i < 20; i++)
+	inc	b
+	jr	00108$
+00112$:
+;title_screen.c:39: for (uint8_t i = 0; i < 3; i++) {
+	inc	c
+;title_screen.c:54: }
+	jr	00111$
+;game.c:36: void initPlayer() {
+;	---------------------------------
+; Function initPlayer
+; ---------------------------------
+_initPlayer::
+;game.c:37: player.x = 88;
+	ld	hl, #_player
+	ld	(hl), #0x58
+;game.c:38: player.y = 78;
+	ld	hl, #(_player + 1)
+	ld	(hl), #0x4e
+;game.c:39: player.dir = NONE;
+	ld	hl, #(_player + 2)
+	ld	(hl), #0x04
+;game.c:40: player.maxHealth = 4;
+	ld	hl, #(_player + 3)
+	ld	(hl), #0x04
+;game.c:41: player.health = 4;
+	ld	hl, #(_player + 4)
+	ld	(hl), #0x04
+;game.c:42: player.alive = true;
+	ld	hl, #(_player + 5)
+	ld	(hl), #0x01
+;game.c:43: }
+	ret
+;game.c:46: void input() {
 ;	---------------------------------
 ; Function input
 ; ---------------------------------
 _input::
-;game.c:26: unsigned char j = joypad();
+;game.c:47: unsigned char j = joypad();
 	call	_joypad
-	ld	c, e
-;game.c:27: if (j & J_UP) {
-	bit	2, c
+	ld	a, e
+;game.c:48: if (j & J_UP) {
+	bit	2, a
 	jr	Z, 00110$
-;game.c:28: dir = UP;
-	ld	hl, #_dir
+;game.c:49: player.dir = UP;
+	ld	hl, #(_player + 2)
 	ld	(hl), #0x00
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
-	ld	bc, #_shadow_OAM+0
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
+;game.c:50: player.y--;
+	ld	bc, #_player + 1
 	ld	a, (bc)
 	dec	a
 	ld	(bc), a
-	inc	bc
-	ld	a, (bc)
-	ld	(bc), a
-;game.c:29: scroll_sprite(0, 0, -1);
 	ret
 00110$:
-;game.c:30: } else if (j & J_DOWN) {
-	bit	3, c
+;game.c:51: } else if (j & J_DOWN) {
+	bit	3, a
 	jr	Z, 00107$
-;game.c:31: dir = DOWN;
-	ld	hl, #_dir
+;game.c:52: player.dir = DOWN;
+	ld	hl, #(_player + 2)
 	ld	(hl), #0x01
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
-	ld	bc, #_shadow_OAM+0
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
+;game.c:53: player.y++;
+	ld	bc, #_player + 1
 	ld	a, (bc)
 	inc	a
 	ld	(bc), a
-	inc	bc
-	ld	a, (bc)
-	ld	(bc), a
-;game.c:32: scroll_sprite(0, 0, 1);
 	ret
 00107$:
-;game.c:33: } else if (j & J_LEFT) {
-	bit	1, c
+;game.c:54: } else if (j & J_LEFT) {
+	bit	1, a
 	jr	Z, 00104$
-;game.c:34: dir = LEFT;
-	ld	hl, #_dir
+;game.c:55: player.dir = LEFT;
+	ld	bc, #_player+0
+	ld	hl, #(_player + 2)
 	ld	(hl), #0x02
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
-	ld	bc, #_shadow_OAM+0
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
-	ld	a, (bc)
-	ld	(bc), a
-	inc	bc
+;game.c:56: player.x--;
 	ld	a, (bc)
 	dec	a
 	ld	(bc), a
-;game.c:35: scroll_sprite(0, -1, 0);
 	ret
 00104$:
-;game.c:36: } else if (j & J_RIGHT) {
-	bit	0, c
-	ret	Z
-;game.c:37: dir = RIGHT;
-	ld	hl, #_dir
+;game.c:57: } else if (j & J_RIGHT) {
+	rrca
+	ret	NC
+;game.c:58: player.dir = RIGHT;
+	ld	bc, #_player+0
+	ld	hl, #(_player + 2)
 	ld	(hl), #0x03
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
-	ld	bc, #_shadow_OAM+0
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
-	ld	a, (bc)
-	ld	(bc), a
-	inc	bc
+;game.c:59: player.x++;
 	ld	a, (bc)
 	inc	a
 	ld	(bc), a
-;game.c:38: scroll_sprite(0, 1, 0);
-;game.c:41: }
+;game.c:62: }
 	ret
-;game.c:43: void logic() {
+;game.c:64: void logic() {
 ;	---------------------------------
 ; Function logic
 ; ---------------------------------
 _logic::
-;game.c:45: }
+;game.c:66: }
 	ret
-;game.c:49: void draw() {
+;game.c:70: void draw() {
 ;	---------------------------------
 ; Function draw
 ; ---------------------------------
 _draw::
 	dec	sp
 	dec	sp
-;game.c:50: unsigned char anim_tiles[2] = {0, 1};
+;game.c:71: unsigned char anim_tiles[2] = {0, 1};
 	ldhl	sp,	#0
 	ld	c, l
 	ld	b, h
@@ -2782,15 +2913,15 @@ _draw::
 	inc	bc
 	ld	a, #0x01
 	ld	(bc), a
-;game.c:54: frame_count++;
-	ld	hl, #_draw_frame_count_65536_121
+;game.c:75: frame_count++;
+	ld	hl, #_draw_frame_count_65536_120
 	inc	(hl)
-	jr	NZ, 00139$
+	jr	NZ, 00140$
 	inc	hl
 	inc	(hl)
-00139$:
-;game.c:55: if (frame_count >= FRAMES_ANIM_UPDATE) {
-	ld	hl, #_draw_frame_count_65536_121
+00140$:
+;game.c:76: if (frame_count >= FRAMES_ANIM_UPDATE) {
+	ld	hl, #_draw_frame_count_65536_120
 	ld	a, (hl+)
 	sub	a, #0x0a
 	ld	a, (hl)
@@ -2798,24 +2929,24 @@ _draw::
 	ld	d, (hl)
 	ld	a, #0x00
 	bit	7,a
-	jr	Z, 00140$
-	bit	7, d
-	jr	NZ, 00141$
-	cp	a, a
-	jr	00141$
-00140$:
-	bit	7, d
 	jr	Z, 00141$
-	scf
+	bit	7, d
+	jr	NZ, 00142$
+	cp	a, a
+	jr	00142$
 00141$:
+	bit	7, d
+	jr	Z, 00142$
+	scf
+00142$:
 	jr	C, 00102$
-;game.c:56: frame_count = 0;
+;game.c:77: frame_count = 0;
 	xor	a, a
-	ld	hl, #_draw_frame_count_65536_121
+	ld	hl, #_draw_frame_count_65536_120
 	ld	(hl+), a
 	ld	(hl), a
-;game.c:57: anim_count = !anim_count;
-	ld	hl, #_draw_anim_count_65536_121 + 1
+;game.c:78: anim_count = !anim_count;
+	ld	hl, #_draw_anim_count_65536_120 + 1
 	ld	a, (hl-)
 	or	a, (hl)
 	sub	a,#0x01
@@ -2824,93 +2955,101 @@ _draw::
 	ld	(hl+), a
 	ld	(hl), #0x00
 00102$:
-;game.c:59: switch (dir) {
-	ld	a, (#_dir)
+;game.c:80: switch (player.dir) {
+	ld	bc, #_player + 2
+	ld	a, (bc)
 	or	a, a
 	jr	Z, 00103$
-;game.c:66: set_sprite_tile(0, anim_count + 4);
-	ld	hl, #_draw_anim_count_65536_121
-	ld	c, (hl)
-;game.c:59: switch (dir) {
-	ld	a, (#_dir)
-	dec	a
+	cp	a, #0x01
 	jr	Z, 00104$
-	ld	a, (#_dir)
-	sub	a, #0x02
+	cp	a, #0x02
 	jr	Z, 00105$
-	ld	a, (#_dir)
 	sub	a, #0x03
 	jr	Z, 00106$
 	jr	00107$
-;game.c:60: case UP:
+;game.c:81: case UP:
 00103$:
-;game.c:61: dir = NONE;
-	ld	hl, #_dir
-	ld	(hl), #0x04
-;game.c:62: set_sprite_tile(0, anim_count);
-	ld	hl, #_draw_anim_count_65536_121
+;game.c:82: player.dir = NONE;
+	ld	a, #0x04
+	ld	(bc), a
+;game.c:83: set_sprite_tile(0, anim_count);
+	ld	hl, #_draw_anim_count_65536_120
 	ld	c, (hl)
 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 2)
 	ld	(hl), c
-;game.c:63: break;
+;game.c:84: break;
 	jr	00107$
-;game.c:64: case DOWN:
+;game.c:85: case DOWN:
 00104$:
-;game.c:65: dir = NONE;
-	ld	hl, #_dir
-	ld	(hl), #0x04
-;game.c:66: set_sprite_tile(0, anim_count + 4);
-	inc	c
-	inc	c
-	inc	c
-	inc	c
+;game.c:86: player.dir = NONE;
+	ld	a, #0x04
+	ld	(bc), a
+;game.c:87: set_sprite_tile(0, anim_count + 4);
+	ld	a, (#_draw_anim_count_65536_120)
+	add	a, #0x04
+	ld	c, a
 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 2)
 	ld	(hl), c
-;game.c:67: break;
+;game.c:88: break;
 	jr	00107$
-;game.c:68: case LEFT:
+;game.c:89: case LEFT:
 00105$:
-;game.c:69: dir = NONE;
-	ld	hl, #_dir
-	ld	(hl), #0x04
-;game.c:70: set_sprite_tile(0, anim_count + 6);
-	ld	a, c
+;game.c:90: player.dir = NONE;
+	ld	a, #0x04
+	ld	(bc), a
+;game.c:91: set_sprite_tile(0, anim_count + 6);
+	ld	a, (#_draw_anim_count_65536_120)
 	add	a, #0x06
 	ld	c, a
 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 2)
 	ld	(hl), c
-;game.c:71: break;
+;game.c:92: break;
 	jr	00107$
-;game.c:72: case RIGHT:
+;game.c:93: case RIGHT:
 00106$:
-;game.c:73: dir = NONE;
-	ld	hl, #_dir
-	ld	(hl), #0x04
-;game.c:74: set_sprite_tile(0, anim_count + 2);
+;game.c:94: player.dir = NONE;
+	ld	a, #0x04
+	ld	(bc), a
+;game.c:95: set_sprite_tile(0, anim_count + 2);
+	ld	hl, #_draw_anim_count_65536_120
+	ld	c, (hl)
 	inc	c
 	inc	c
 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 2)
 	ld	(hl), c
-;game.c:76: }
+;game.c:97: }
 00107$:
-;game.c:78: wait_vbl_done();
-;game.c:79: }
+;game.c:98: move_sprite(0, player.x, player.y);
+	ld	hl, #(_player + 1)
+	ld	c, (hl)
+	ld	hl, #_player
+	ld	b, (hl)
+;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1399: OAM_item_t * itm = &shadow_OAM[nb];
+	ld	hl, #_shadow_OAM
+;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1400: itm->y=y, itm->x=x;
+	ld	a, c
+	ld	(hl+), a
+	ld	(hl), b
+;game.c:100: wait_vbl_done();
+;game.c:101: }
 	call	_wait_vbl_done
 	pop	hl
 	ret
-;game.c:81: void main() {
+;game.c:103: void main() {
 ;	---------------------------------
 ; Function main
 ; ---------------------------------
 _main::
 	add	sp, #-4
-;game.c:82: show_title();
+;game.c:104: show_title();
 	call	_show_title
-;game.c:84: unsigned char arrow_palette[] =  {0, RGB_RED, RGB_BLUE, RGB_BLACK};
+;game.c:105: fadeout();
+	call	_fadeout
+;game.c:107: unsigned char arrow_palette[] =  {0, RGB_RED, RGB_LIGHTGRAY, RGB_BLACK};
 	ldhl	sp,	#0
 	ld	c, l
 	ld	b, h
@@ -2924,26 +3063,29 @@ _main::
 ;	spillPairReg hl
 	inc	hl
 	ld	(hl), #0x1f
+	ld	l, c
+;	spillPairReg hl
+;	spillPairReg hl
+	ld	h, b
+;	spillPairReg hl
+;	spillPairReg hl
+	inc	hl
+	inc	hl
+	ld	(hl), #0xb5
 	ld	e, c
 	ld	d, b
 	inc	de
 	inc	de
-	xor	a, a
-	ld	(de), a
-	ld	e, c
-	ld	d, b
-	inc	de
-	inc	de
 	inc	de
 	xor	a, a
 	ld	(de), a
-;game.c:85: set_sprite_palette(0, 8, arrow_palette);
+;game.c:108: set_sprite_palette(0, 8, arrow_palette);
 	push	bc
 	ld	hl, #0x800
 	push	hl
 	call	_set_sprite_palette
 	add	sp, #4
-;game.c:86: set_sprite_data(0, 8, arrow);
+;game.c:109: set_sprite_data(0, 8, arrow);
 	ld	de, #_arrow
 	push	de
 	ld	hl, #0x800
@@ -2953,20 +3095,27 @@ _main::
 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 2)
 	ld	(hl), #0x00
+;game.c:112: initPlayer();
+	call	_initPlayer
+;game.c:113: move_sprite(0, player.x, player.y);
+	ld	hl, #_player + 1
+	ld	b, (hl)
+	ld	hl, #_player
+	ld	c, (hl)
 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1399: OAM_item_t * itm = &shadow_OAM[nb];
 	ld	hl, #_shadow_OAM
 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1400: itm->y=y, itm->x=x;
-	ld	a, #0x4e
+	ld	a, b
 	ld	(hl+), a
-	ld	(hl), #0x58
-;game.c:91: set_bkg_data(21, 9, test_data);
+	ld	(hl), c
+;game.c:115: set_bkg_data(21, 9, test_data);
 	ld	de, #_test_data
 	push	de
 	ld	hl, #0x915
 	push	hl
 	call	_set_bkg_data
 	add	sp, #4
-;game.c:92: set_bkg_tiles(0, 0, test_tilemapWidth, test_tilemapHeight, test_tilemap);
+;game.c:116: set_bkg_tiles(0, 0, test_tilemapWidth, test_tilemapHeight, test_tilemap);
 	ld	de, #_test_tilemap
 	push	de
 	ld	hl, #0x1014
@@ -2976,14 +3125,14 @@ _main::
 	push	af
 	call	_set_bkg_tiles
 	add	sp, #6
-;game.c:94: set_win_data(0, 20, hud_data);
+;game.c:118: set_win_data(0, 20, hud_data);
 	ld	de, #_hud_data
 	push	de
 	ld	hl, #0x1400
 	push	hl
 	call	_set_win_data
 	add	sp, #4
-;game.c:95: set_win_tiles(0, 0, hud_tilemapWidth, hud_tilemapHeight, hud_tilemap);
+;game.c:119: set_win_tiles(0, 0, hud_tilemapWidth, hud_tilemapHeight, hud_tilemap);
 	ld	de, #_hud_tilemap
 	push	de
 	ld	hl, #0x214
@@ -2998,28 +3147,34 @@ _main::
 	ldh	(_WX_REG + 0), a
 	ld	a, #0x80
 	ldh	(_WY_REG + 0), a
-;game.c:98: SHOW_SPRITES;
+;game.c:122: SHOW_SPRITES;
 	ldh	a, (_LCDC_REG + 0)
 	or	a, #0x02
 	ldh	(_LCDC_REG + 0), a
-;game.c:99: SHOW_WIN;
+;game.c:123: SHOW_BKG;
+	ldh	a, (_LCDC_REG + 0)
+	or	a, #0x01
+	ldh	(_LCDC_REG + 0), a
+;game.c:124: SHOW_WIN;
 	ldh	a, (_LCDC_REG + 0)
 	or	a, #0x20
 	ldh	(_LCDC_REG + 0), a
-;game.c:100: DISPLAY_ON;
+;game.c:125: DISPLAY_ON;
 	ldh	a, (_LCDC_REG + 0)
 	or	a, #0x80
 	ldh	(_LCDC_REG + 0), a
-;game.c:102: while (true) {
+;game.c:127: fadein();
+	call	_fadein
+;game.c:129: while (true) {
 00102$:
-;game.c:103: input();
+;game.c:130: input();
 	call	_input
-;game.c:104: logic();
+;game.c:131: logic();
 	call	_logic
-;game.c:105: draw();
+;game.c:132: draw();
 	call	_draw
 	jr	00102$
-;game.c:107: }
+;game.c:134: }
 	add	sp, #4
 	ret
 	.area _CODE
@@ -3981,6 +4136,4 @@ __xinit__test_tilemap:
 	.db #0x1d	; 29
 	.db #0x1d	; 29
 	.db #0x1c	; 28
-__xinit__dir:
-	.db #0x04	; 4
 	.area _CABS (ABS)
