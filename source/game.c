@@ -44,6 +44,19 @@ void initPlayer() {
     player.alive = true;
 }
 
+uint8_t canplayermove(uint8_t newplayerx, uint8_t newplayery){
+    uint16_t indexTLx, indexTLy, tileindexTL;
+    uint8_t result;
+
+    indexTLx = newplayerx / 8;
+    indexTLy = newplayery / 8;
+    tileindexTL = 20 * indexTLy + indexTLx;
+
+    result = test_tilemap[tileindexTL] == (unsigned char)blankmap[0];
+
+    return result;
+}
+
 // Reads the user input and responds apropriately. 
 void input() {
     unsigned char j = joypad();
@@ -108,19 +121,6 @@ void draw() {
     move_sprite(0, player.x, player.y);
     // Wait until we're done drawing to the screen.
     wait_vbl_done();
-}
-
-uint8_t canplayermove(uint8_t newplayerx, uint8_t newplayery){
-    uint16_t indexTLx, indexTLy, tileindexTL;
-    uint8_t result;
-
-    indexTLx = newplayerx / 8;
-    indexTLx = newplayerx / 8;
-    tileindexTL = 20 * indexTLy + indexTLx;
-
-    result = test_title_map[tileindexTL] == blankmap[0];
-
-    return result;
 }
 
 void main() {
