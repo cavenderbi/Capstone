@@ -14,6 +14,7 @@
 	.globl _input
 	.globl _show_title
 	.globl _set_sprite_palette
+	.globl _set_bkg_palette
 	.globl _set_sprite_data
 	.globl _set_win_tiles
 	.globl _set_win_data
@@ -2693,9 +2694,9 @@ _input::
 ;game.c:28: dir = UP;
 	ld	hl, #_dir
 	ld	(hl), #0x00
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
+;/home/gato/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
 	ld	bc, #_shadow_OAM+0
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
+;/home/gato/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
 	ld	a, (bc)
 	dec	a
 	ld	(bc), a
@@ -2711,9 +2712,9 @@ _input::
 ;game.c:31: dir = DOWN;
 	ld	hl, #_dir
 	ld	(hl), #0x01
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
+;/home/gato/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
 	ld	bc, #_shadow_OAM+0
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
+;/home/gato/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
 	ld	a, (bc)
 	inc	a
 	ld	(bc), a
@@ -2729,9 +2730,9 @@ _input::
 ;game.c:34: dir = LEFT;
 	ld	hl, #_dir
 	ld	(hl), #0x02
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
+;/home/gato/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
 	ld	bc, #_shadow_OAM+0
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
+;/home/gato/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
 	ld	a, (bc)
 	ld	(bc), a
 	inc	bc
@@ -2747,9 +2748,9 @@ _input::
 ;game.c:37: dir = RIGHT;
 	ld	hl, #_dir
 	ld	(hl), #0x03
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
+;/home/gato/Downloads/gbdk/include/gb/gb.h:1415: OAM_item_t * itm = &shadow_OAM[nb];
 	ld	bc, #_shadow_OAM+0
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
+;/home/gato/Downloads/gbdk/include/gb/gb.h:1416: itm->y+=y, itm->x+=x;
 	ld	a, (bc)
 	ld	(bc), a
 	inc	bc
@@ -2850,7 +2851,7 @@ _draw::
 ;game.c:62: set_sprite_tile(0, anim_count);
 	ld	hl, #_draw_anim_count_65536_121
 	ld	c, (hl)
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
+;/home/gato/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 2)
 	ld	(hl), c
 ;game.c:63: break;
@@ -2865,7 +2866,7 @@ _draw::
 	inc	c
 	inc	c
 	inc	c
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
+;/home/gato/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 2)
 	ld	(hl), c
 ;game.c:67: break;
@@ -2879,7 +2880,7 @@ _draw::
 	ld	a, c
 	add	a, #0x06
 	ld	c, a
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
+;/home/gato/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 2)
 	ld	(hl), c
 ;game.c:71: break;
@@ -2892,7 +2893,7 @@ _draw::
 ;game.c:74: set_sprite_tile(0, anim_count + 2);
 	inc	c
 	inc	c
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
+;/home/gato/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 2)
 	ld	(hl), c
 ;game.c:76: }
@@ -2907,7 +2908,7 @@ _draw::
 ; Function main
 ; ---------------------------------
 _main::
-	add	sp, #-4
+	add	sp, #-8
 ;game.c:82: show_title();
 	call	_show_title
 ;game.c:84: unsigned char arrow_palette[] =  {0, RGB_RED, RGB_BLUE, RGB_BLACK};
@@ -2950,23 +2951,59 @@ _main::
 	push	hl
 	call	_set_sprite_data
 	add	sp, #4
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
+;/home/gato/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 2)
 	ld	(hl), #0x00
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1399: OAM_item_t * itm = &shadow_OAM[nb];
+;/home/gato/Downloads/gbdk/include/gb/gb.h:1399: OAM_item_t * itm = &shadow_OAM[nb];
 	ld	hl, #_shadow_OAM
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1400: itm->y=y, itm->x=x;
+;/home/gato/Downloads/gbdk/include/gb/gb.h:1400: itm->y=y, itm->x=x;
 	ld	a, #0x4e
 	ld	(hl+), a
 	ld	(hl), #0x58
-;game.c:91: set_bkg_data(21, 9, test_data);
+;game.c:91: unsigned char background_palette[] = {RGB_WHITE, RGB_LIGHTGRAY, RGB_DARKGRAY, RGB_BLACK};
+	ldhl	sp,	#4
+	ld	c, l
+	ld	b, h
+	ld	a, #0xff
+	ld	(bc), a
+	ld	l, c
+;	spillPairReg hl
+;	spillPairReg hl
+	ld	h, b
+;	spillPairReg hl
+;	spillPairReg hl
+	inc	hl
+	ld	(hl), #0xb5
+	ld	l, c
+;	spillPairReg hl
+;	spillPairReg hl
+	ld	h, b
+;	spillPairReg hl
+;	spillPairReg hl
+	inc	hl
+	inc	hl
+	ld	(hl), #0x4a
+	ld	e, c
+	ld	d, b
+	inc	de
+	inc	de
+	inc	de
+	xor	a, a
+	ld	(de), a
+;game.c:92: set_bkg_palette(0,29,background_palette);
+	push	bc
+	ld	hl, #0x1d00
+	push	hl
+	call	_set_bkg_palette
+	add	sp, #4
+;game.c:93: set_bkg_data(21, 9, test_data);
 	ld	de, #_test_data
 	push	de
 	ld	hl, #0x915
 	push	hl
 	call	_set_bkg_data
 	add	sp, #4
-;game.c:92: set_bkg_tiles(0, 0, test_tilemapWidth, test_tilemapHeight, test_tilemap);
+;game.c:94: set_bkg_tiles(0, 0, test_tilemapWidth, test_tilemapHeight, test_tilemap);
 	ld	de, #_test_tilemap
 	push	de
 	ld	hl, #0x1014
@@ -2976,14 +3013,14 @@ _main::
 	push	af
 	call	_set_bkg_tiles
 	add	sp, #6
-;game.c:94: set_win_data(0, 20, hud_data);
+;game.c:96: set_win_data(0, 20, hud_data);
 	ld	de, #_hud_data
 	push	de
 	ld	hl, #0x1400
 	push	hl
 	call	_set_win_data
 	add	sp, #4
-;game.c:95: set_win_tiles(0, 0, hud_tilemapWidth, hud_tilemapHeight, hud_tilemap);
+;game.c:97: set_win_tiles(0, 0, hud_tilemapWidth, hud_tilemapHeight, hud_tilemap);
 	ld	de, #_hud_tilemap
 	push	de
 	ld	hl, #0x214
@@ -2993,34 +3030,34 @@ _main::
 	push	af
 	call	_set_win_tiles
 	add	sp, #6
-;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1195: WX_REG=x, WY_REG=y;
+;/home/gato/Downloads/gbdk/include/gb/gb.h:1195: WX_REG=x, WY_REG=y;
 	ld	a, #0x08
 	ldh	(_WX_REG + 0), a
 	ld	a, #0x80
 	ldh	(_WY_REG + 0), a
-;game.c:98: SHOW_SPRITES;
+;game.c:100: SHOW_SPRITES;
 	ldh	a, (_LCDC_REG + 0)
 	or	a, #0x02
 	ldh	(_LCDC_REG + 0), a
-;game.c:99: SHOW_WIN;
+;game.c:101: SHOW_WIN;
 	ldh	a, (_LCDC_REG + 0)
 	or	a, #0x20
 	ldh	(_LCDC_REG + 0), a
-;game.c:100: DISPLAY_ON;
+;game.c:102: DISPLAY_ON;
 	ldh	a, (_LCDC_REG + 0)
 	or	a, #0x80
 	ldh	(_LCDC_REG + 0), a
-;game.c:102: while (true) {
+;game.c:104: while (true) {
 00102$:
-;game.c:103: input();
+;game.c:105: input();
 	call	_input
-;game.c:104: logic();
+;game.c:106: logic();
 	call	_logic
-;game.c:105: draw();
+;game.c:107: draw();
 	call	_draw
 	jr	00102$
-;game.c:107: }
-	add	sp, #4
+;game.c:109: }
+	add	sp, #8
 	ret
 	.area _CODE
 	.area _INITIALIZER

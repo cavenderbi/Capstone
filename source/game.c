@@ -88,6 +88,8 @@ void main() {
 
     move_sprite(0, 88, 78);
 
+    unsigned char background_palette[] = {RGB_WHITE, RGB_LIGHTGRAY, RGB_DARKGRAY, RGB_BLACK};
+    set_bkg_palette(0,29,background_palette);
     set_bkg_data(21, 9, test_data);
     set_bkg_tiles(0, 0, test_tilemapWidth, test_tilemapHeight, test_tilemap);
 
