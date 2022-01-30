@@ -18,6 +18,8 @@
 
 #include "../sprites/test.c"
 #include "../tilemaps/test.c"
+
+const char blankmap[1] = {0x00};
 typedef enum Direction { UP, DOWN, LEFT, RIGHT, NONE } Direction;
 // Using a player struct to clean up the code a bit.
 struct Player {
@@ -42,21 +44,42 @@ void initPlayer() {
     player.alive = true;
 }
 
+uint8_t canplayermove(uint8_t newplayerx, uint8_t newplayery){
+    uint16_t indexTLx, indexTLy, tileindexTL;
+    uint8_t result;
+
+    indexTLx = newplayerx / 8;
+    indexTLy = newplayery / 8;
+    tileindexTL = 20 * indexTLy + indexTLx;
+
+    result = test_tilemap[tileindexTL] == (unsigned char)blankmap[0];
+
+    return result;
+}
+
 // Reads the user input and responds apropriately. 
 void input() {
     unsigned char j = joypad();
     if (j & J_UP) {
-        player.dir = UP;
-        player.y--;
+        if(canplayermove(player.x, player.y-1) == (unsigned char) blankmap[0]) {
+            player.dir = UP;
+            player.y--;
+        }
     } else if (j & J_DOWN) {
-        player.dir = DOWN;
-        player.y++;
+        if(canplayermove(player.x, player.y+1) == (unsigned char) blankmap[0]) {
+            player.dir = DOWN;
+            player.y++;
+        }
     } else if (j & J_LEFT) {
-        player.dir = LEFT;
-        player.x--;
+        if(canplayermove(player.x-1, player.y) == (unsigned char) blankmap[0]) {
+            player.dir = LEFT;
+            player.x--;
+        }
     } else if (j & J_RIGHT) {
-        player.dir = RIGHT;
-        player.x++;
+        if(canplayermove(player.x+1, player.y) == (unsigned char) blankmap[0]) {
+            player.dir = RIGHT;
+            player.x++;
+        }
     }
     
 }
