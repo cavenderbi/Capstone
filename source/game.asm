@@ -17,6 +17,7 @@
 	.globl _fadeout
 	.globl _show_title
 	.globl _set_sprite_palette
+	.globl _set_bkg_palette
 	.globl _set_sprite_data
 	.globl _set_win_tiles
 	.globl _set_win_data
@@ -3044,7 +3045,7 @@ _draw::
 ; Function main
 ; ---------------------------------
 _main::
-	add	sp, #-4
+	add	sp, #-8
 ;game.c:104: show_title();
 	call	_show_title
 ;game.c:105: fadeout();
@@ -3108,14 +3109,50 @@ _main::
 	ld	a, b
 	ld	(hl+), a
 	ld	(hl), c
-;game.c:115: set_bkg_data(21, 9, test_data);
+;game.c:115: unsigned char background_palette[] = {RGB_WHITE, RGB_LIGHTGRAY, RGB_DARKGRAY, RGB_BLACK};
+	ldhl	sp,	#4
+	ld	c, l
+	ld	b, h
+	ld	a, #0xff
+	ld	(bc), a
+	ld	l, c
+;	spillPairReg hl
+;	spillPairReg hl
+	ld	h, b
+;	spillPairReg hl
+;	spillPairReg hl
+	inc	hl
+	ld	(hl), #0xb5
+	ld	l, c
+;	spillPairReg hl
+;	spillPairReg hl
+	ld	h, b
+;	spillPairReg hl
+;	spillPairReg hl
+	inc	hl
+	inc	hl
+	ld	(hl), #0x4a
+	ld	e, c
+	ld	d, b
+	inc	de
+	inc	de
+	inc	de
+	xor	a, a
+	ld	(de), a
+;game.c:116: set_bkg_palette(0,29,background_palette);
+	push	bc
+	ld	hl, #0x1d00
+	push	hl
+	call	_set_bkg_palette
+	add	sp, #4
+;game.c:117: set_bkg_data(21, 9, test_data);
 	ld	de, #_test_data
 	push	de
 	ld	hl, #0x915
 	push	hl
 	call	_set_bkg_data
 	add	sp, #4
-;game.c:116: set_bkg_tiles(0, 0, test_tilemapWidth, test_tilemapHeight, test_tilemap);
+;game.c:118: set_bkg_tiles(0, 0, test_tilemapWidth, test_tilemapHeight, test_tilemap);
 	ld	de, #_test_tilemap
 	push	de
 	ld	hl, #0x1014
@@ -3125,14 +3162,14 @@ _main::
 	push	af
 	call	_set_bkg_tiles
 	add	sp, #6
-;game.c:118: set_win_data(0, 20, hud_data);
+;game.c:120: set_win_data(0, 20, hud_data);
 	ld	de, #_hud_data
 	push	de
 	ld	hl, #0x1400
 	push	hl
 	call	_set_win_data
 	add	sp, #4
-;game.c:119: set_win_tiles(0, 0, hud_tilemapWidth, hud_tilemapHeight, hud_tilemap);
+;game.c:121: set_win_tiles(0, 0, hud_tilemapWidth, hud_tilemapHeight, hud_tilemap);
 	ld	de, #_hud_tilemap
 	push	de
 	ld	hl, #0x214
@@ -3147,35 +3184,35 @@ _main::
 	ldh	(_WX_REG + 0), a
 	ld	a, #0x80
 	ldh	(_WY_REG + 0), a
-;game.c:122: SHOW_SPRITES;
+;game.c:124: SHOW_SPRITES;
 	ldh	a, (_LCDC_REG + 0)
 	or	a, #0x02
 	ldh	(_LCDC_REG + 0), a
-;game.c:123: SHOW_BKG;
+;game.c:125: SHOW_BKG;
 	ldh	a, (_LCDC_REG + 0)
 	or	a, #0x01
 	ldh	(_LCDC_REG + 0), a
-;game.c:124: SHOW_WIN;
+;game.c:126: SHOW_WIN;
 	ldh	a, (_LCDC_REG + 0)
 	or	a, #0x20
 	ldh	(_LCDC_REG + 0), a
-;game.c:125: DISPLAY_ON;
+;game.c:127: DISPLAY_ON;
 	ldh	a, (_LCDC_REG + 0)
 	or	a, #0x80
 	ldh	(_LCDC_REG + 0), a
-;game.c:127: fadein();
+;game.c:129: fadein();
 	call	_fadein
-;game.c:129: while (true) {
+;game.c:131: while (true) {
 00102$:
-;game.c:130: input();
+;game.c:132: input();
 	call	_input
-;game.c:131: logic();
+;game.c:133: logic();
 	call	_logic
-;game.c:132: draw();
+;game.c:134: draw();
 	call	_draw
 	jr	00102$
-;game.c:134: }
-	add	sp, #4
+;game.c:136: }
+	add	sp, #8
 	ret
 	.area _CODE
 	.area _INITIALIZER
