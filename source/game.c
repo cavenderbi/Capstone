@@ -2,6 +2,7 @@
 #include <gb/gb.h>
 #include <gb/cgb.h>
 #include <gbdk/font.h>
+#include <gb/drawing.h>
 // Booleans are nice to have.
 #include <stdbool.h>
 #include <stdio.h>
@@ -11,7 +12,8 @@
 // Include the sprites defined in their respective C folders. 
 // Thanks to GBTD for letting me not have to write 8x8 sprites in hex by hand.
 #include "../sprites/arrow.c"
-#include "../sprites/debug.c"
+#include "../sprites/test_projectile.c"
+#include "../sprites/test_enemy.c"
 
 // Include the tiles and tilemap for the HUD. 
 #include "../sprites/hud.c"
@@ -34,6 +36,14 @@ struct Player {
     bool alive;
 } player;
 
+struct Projectile {
+    uint8_t x;
+    uint8_t y;
+    Direction dir;
+    uint8_t speed;
+    bool alive;
+} projectile;
+
 void initPlayer() {
     player.x = 88;
     player.y = 78;
@@ -41,6 +51,15 @@ void initPlayer() {
     player.maxHealth = 4;
     player.health = 4;
     player.alive = true;
+}
+
+// Shoots a projectile from the given x/y location. 
+void shoot(uint8_t x, uint8_t y, Direction dir) {
+    projectile.x = x;
+    projectile.y = y;
+    projectile.dir = dir;
+    projectile.alive = true;
+    move_sprite(1, x, y);
 }
 
 // Returns false when the player collides with the background tiles.
@@ -72,11 +91,36 @@ void input() {
         if (collision(player.x + 1, player.y))
             player.x++;
     }
-    
+
+    // If player presses A, shoot test projectile.
+    if (j & J_A) 
+        shoot(player.x, player.y, player.dir);
 }
 
 void logic() {
-    ;
+    // Move the projectiles.
+    switch (projectile.dir) {
+        case UP:
+            if (collision(projectile.x, projectile.y - 1))
+                projectile.y--;
+            break;
+        case DOWN:
+            if (collision(projectile.x, projectile.y + 1))
+                projectile.y++;
+                break;
+        case LEFT:
+            if (collision(projectile.x - 1, projectile.y))
+                projectile.x--;
+            break;
+        case RIGHT:
+            if (collision(projectile.x + 1, projectile.y))
+                projectile.x++;
+            break;
+    }
+    if (!collision(projectile.x, projectile.y)){
+        hide_sprite(1);
+        projectile.alive = false;
+    }
 }
 
 // Every ten frames, update the animation. 
@@ -93,23 +137,37 @@ void draw() {
     }
     switch (player.dir) {
         case UP:
-            player.dir = NONE;
             set_sprite_tile(0, anim_count);
             break;
         case DOWN:
-            player.dir = NONE;
             set_sprite_tile(0, anim_count + 4);
             break;
         case LEFT:
-            player.dir = NONE;
             set_sprite_tile(0, anim_count + 6);
             break;
         case RIGHT:
-            player.dir = NONE;
             set_sprite_tile(0, anim_count + 2);
             break;
     }
+
+    switch (projectile.dir) {
+        case UP:
+            set_sprite_tile(1, 11);
+            break;
+        case DOWN:
+            set_sprite_tile(1, 9);
+            break;
+        case LEFT:
+            set_sprite_tile(1, 10);
+            break;
+        case RIGHT:
+            set_sprite_tile(1, 8);
+            break;
+    }
+
     move_sprite(0, player.x, player.y);
+    if (projectile.alive)
+        move_sprite(1, projectile.x, projectile.y);
     // Wait until we're done drawing to the screen.
     wait_vbl_done();
 }
@@ -117,10 +175,15 @@ void draw() {
 void main() {
     show_title();
 
-    unsigned char arrow_palette[] =  {0, RGB_RED, RGB_LIGHTGRAY, RGB_BLACK};
+    const unsigned char arrow_palette[] =  {0, RGB_RED, RGB_LIGHTGRAY, RGB_BLACK};
     set_sprite_palette(0, 8, arrow_palette);
     set_sprite_data(0, 8, arrow);
     set_sprite_tile(0, 0);
+
+    set_sprite_data(8, 4, test_projectile);
+    set_sprite_tile(1, 9);
+    hide_sprite(1);
+    set_sprite_data(13, 1, test_enemy);
 
     initPlayer();
     move_sprite(0, player.x, player.y);
