@@ -29,6 +29,7 @@
 	.globl _test_data
 	.globl _hud_tilemap
 	.globl _hud_data
+	.globl _debug
 	.globl _arrow
 	.globl _player
 	.globl _test_title_map
@@ -42,9 +43,9 @@
 	.area _DATA
 _player::
 	.ds 6
-_draw_frame_count_65536_120:
+_draw_frame_count_65536_139:
 	.ds 2
-_draw_anim_count_65536_120:
+_draw_anim_count_65536_139:
 	.ds 2
 ;--------------------------------------------------------
 ; ram data
@@ -52,6 +53,8 @@ _draw_anim_count_65536_120:
 	.area _INITIALIZED
 _arrow::
 	.ds 128
+_debug::
+	.ds 224
 _hud_data::
 	.ds 320
 _hud_tilemap::
@@ -71,14 +74,14 @@ _test_tilemap::
 	.area _GSINIT
 	.area _GSFINAL
 	.area _GSINIT
-;game.c:72: static int frame_count = 0;
+;game.c:86: static int frame_count = 0;
 	xor	a, a
-	ld	hl, #_draw_frame_count_65536_120
+	ld	hl, #_draw_frame_count_65536_139
 	ld	(hl+), a
 	ld	(hl), a
-;game.c:73: static int anim_count = 0;
+;game.c:87: static int anim_count = 0;
 	xor	a, a
-	ld	hl, #_draw_anim_count_65536_120
+	ld	hl, #_draw_anim_count_65536_139
 	ld	(hl+), a
 	ld	(hl), a
 ;--------------------------------------------------------
@@ -2805,106 +2808,669 @@ _fadein::
 	inc	c
 ;title_screen.c:54: }
 	jr	00111$
-;game.c:36: void initPlayer() {
+;game.c:37: void initPlayer() {
 ;	---------------------------------
 ; Function initPlayer
 ; ---------------------------------
 _initPlayer::
-;game.c:37: player.x = 88;
+;game.c:38: player.x = 88;
 	ld	hl, #_player
 	ld	(hl), #0x58
-;game.c:38: player.y = 78;
+;game.c:39: player.y = 78;
 	ld	hl, #(_player + 1)
 	ld	(hl), #0x4e
-;game.c:39: player.dir = NONE;
+;game.c:40: player.dir = RIGHT;
 	ld	hl, #(_player + 2)
-	ld	(hl), #0x04
-;game.c:40: player.maxHealth = 4;
+	ld	(hl), #0x03
+;game.c:41: player.maxHealth = 4;
 	ld	hl, #(_player + 3)
 	ld	(hl), #0x04
-;game.c:41: player.health = 4;
+;game.c:42: player.health = 4;
 	ld	hl, #(_player + 4)
 	ld	(hl), #0x04
-;game.c:42: player.alive = true;
+;game.c:43: player.alive = true;
 	ld	hl, #(_player + 5)
 	ld	(hl), #0x01
-;game.c:43: }
+;game.c:44: }
 	ret
-;game.c:46: void input() {
+;game.c:56: void input() {
 ;	---------------------------------
 ; Function input
 ; ---------------------------------
 _input::
-;game.c:47: unsigned char j = joypad();
+	add	sp, #-7
+;game.c:57: UBYTE j = joypad();
 	call	_joypad
-	ld	a, e
-;game.c:48: if (j & J_UP) {
-	bit	2, a
-	jr	Z, 00110$
-;game.c:49: player.dir = UP;
-	ld	hl, #(_player + 2)
-	ld	(hl), #0x00
-;game.c:50: player.y--;
-	ld	bc, #_player + 1
-	ld	a, (bc)
+	ldhl	sp,	#6
+	ld	(hl), e
+;game.c:58: if (j & J_UP) {
+	push	hl
+	bit	2, (hl)
+	pop	hl
+	jp	Z,00118$
+;game.c:59: player.dir = UP;
+	ld	bc, #_player + 2
+	xor	a, a
+	ld	(bc), a
+;game.c:60: if (collision(player.x, player.y - 1))
+	ld	a, (#(_player + 1) + 0)
+	ldhl	sp,#0
+	ld	(hl), a
 	dec	a
-	ld	(bc), a
-	ret
-00110$:
-;game.c:51: } else if (j & J_DOWN) {
-	bit	3, a
-	jr	Z, 00107$
-;game.c:52: player.dir = DOWN;
-	ld	hl, #(_player + 2)
-	ld	(hl), #0x01
-;game.c:53: player.y++;
-	ld	bc, #_player + 1
+	ldhl	sp,	#5
+	ld	(hl), a
+	ld	a, (#_player + 0)
+	ldhl	sp,	#6
+	ld	(hl), a
+;game.c:48: if (player.dir == DOWN || player.dir == RIGHT) {
 	ld	a, (bc)
-	inc	a
+	ldhl	sp,	#4
+	ld	(hl), a
+	dec	a
+	jr	Z, 00121$
+	ldhl	sp,	#4
+	ld	a, (hl)
+	sub	a, #0x03
+	jr	NZ, 00122$
+00121$:
+;game.c:49: x += 7;
+	ldhl	sp,	#6
+	ld	a, (hl)
+	add	a, #0x07
+;game.c:50: y += 7;
+	ld	(hl-), a
+	ld	a, (hl)
+	add	a, #0x07
+	ld	(hl), a
+00122$:
+;game.c:52: return test_tilemap[(((y - 16) / 8) * 20) + ((x - 8) / 8)] == 0x15;
+	ldhl	sp,	#5
+	ld	a, (hl)
+	ldhl	sp,	#2
+	ld	(hl+), a
+	xor	a, a
+	ld	(hl-), a
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	hl, #0x0010
+	ld	a, e
+	sub	a, l
+	ld	e, a
+	ld	a, d
+	sbc	a, h
+	ldhl	sp,	#5
+	ld	(hl-), a
+	ld	(hl), e
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
+	bit	7, (hl)
+	jr	Z, 00138$
+	dec	hl
+	dec	hl
+	dec	hl
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	hl, #0xfff7
+	add	hl, de
+	ld	c, l
+	ld	b, h
+00138$:
+	sra	b
+	rr	c
+	sra	b
+	rr	c
+	sra	b
+	rr	c
+	ld	l, c
+	ld	h, b
+	add	hl, hl
+	add	hl, hl
+	add	hl, bc
+	add	hl, hl
+	add	hl, hl
+	push	hl
+	ld	a, l
+	ldhl	sp,	#3
+	ld	(hl), a
+	pop	hl
+	ld	a, h
+	ldhl	sp,	#2
+	ld	(hl), a
+	ldhl	sp,	#6
+	ld	a, (hl)
+	ldhl	sp,	#3
+	ld	(hl+), a
+	xor	a, a
+	ld	(hl-), a
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	hl, #0x0008
+	ld	a, e
+	sub	a, l
+	ld	e, a
+	ld	a, d
+	sbc	a, h
+	ldhl	sp,	#6
+	ld	(hl-), a
+	ld	(hl), e
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
+	bit	7, (hl)
+	jr	Z, 00139$
+	dec	hl
+	dec	hl
+	dec	hl
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	hl, #0xffff
+	add	hl, de
+	ld	c, l
+	ld	b, h
+00139$:
+	sra	b
+	rr	c
+	sra	b
+	rr	c
+	sra	b
+	rr	c
+	ldhl	sp,	#1
+	ld	a,	(hl+)
+	ld	h, (hl)
+	ld	l, a
+	add	hl, bc
+	ld	bc,#_test_tilemap
+	add	hl,bc
+	ld	a, (hl)
+	sub	a, #0x15
+	jp	NZ,00136$
+;game.c:60: if (collision(player.x, player.y - 1))
+;game.c:61: player.y--;
+	ldhl	sp,	#0
+	ld	a, (hl)
+	dec	a
+	ld	(#(_player + 1)),a
+	jp	00136$
+00118$:
+;game.c:62: } else if (j & J_DOWN) {
+	push	hl
+	ldhl	sp,	#8
+	bit	3, (hl)
+	pop	hl
+	jp	Z,00115$
+;game.c:63: player.dir = DOWN;
+	ld	bc, #_player + 2
+	ld	a, #0x01
 	ld	(bc), a
-	ret
-00107$:
-;game.c:54: } else if (j & J_LEFT) {
-	bit	1, a
-	jr	Z, 00104$
-;game.c:55: player.dir = LEFT;
-	ld	bc, #_player+0
+;game.c:64: if(collision(player.x, player.y + 1))
+	ld	a, (#(_player + 1) + 0)
+	ldhl	sp,#0
+	ld	(hl), a
+	inc	a
+	ldhl	sp,	#5
+	ld	(hl), a
+	ld	a, (#_player + 0)
+	ldhl	sp,	#6
+	ld	(hl), a
+;game.c:48: if (player.dir == DOWN || player.dir == RIGHT) {
+	ld	a, (bc)
+	ldhl	sp,	#4
+	ld	(hl), a
+	dec	a
+	jr	Z, 00125$
+	ldhl	sp,	#4
+	ld	a, (hl)
+	sub	a, #0x03
+	jr	NZ, 00126$
+00125$:
+;game.c:49: x += 7;
+	ldhl	sp,	#6
+	ld	a, (hl)
+	add	a, #0x07
+;game.c:50: y += 7;
+	ld	(hl-), a
+	ld	a, (hl)
+	add	a, #0x07
+	ld	(hl), a
+00126$:
+;game.c:52: return test_tilemap[(((y - 16) / 8) * 20) + ((x - 8) / 8)] == 0x15;
+	ldhl	sp,	#5
+	ld	a, (hl)
+	ldhl	sp,	#2
+	ld	(hl+), a
+	xor	a, a
+	ld	(hl-), a
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	hl, #0x0010
+	ld	a, e
+	sub	a, l
+	ld	e, a
+	ld	a, d
+	sbc	a, h
+	ldhl	sp,	#5
+	ld	(hl-), a
+	ld	(hl), e
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
+	bit	7, (hl)
+	jr	Z, 00140$
+	dec	hl
+	dec	hl
+	dec	hl
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	hl, #0xfff7
+	add	hl, de
+	ld	c, l
+	ld	b, h
+00140$:
+	sra	b
+	rr	c
+	sra	b
+	rr	c
+	sra	b
+	rr	c
+	ld	l, c
+	ld	h, b
+	add	hl, hl
+	add	hl, hl
+	add	hl, bc
+	add	hl, hl
+	add	hl, hl
+	push	hl
+	ld	a, l
+	ldhl	sp,	#3
+	ld	(hl), a
+	pop	hl
+	ld	a, h
+	ldhl	sp,	#2
+	ld	(hl), a
+	ldhl	sp,	#6
+	ld	a, (hl)
+	ldhl	sp,	#3
+	ld	(hl+), a
+	xor	a, a
+	ld	(hl-), a
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	hl, #0x0008
+	ld	a, e
+	sub	a, l
+	ld	e, a
+	ld	a, d
+	sbc	a, h
+	ldhl	sp,	#6
+	ld	(hl-), a
+	ld	(hl), e
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
+	bit	7, (hl)
+	jr	Z, 00141$
+	dec	hl
+	dec	hl
+	dec	hl
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	hl, #0xffff
+	add	hl, de
+	ld	c, l
+	ld	b, h
+00141$:
+	sra	b
+	rr	c
+	sra	b
+	rr	c
+	sra	b
+	rr	c
+	ldhl	sp,	#1
+	ld	a,	(hl+)
+	ld	h, (hl)
+	ld	l, a
+	add	hl, bc
+	ld	bc,#_test_tilemap
+	add	hl,bc
+	ld	a, (hl)
+	sub	a, #0x15
+	jp	NZ,00136$
+;game.c:64: if(collision(player.x, player.y + 1))
+;game.c:65: player.y++;
+	ldhl	sp,	#0
+	ld	a, (hl)
+	inc	a
+	ld	(#(_player + 1)),a
+	jp	00136$
+00115$:
+;game.c:66: } else if (j & J_LEFT) {
+	push	hl
+	ldhl	sp,	#8
+	bit	1, (hl)
+	pop	hl
+	jp	Z,00112$
+;game.c:67: player.dir = LEFT;
 	ld	hl, #(_player + 2)
 	ld	(hl), #0x02
-;game.c:56: player.x--;
-	ld	a, (bc)
+;game.c:68: if (collision(player.x - 1, player.y))
+	ld	hl, #_player + 1
+	ld	c, (hl)
+	ld	a, (#_player + 0)
+	ldhl	sp,#0
+	ld	(hl), a
 	dec	a
-	ld	(bc), a
-	ret
-00104$:
-;game.c:57: } else if (j & J_RIGHT) {
-	rrca
-	ret	NC
-;game.c:58: player.dir = RIGHT;
-	ld	bc, #_player+0
+	ldhl	sp,	#6
+	ld	(hl), a
+;game.c:48: if (player.dir == DOWN || player.dir == RIGHT) {
+	ld	hl, #(_player + 2)
+	ld	b, (hl)
+	ld	a, b
+	dec	a
+	jr	Z, 00129$
+	ld	a, b
+	sub	a, #0x03
+	jr	NZ, 00130$
+00129$:
+;game.c:49: x += 7;
+	ldhl	sp,	#6
+	ld	a, (hl)
+	add	a, #0x07
+	ld	(hl), a
+;game.c:50: y += 7;
+	ld	a, c
+	add	a, #0x07
+	ld	c, a
+00130$:
+;game.c:52: return test_tilemap[(((y - 16) / 8) * 20) + ((x - 8) / 8)] == 0x15;
+	ldhl	sp,	#2
+	ld	a, c
+	ld	(hl+), a
+	xor	a, a
+	ld	(hl-), a
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	hl, #0x0010
+	ld	a, e
+	sub	a, l
+	ld	e, a
+	ld	a, d
+	sbc	a, h
+	ldhl	sp,	#5
+	ld	(hl-), a
+	ld	(hl), e
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
+	bit	7, (hl)
+	jr	Z, 00142$
+	dec	hl
+	dec	hl
+	dec	hl
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	hl, #0xfff7
+	add	hl, de
+	ld	c, l
+	ld	b, h
+00142$:
+	sra	b
+	rr	c
+	sra	b
+	rr	c
+	sra	b
+	rr	c
+	ld	l, c
+	ld	h, b
+	add	hl, hl
+	add	hl, hl
+	add	hl, bc
+	add	hl, hl
+	add	hl, hl
+	push	hl
+	ld	a, l
+	ldhl	sp,	#3
+	ld	(hl), a
+	pop	hl
+	ld	a, h
+	ldhl	sp,	#2
+	ld	(hl), a
+	ldhl	sp,	#6
+	ld	a, (hl)
+	ldhl	sp,	#3
+	ld	(hl+), a
+	xor	a, a
+	ld	(hl-), a
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	hl, #0x0008
+	ld	a, e
+	sub	a, l
+	ld	e, a
+	ld	a, d
+	sbc	a, h
+	ldhl	sp,	#6
+	ld	(hl-), a
+	ld	(hl), e
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
+	bit	7, (hl)
+	jr	Z, 00143$
+	dec	hl
+	dec	hl
+	dec	hl
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	hl, #0xffff
+	add	hl, de
+	ld	c, l
+	ld	b, h
+00143$:
+	sra	b
+	rr	c
+	sra	b
+	rr	c
+	sra	b
+	rr	c
+	ldhl	sp,	#1
+	ld	a,	(hl+)
+	ld	h, (hl)
+	ld	l, a
+	add	hl, bc
+	ld	bc,#_test_tilemap
+	add	hl,bc
+	ld	a, (hl)
+	sub	a, #0x15
+	jp	NZ,00136$
+;game.c:68: if (collision(player.x - 1, player.y))
+;game.c:69: player.x--;
+	ldhl	sp,	#0
+	ld	a, (hl)
+	dec	a
+	ld	(#_player),a
+	jp	00136$
+00112$:
+;game.c:70: } else if (j & J_RIGHT) {
+	push	hl
+	ldhl	sp,	#8
+	bit	0, (hl)
+	pop	hl
+	jp	Z,00136$
+;game.c:71: player.dir = RIGHT;
 	ld	hl, #(_player + 2)
 	ld	(hl), #0x03
-;game.c:59: player.x++;
-	ld	a, (bc)
+;game.c:72: if (collision(player.x + 1, player.y))
+	ld	hl, #_player + 1
+	ld	c, (hl)
+	ld	a, (#_player + 0)
+	ldhl	sp,#0
+	ld	(hl), a
 	inc	a
-	ld	(bc), a
-;game.c:62: }
+	ldhl	sp,	#6
+	ld	(hl), a
+;game.c:48: if (player.dir == DOWN || player.dir == RIGHT) {
+	ld	hl, #(_player + 2)
+	ld	b, (hl)
+	ld	a, b
+	dec	a
+	jr	Z, 00133$
+	ld	a, b
+	sub	a, #0x03
+	jr	NZ, 00134$
+00133$:
+;game.c:49: x += 7;
+	ldhl	sp,	#6
+	ld	a, (hl)
+	add	a, #0x07
+	ld	(hl), a
+;game.c:50: y += 7;
+	ld	a, c
+	add	a, #0x07
+	ld	c, a
+00134$:
+;game.c:52: return test_tilemap[(((y - 16) / 8) * 20) + ((x - 8) / 8)] == 0x15;
+	ldhl	sp,	#2
+	ld	a, c
+	ld	(hl+), a
+	xor	a, a
+	ld	(hl-), a
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	hl, #0x0010
+	ld	a, e
+	sub	a, l
+	ld	e, a
+	ld	a, d
+	sbc	a, h
+	ldhl	sp,	#5
+	ld	(hl-), a
+	ld	(hl), e
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
+	bit	7, (hl)
+	jr	Z, 00144$
+	dec	hl
+	dec	hl
+	dec	hl
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	hl, #0xfff7
+	add	hl, de
+	ld	c, l
+	ld	b, h
+00144$:
+	sra	b
+	rr	c
+	sra	b
+	rr	c
+	sra	b
+	rr	c
+	ld	l, c
+	ld	h, b
+	add	hl, hl
+	add	hl, hl
+	add	hl, bc
+	add	hl, hl
+	add	hl, hl
+	push	hl
+	ld	a, l
+	ldhl	sp,	#3
+	ld	(hl), a
+	pop	hl
+	ld	a, h
+	ldhl	sp,	#2
+	ld	(hl), a
+	ldhl	sp,	#6
+	ld	a, (hl)
+	ldhl	sp,	#3
+	ld	(hl+), a
+	xor	a, a
+	ld	(hl-), a
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	hl, #0x0008
+	ld	a, e
+	sub	a, l
+	ld	e, a
+	ld	a, d
+	sbc	a, h
+	ldhl	sp,	#6
+	ld	(hl-), a
+	ld	(hl), e
+	ld	a, (hl+)
+	ld	c, a
+	ld	b, (hl)
+	bit	7, (hl)
+	jr	Z, 00145$
+	dec	hl
+	dec	hl
+	dec	hl
+	ld	a, (hl+)
+	ld	e, a
+	ld	d, (hl)
+	ld	hl, #0xffff
+	add	hl, de
+	ld	c, l
+	ld	b, h
+00145$:
+	sra	b
+	rr	c
+	sra	b
+	rr	c
+	sra	b
+	rr	c
+	ldhl	sp,	#1
+	ld	a,	(hl+)
+	ld	h, (hl)
+	ld	l, a
+	add	hl, bc
+	ld	bc,#_test_tilemap
+	add	hl,bc
+	ld	a, (hl)
+	sub	a, #0x15
+	jr	NZ, 00136$
+;game.c:72: if (collision(player.x + 1, player.y))
+;game.c:73: player.x++;
+	ldhl	sp,	#0
+	ld	a, (hl)
+	inc	a
+	ld	(#_player),a
+00136$:
+;game.c:76: }
+	add	sp, #7
 	ret
-;game.c:64: void logic() {
+;game.c:78: void logic() {
 ;	---------------------------------
 ; Function logic
 ; ---------------------------------
 _logic::
-;game.c:66: }
+;game.c:80: }
 	ret
-;game.c:70: void draw() {
+;game.c:84: void draw() {
 ;	---------------------------------
 ; Function draw
 ; ---------------------------------
 _draw::
 	dec	sp
 	dec	sp
-;game.c:71: unsigned char anim_tiles[2] = {0, 1};
+;game.c:85: unsigned char anim_tiles[2] = {0, 1};
 	ldhl	sp,	#0
 	ld	c, l
 	ld	b, h
@@ -2913,15 +3479,15 @@ _draw::
 	inc	bc
 	ld	a, #0x01
 	ld	(bc), a
-;game.c:75: frame_count++;
-	ld	hl, #_draw_frame_count_65536_120
+;game.c:89: frame_count++;
+	ld	hl, #_draw_frame_count_65536_139
 	inc	(hl)
 	jr	NZ, 00140$
 	inc	hl
 	inc	(hl)
 00140$:
-;game.c:76: if (frame_count >= FRAMES_ANIM_UPDATE) {
-	ld	hl, #_draw_frame_count_65536_120
+;game.c:90: if (frame_count >= FRAMES_ANIM_UPDATE) {
+	ld	hl, #_draw_frame_count_65536_139
 	ld	a, (hl+)
 	sub	a, #0x0a
 	ld	a, (hl)
@@ -2940,13 +3506,13 @@ _draw::
 	scf
 00142$:
 	jr	C, 00102$
-;game.c:77: frame_count = 0;
+;game.c:91: frame_count = 0;
 	xor	a, a
-	ld	hl, #_draw_frame_count_65536_120
+	ld	hl, #_draw_frame_count_65536_139
 	ld	(hl+), a
 	ld	(hl), a
-;game.c:78: anim_count = !anim_count;
-	ld	hl, #_draw_anim_count_65536_120 + 1
+;game.c:92: anim_count = !anim_count;
+	ld	hl, #_draw_anim_count_65536_139 + 1
 	ld	a, (hl-)
 	or	a, (hl)
 	sub	a,#0x01
@@ -2955,7 +3521,7 @@ _draw::
 	ld	(hl+), a
 	ld	(hl), #0x00
 00102$:
-;game.c:80: switch (player.dir) {
+;game.c:94: switch (player.dir) {
 	ld	bc, #_player + 2
 	ld	a, (bc)
 	or	a, a
@@ -2967,63 +3533,63 @@ _draw::
 	sub	a, #0x03
 	jr	Z, 00106$
 	jr	00107$
-;game.c:81: case UP:
+;game.c:95: case UP:
 00103$:
-;game.c:82: player.dir = NONE;
+;game.c:96: player.dir = NONE;
 	ld	a, #0x04
 	ld	(bc), a
-;game.c:83: set_sprite_tile(0, anim_count);
-	ld	hl, #_draw_anim_count_65536_120
+;game.c:97: set_sprite_tile(0, anim_count);
+	ld	hl, #_draw_anim_count_65536_139
 	ld	c, (hl)
 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 2)
 	ld	(hl), c
-;game.c:84: break;
+;game.c:98: break;
 	jr	00107$
-;game.c:85: case DOWN:
+;game.c:99: case DOWN:
 00104$:
-;game.c:86: player.dir = NONE;
+;game.c:100: player.dir = NONE;
 	ld	a, #0x04
 	ld	(bc), a
-;game.c:87: set_sprite_tile(0, anim_count + 4);
-	ld	a, (#_draw_anim_count_65536_120)
+;game.c:101: set_sprite_tile(0, anim_count + 4);
+	ld	a, (#_draw_anim_count_65536_139)
 	add	a, #0x04
 	ld	c, a
 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 2)
 	ld	(hl), c
-;game.c:88: break;
+;game.c:102: break;
 	jr	00107$
-;game.c:89: case LEFT:
+;game.c:103: case LEFT:
 00105$:
-;game.c:90: player.dir = NONE;
+;game.c:104: player.dir = NONE;
 	ld	a, #0x04
 	ld	(bc), a
-;game.c:91: set_sprite_tile(0, anim_count + 6);
-	ld	a, (#_draw_anim_count_65536_120)
+;game.c:105: set_sprite_tile(0, anim_count + 6);
+	ld	a, (#_draw_anim_count_65536_139)
 	add	a, #0x06
 	ld	c, a
 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 2)
 	ld	(hl), c
-;game.c:92: break;
+;game.c:106: break;
 	jr	00107$
-;game.c:93: case RIGHT:
+;game.c:107: case RIGHT:
 00106$:
-;game.c:94: player.dir = NONE;
+;game.c:108: player.dir = NONE;
 	ld	a, #0x04
 	ld	(bc), a
-;game.c:95: set_sprite_tile(0, anim_count + 2);
-	ld	hl, #_draw_anim_count_65536_120
+;game.c:109: set_sprite_tile(0, anim_count + 2);
+	ld	hl, #_draw_anim_count_65536_139
 	ld	c, (hl)
 	inc	c
 	inc	c
 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 2)
 	ld	(hl), c
-;game.c:97: }
+;game.c:111: }
 00107$:
-;game.c:98: move_sprite(0, player.x, player.y);
+;game.c:112: move_sprite(0, player.x, player.y);
 	ld	hl, #(_player + 1)
 	ld	c, (hl)
 	ld	hl, #_player
@@ -3034,22 +3600,20 @@ _draw::
 	ld	a, c
 	ld	(hl+), a
 	ld	(hl), b
-;game.c:100: wait_vbl_done();
-;game.c:101: }
+;game.c:114: wait_vbl_done();
+;game.c:115: }
 	call	_wait_vbl_done
 	pop	hl
 	ret
-;game.c:103: void main() {
+;game.c:117: void main() {
 ;	---------------------------------
 ; Function main
 ; ---------------------------------
 _main::
 	add	sp, #-4
-;game.c:104: show_title();
+;game.c:118: show_title();
 	call	_show_title
-;game.c:105: fadeout();
-	call	_fadeout
-;game.c:107: unsigned char arrow_palette[] =  {0, RGB_RED, RGB_LIGHTGRAY, RGB_BLACK};
+;game.c:120: unsigned char arrow_palette[] =  {0, RGB_RED, RGB_LIGHTGRAY, RGB_BLACK};
 	ldhl	sp,	#0
 	ld	c, l
 	ld	b, h
@@ -3079,13 +3643,13 @@ _main::
 	inc	de
 	xor	a, a
 	ld	(de), a
-;game.c:108: set_sprite_palette(0, 8, arrow_palette);
+;game.c:121: set_sprite_palette(0, 8, arrow_palette);
 	push	bc
 	ld	hl, #0x800
 	push	hl
 	call	_set_sprite_palette
 	add	sp, #4
-;game.c:109: set_sprite_data(0, 8, arrow);
+;game.c:122: set_sprite_data(0, 8, arrow);
 	ld	de, #_arrow
 	push	de
 	ld	hl, #0x800
@@ -3095,9 +3659,9 @@ _main::
 ;/home/cavenderbi/Downloads/gbdk/include/gb/gb.h:1326: shadow_OAM[nb].tile=tile;
 	ld	hl, #(_shadow_OAM + 2)
 	ld	(hl), #0x00
-;game.c:112: initPlayer();
+;game.c:125: initPlayer();
 	call	_initPlayer
-;game.c:113: move_sprite(0, player.x, player.y);
+;game.c:126: move_sprite(0, player.x, player.y);
 	ld	hl, #_player + 1
 	ld	b, (hl)
 	ld	hl, #_player
@@ -3108,14 +3672,14 @@ _main::
 	ld	a, b
 	ld	(hl+), a
 	ld	(hl), c
-;game.c:115: set_bkg_data(21, 9, test_data);
+;game.c:128: set_bkg_data(21, 9, test_data);
 	ld	de, #_test_data
 	push	de
 	ld	hl, #0x915
 	push	hl
 	call	_set_bkg_data
 	add	sp, #4
-;game.c:116: set_bkg_tiles(0, 0, test_tilemapWidth, test_tilemapHeight, test_tilemap);
+;game.c:129: set_bkg_tiles(0, 0, test_tilemapWidth, test_tilemapHeight, test_tilemap);
 	ld	de, #_test_tilemap
 	push	de
 	ld	hl, #0x1014
@@ -3125,14 +3689,14 @@ _main::
 	push	af
 	call	_set_bkg_tiles
 	add	sp, #6
-;game.c:118: set_win_data(0, 20, hud_data);
+;game.c:131: set_win_data(0, 20, hud_data);
 	ld	de, #_hud_data
 	push	de
 	ld	hl, #0x1400
 	push	hl
 	call	_set_win_data
 	add	sp, #4
-;game.c:119: set_win_tiles(0, 0, hud_tilemapWidth, hud_tilemapHeight, hud_tilemap);
+;game.c:132: set_win_tiles(0, 0, hud_tilemapWidth, hud_tilemapHeight, hud_tilemap);
 	ld	de, #_hud_tilemap
 	push	de
 	ld	hl, #0x214
@@ -3147,34 +3711,32 @@ _main::
 	ldh	(_WX_REG + 0), a
 	ld	a, #0x80
 	ldh	(_WY_REG + 0), a
-;game.c:122: SHOW_SPRITES;
+;game.c:135: SHOW_SPRITES;
 	ldh	a, (_LCDC_REG + 0)
 	or	a, #0x02
 	ldh	(_LCDC_REG + 0), a
-;game.c:123: SHOW_BKG;
+;game.c:136: SHOW_BKG;
 	ldh	a, (_LCDC_REG + 0)
 	or	a, #0x01
 	ldh	(_LCDC_REG + 0), a
-;game.c:124: SHOW_WIN;
+;game.c:137: SHOW_WIN;
 	ldh	a, (_LCDC_REG + 0)
 	or	a, #0x20
 	ldh	(_LCDC_REG + 0), a
-;game.c:125: DISPLAY_ON;
+;game.c:138: DISPLAY_ON;
 	ldh	a, (_LCDC_REG + 0)
 	or	a, #0x80
 	ldh	(_LCDC_REG + 0), a
-;game.c:127: fadein();
-	call	_fadein
-;game.c:129: while (true) {
+;game.c:140: while (true) {
 00102$:
-;game.c:130: input();
+;game.c:141: input();
 	call	_input
-;game.c:131: logic();
+;game.c:142: logic();
 	call	_logic
-;game.c:132: draw();
+;game.c:143: draw();
 	call	_draw
 	jr	00102$
-;game.c:134: }
+;game.c:145: }
 	add	sp, #4
 	ret
 	.area _CODE
@@ -3306,6 +3868,231 @@ __xinit__arrow:
 	.db #0x28	; 40
 	.db #0x18	; 24
 	.db #0x18	; 24
+	.db #0x00	; 0
+	.db #0x00	; 0
+__xinit__debug:
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0x18	; 24
+	.db #0x18	; 24
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0x1c	; 28
+	.db #0x1c	; 28
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0x14	; 20
+	.db #0x14	; 20
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x10	; 16
+	.db #0x10	; 16
+	.db #0x1c	; 28
+	.db #0x1c	; 28
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x18	; 24
+	.db #0x18	; 24
+	.db #0x04	; 4
+	.db #0x04	; 4
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x04	; 4
+	.db #0x04	; 4
+	.db #0x18	; 24
+	.db #0x18	; 24
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x14	; 20
+	.db #0x14	; 20
+	.db #0x14	; 20
+	.db #0x14	; 20
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x04	; 4
+	.db #0x04	; 4
+	.db #0x04	; 4
+	.db #0x04	; 4
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1c	; 28
+	.db #0x1c	; 28
+	.db #0x10	; 16
+	.db #0x10	; 16
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x04	; 4
+	.db #0x04	; 4
+	.db #0x18	; 24
+	.db #0x18	; 24
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x10	; 16
+	.db #0x10	; 16
+	.db #0x18	; 24
+	.db #0x18	; 24
+	.db #0x14	; 20
+	.db #0x14	; 20
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x1c	; 28
+	.db #0x1c	; 28
+	.db #0x14	; 20
+	.db #0x14	; 20
+	.db #0x04	; 4
+	.db #0x04	; 4
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0x14	; 20
+	.db #0x14	; 20
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0x14	; 20
+	.db #0x14	; 20
+	.db #0x08	; 8
+	.db #0x08	; 8
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x0c	; 12
+	.db #0x0c	; 12
+	.db #0x14	; 20
+	.db #0x14	; 20
+	.db #0x1c	; 28
+	.db #0x1c	; 28
+	.db #0x04	; 4
+	.db #0x04	; 4
+	.db #0x04	; 4
+	.db #0x04	; 4
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x24	; 36
+	.db #0x24	; 36
+	.db #0x6a	; 106	'j'
+	.db #0x6a	; 106	'j'
+	.db #0x2a	; 42
+	.db #0x2a	; 42
+	.db #0x74	; 116	't'
+	.db #0x74	; 116	't'
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x22	; 34
+	.db #0x22	; 34
+	.db #0x66	; 102	'f'
+	.db #0x66	; 102	'f'
+	.db #0x22	; 34
+	.db #0x22	; 34
+	.db #0x77	; 119	'w'
+	.db #0x77	; 119	'w'
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x22	; 34
+	.db #0x22	; 34
+	.db #0x65	; 101	'e'
+	.db #0x65	; 101	'e'
+	.db #0x23	; 35
+	.db #0x23	; 35
+	.db #0x74	; 116	't'
+	.db #0x74	; 116	't'
+	.db #0x07	; 7
+	.db #0x07	; 7
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x12	; 18
+	.db #0x12	; 18
+	.db #0x95	; 149
+	.db #0x95	; 149
+	.db #0x53	; 83	'S'
+	.db #0x53	; 83	'S'
+	.db #0x94	; 148
+	.db #0x94	; 148
+	.db #0x17	; 23
+	.db #0x17	; 23
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
 __xinit__hud_data:
@@ -3739,12 +4526,6 @@ __xinit__test_data:
 	.db #0x02	; 2
 	.db #0x02	; 2
 	.db #0x02	; 2
-	.db #0x02	; 2
-	.db #0x02	; 2
-	.db #0x02	; 2
-	.db #0x02	; 2
-	.db #0x02	; 2
-	.db #0x02	; 2
 	.db #0x03	; 3
 	.db #0x03	; 3
 	.db #0x00	; 0
@@ -3755,6 +4536,12 @@ __xinit__test_data:
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
 	.db #0xc0	; 192
 	.db #0xc0	; 192
 	.db #0xc0	; 192
@@ -3766,12 +4553,6 @@ __xinit__test_data:
 	.db #0xc0	; 192
 	.db #0x40	; 64
 	.db #0xc0	; 192
-	.db #0x40	; 64
-	.db #0x40	; 64
-	.db #0x40	; 64
-	.db #0x40	; 64
-	.db #0x40	; 64
-	.db #0x40	; 64
 	.db #0x40	; 64
 	.db #0x40	; 64
 	.db #0x40	; 64
@@ -3811,6 +4592,12 @@ __xinit__test_data:
 	.db #0x00	; 0
 	.db #0xff	; 255
 	.db #0xff	; 255
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
+	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0
 	.db #0x00	; 0

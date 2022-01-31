@@ -12,23 +12,25 @@ Symbol Table
     _WX_REG                                                        ****** GX
     _WY_REG                                                        ****** GX
   7 __xinit__arrow                                                 000000 R
-  7 __xinit__hud_data                                              000080 R
-  7 __xinit__hud_tilemap                                           0001C0 R
-  7 __xinit__test_data                                             0001E8 R
-  7 __xinit__test_tilemap                                          000278 R
+  7 __xinit__debug                                                 000080 R
+  7 __xinit__hud_data                                              000160 R
+  7 __xinit__hud_tilemap                                           0002A0 R
+  7 __xinit__test_data                                             0002C8 R
+  7 __xinit__test_tilemap                                          000358 R
   2 _arrow                                                         000000 GR
-  0 _draw                                                          000AFE GR
-  1 _draw_anim_count_65536_120                                     000008 R
-  1 _draw_frame_count_65536_120                                    000006 R
+  2 _debug                                                         000080 GR
+  0 _draw                                                          000DEC GR
+  1 _draw_anim_count_65536_139                                     000008 R
+  1 _draw_frame_count_65536_139                                    000006 R
   0 _fadein                                                        000A68 GR
   0 _fadeout                                                       000A2A GR
-  2 _hud_data                                                      000080 GR
-  2 _hud_tilemap                                                   0001C0 GR
+  2 _hud_data                                                      000160 GR
+  2 _hud_tilemap                                                   0002A0 GR
   0 _initPlayer                                                    000A9C GR
   0 _input                                                         000ABB GR
     _joypad                                                        ****** GX
-  0 _logic                                                         000AFD GR
-  0 _main                                                          000BA3 GR
+  0 _logic                                                         000DEB GR
+  0 _main                                                          000E91 GR
   1 _player                                                        000000 GR
     _set_bkg_data                                                  ****** GX
     _set_bkg_tiles                                                 ****** GX
@@ -38,8 +40,8 @@ Symbol Table
     _set_win_tiles                                                 ****** GX
     _shadow_OAM                                                    ****** GX
   0 _show_title                                                    000000 GR
-  2 _test_data                                                     0001E8 GR
-  2 _test_tilemap                                                  000278 GR
+  2 _test_data                                                     0002C8 GR
+  2 _test_tilemap                                                  000358 GR
   0 _test_title_data                                               000032 GR
   0 _test_title_map                                                0008C2 GR
     _wait_vbl_done                                                 ****** GX
@@ -51,13 +53,13 @@ Hexadecimal [24-Bits]
 
 Area Table
 
-   0 _CODE                                      size    C5B   flags    0
+   0 _CODE                                      size    F43   flags    0
    1 _DATA                                      size      A   flags    0
-   2 _INITIALIZED                               size    3B8   flags    0
+   2 _INITIALIZED                               size    498   flags    0
    3 _DABS                                      size      0   flags    8
    4 _HOME                                      size      0   flags    0
    5 _GSINIT                                    size      C   flags    0
    6 _GSFINAL                                   size      0   flags    0
-   7 _INITIALIZER                               size    3B8   flags    0
+   7 _INITIALIZER                               size    498   flags    0
    8 _CABS                                      size      0   flags    8
 

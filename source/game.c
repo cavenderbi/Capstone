@@ -11,6 +11,7 @@
 // Include the sprites defined in their respective C folders. 
 // Thanks to GBTD for letting me not have to write 8x8 sprites in hex by hand.
 #include "../sprites/arrow.c"
+#include "../sprites/debug.c"
 
 // Include the tiles and tilemap for the HUD. 
 #include "../sprites/hud.c"
@@ -36,27 +37,40 @@ struct Player {
 void initPlayer() {
     player.x = 88;
     player.y = 78;
-    player.dir = NONE;
+    player.dir = RIGHT;
     player.maxHealth = 4;
     player.health = 4;
     player.alive = true;
 }
 
+// Returns false when the player collides with the background tiles.
+inline bool collision(UBYTE x, UBYTE y) {
+    if (player.dir == DOWN || player.dir == RIGHT) {
+        x += 7;
+        y += 7;
+    }
+    return test_tilemap[(((y - 16) / 8) * 20) + ((x - 8) / 8)] == 0x15;
+}
+
 // Reads the user input and responds apropriately. 
 void input() {
-    unsigned char j = joypad();
+    UBYTE j = joypad();
     if (j & J_UP) {
         player.dir = UP;
-        player.y--;
+        if (collision(player.x, player.y - 1))
+            player.y--;
     } else if (j & J_DOWN) {
         player.dir = DOWN;
-        player.y++;
+        if(collision(player.x, player.y + 1))
+            player.y++;
     } else if (j & J_LEFT) {
         player.dir = LEFT;
-        player.x--;
+        if (collision(player.x - 1, player.y))
+            player.x--;
     } else if (j & J_RIGHT) {
         player.dir = RIGHT;
-        player.x++;
+        if (collision(player.x + 1, player.y))
+            player.x++;
     }
     
 }
@@ -102,7 +116,6 @@ void draw() {
 
 void main() {
     show_title();
-    fadeout();
 
     unsigned char arrow_palette[] =  {0, RGB_RED, RGB_LIGHTGRAY, RGB_BLACK};
     set_sprite_palette(0, 8, arrow_palette);
@@ -123,8 +136,6 @@ void main() {
     SHOW_BKG;
     SHOW_WIN;
     DISPLAY_ON;
-
-    fadein();
     
     while (true) {
         input();
