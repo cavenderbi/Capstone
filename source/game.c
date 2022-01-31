@@ -1,3 +1,5 @@
+#include "game.h"
+
 void initPlayer() {
     player.x = 88;
     player.y = 78;
@@ -55,20 +57,20 @@ void logic() {
     // Move the projectiles.
     switch (projectile.dir) {
         case UP:
-            if (collision(projectile.x, projectile.y - 1))
-                projectile.y--;
+            if (collision(projectile.x, projectile.y - 4))
+                projectile.y -= 4;
             break;
         case DOWN:
-            if (collision(projectile.x, projectile.y + 1))
-                projectile.y++;
+            if (collision(projectile.x, projectile.y + 4))
+                projectile.y += 4;
                 break;
         case LEFT:
-            if (collision(projectile.x - 1, projectile.y))
-                projectile.x--;
+            if (collision(projectile.x - 4, projectile.y))
+                projectile.x -= 4;
             break;
         case RIGHT:
-            if (collision(projectile.x + 1, projectile.y))
-                projectile.x++;
+            if (collision(projectile.x + 4, projectile.y))
+                projectile.x += 4;
             break;
     }
     if (!collision(projectile.x, projectile.y)){

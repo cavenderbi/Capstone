@@ -1,3 +1,5 @@
+#pragma once
+
 // Include the gameboy functions. 
 #include <gb/gb.h>
 #include <gb/cgb.h>
@@ -59,4 +61,3 @@ inline bool collision(UBYTE, UBYTE);
 void input();
 void logic();
 void draw();
-void main();
