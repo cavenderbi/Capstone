@@ -51,7 +51,12 @@ struct TestEnemy {
 };
 
 void initPlayer() {
-    player = (struct Player) {88, 78, RIGHT, 4, 4, true};
+    player.x = 88;
+    player.y = 78;
+    player.dir = RIGHT;
+    player.maxHealth = 4;
+    player.health = 4;
+    player.alive = true;
 }
 
 // Shoots a projectile from the given x/y location. 
@@ -69,7 +74,7 @@ inline bool collision(UBYTE x, UBYTE y) {
         x += 7;
         y += 7;
     }
-    return test_tilemap[(((y - 16) / 8) * 20) + ((x - 8) / 8)] == 0x15;
+    return get_bkg_tile_xy((x - 8) / 8, ((y - 16) / 8)) == 0x15;
 }
 
 // Reads the user input and responds apropriately. 
@@ -119,7 +124,7 @@ void logic() {
             break;
     }
     if (!collision(projectile.x, projectile.y)){
-        hide_sprite(1);
+        move_sprite(1, 0, 0);
         projectile.alive = false;
     }
 }
