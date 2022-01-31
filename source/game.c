@@ -1,8 +1,6 @@
 // Include the gameboy functions. 
 #include <gb/gb.h>
 #include <gb/cgb.h>
-#include <gbdk/font.h>
-#include <gb/drawing.h>
 // Booleans are nice to have.
 #include <stdbool.h>
 #include <stdio.h>
@@ -44,13 +42,16 @@ struct Projectile {
     bool alive;
 } projectile;
 
+struct TestEnemy {
+    UBYTE x;
+    UBYTE y; 
+    Direction dir;
+    UBYTE health;
+    const UBYTE maxHealth;
+};
+
 void initPlayer() {
-    player.x = 88;
-    player.y = 78;
-    player.dir = RIGHT;
-    player.maxHealth = 4;
-    player.health = 4;
-    player.alive = true;
+    player = (struct Player) {88, 78, RIGHT, 4, 4, true};
 }
 
 // Shoots a projectile from the given x/y location. 
