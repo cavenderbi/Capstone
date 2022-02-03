@@ -5,6 +5,8 @@
 /*  Displays the tite screen and waits for the player to press start. */
 void show_title() {
     // Load in the title screen tiles.
+    const UWORD title_palette[] = { RGB_WHITE, RGB_BLUE, RGB_DARKBLUE };
+    set_bkg_palette(0, 1, title_palette);
     set_bkg_data(0, 137, test_title_data);
     set_bkg_tiles(0, 0, 20, 18, test_title_map);
 

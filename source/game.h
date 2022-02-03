@@ -52,12 +52,13 @@ struct TestEnemy {
     UBYTE y; 
     Direction dir;
     UBYTE health;
-    const UBYTE maxHealth;
-};
+} testEnemy;
 
 void initPlayer();
+void initTestEnemy();
 void shoot(uint8_t, uint8_t, Direction);
-inline bool collision(UBYTE, UBYTE);
+inline bool collision(UBYTE, UBYTE, Direction);
+inline bool spritecollision(UBYTE, UBYTE, UBYTE, UBYTE, UBYTE, UBYTE, UBYTE, UBYTE);
 void input();
 void logic();
 void draw();
