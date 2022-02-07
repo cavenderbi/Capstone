@@ -31,7 +31,7 @@ inline bool collision(UBYTE x, UBYTE y, Direction dir) {
         x += 7;
         y += 7;
     }
-    return get_bkg_tile_xy((x - 8) / 8, ((y - 16) / 8)) == 0x15;
+    return get_bkg_tile_xy((x - 8) / 8, ((y - 16) / 8)) == 0x14;
 }
 
 // Returns true when two sprites collide with each other.
@@ -156,11 +156,14 @@ void draw() {
 
 void main() {
     show_title();
-
-    const UWORD arrow_palette[] =  {0, RGB_RED, RGB_PINK, RGB_DARKRED};
-    set_sprite_palette(0, 8, arrow_palette);
+    const UWORD brick_palette[] = { RGB_WHITE, RGB_LIGHTGRAY, RGB_DARKGRAY, RGB_BLACK };
+    const UWORD heart_palette[] = { 0, RGB_PINK, RGB_RED, RGB_DARKRED };
+    const UWORD palette[] = { RGBHTML(0xd0d058), RGBHTML(0xa0a840), RGBHTML(0x708028), RGBHTML(0x405010) };
+    set_sprite_palette(0, 1, palette);
+    set_sprite_palette(1, 1, heart_palette);
     set_sprite_data(0, 8, arrow);
     set_sprite_tile(0, 0);
+    set_sprite_prop(0, 1);
 
     set_sprite_data(8, 4, test_projectile);
     set_sprite_tile(1, 9);
@@ -173,10 +176,9 @@ void main() {
     initTestEnemy();
     move_sprite(0, player.x, player.y);
 
-    const UWORD bkg_palette[] = { RGB_WHITE, RGB_RED, RGB_LIGHTGRAY, RGB_BLACK };
-    set_bkg_palette(0, 1, bkg_palette);
-    set_bkg_data(21, 9, test_data);
-    set_bkg_tiles(0, 0, test_tilemapWidth, test_tilemapHeight, test_tilemap);
+    set_bkg_data(20, 44, testroomtiles);
+    set_bkg_tiles(0, 0, testroom2Width, testroom2Height, testroom2);
+    set_bkg_palette(0, 1, brick_palette);
 
     set_win_data(0, 20, hud_data);
     set_win_tiles(0, 0, hud_tilemapWidth, hud_tilemapHeight, hud_tilemap);

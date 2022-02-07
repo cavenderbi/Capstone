@@ -22,6 +22,9 @@
 #include "../sprites/test.c"
 #include "../tilemaps/test.c"
 
+#include "../tilemaps/testroom_tilemap2.c"
+#include "../sprites/testroomtiles.c"
+
 #define FRAMES_ANIM_UPDATE 10
 
 typedef enum Direction { UP, DOWN, LEFT, RIGHT, NONE } Direction;

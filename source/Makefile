@@ -30,4 +30,4 @@ game.gb:	game.o
 	$(CC) $(CFLAGS) -Wm-yC -o game.gb game.o
 # Run the game in the emulator. 
 emu: game.gb
-	wine ~/Downloads/bgbw64/bgb64.exe game.gb
+	wine ~/Downloads/bgbw64/bgb64.exe game.gb &
