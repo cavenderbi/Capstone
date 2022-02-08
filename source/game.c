@@ -67,43 +67,50 @@ void input() {
 
 // Controls other game functions such as moving projectiles. 
 void logic() {
-    // Move the projectiles.
-
-    if (projectile.alive && !collision(projectile.x, projectile.y, projectile.dir)){
-        move_sprite(1, 0, 0);
-        projectile.alive = false;
-    } else {
-        switch (projectile.dir) {
-            case UP:
-                if (collision(projectile.x, projectile.y - 4, projectile.dir))
-                    projectile.y -= 4;
-                break;
-            case DOWN:
-                if (collision(projectile.x, projectile.y + 1, projectile.dir))
-                    projectile.y += 4;
-                    break;
-            case LEFT:
-                if (collision(projectile.x - 4, projectile.y, projectile.dir))
-                    projectile.x -= 4;
-                break;
-            case RIGHT:
-                if (collision(projectile.x + 4, projectile.y, projectile.dir))
-                    projectile.x += 4;
-                break;
-        }
+    switch (projectile.dir) {
+        case UP:
+            if (collision(projectile.x, projectile.y - 4, projectile.dir))
+                projectile.y -= 4;
+            else {
+                hide_sprite(1);
+                projectile.alive = false;
+            }
+            break;
+        case DOWN:
+            if (collision(projectile.x, projectile.y + 1, projectile.dir))
+                projectile.y += 4;
+            else {
+                hide_sprite(1);
+                projectile.alive = false;
+            }
+            break;
+        case LEFT:
+            if (collision(projectile.x - 4, projectile.y, projectile.dir))
+                projectile.x -= 4;
+            else {
+                hide_sprite(1);
+                projectile.alive = false;
+            }
+            break;
+        case RIGHT:
+            if (collision(projectile.x + 4, projectile.y, projectile.dir))
+                projectile.x += 4;
+            else {
+                hide_sprite(1);
+                projectile.alive = false;
+            }
+            break;
     }
     
-
     if (spritecollision(projectile.x, projectile.y, 8, 3, testEnemy.x, testEnemy.y, 8, 8)) {
         testEnemy.health--;
-        if (testEnemy.health == 0)
+        if (testEnemy.health == 0) 
             hide_sprite(2);
     }
 }
 
 // Every ten frames, update the animation. 
 void draw() {
-    unsigned char anim_tiles[2] = {0, 1};
     static int frame_count = 0;
     static int anim_count = 0;
     // Only animate every 10 frames. 
@@ -126,7 +133,7 @@ void draw() {
             set_sprite_tile(0, anim_count + 2);
             break;
     }
-
+    // Set the projectile sprite.
     switch (projectile.dir) {
         case UP:
             set_sprite_tile(1, 9);
@@ -145,11 +152,11 @@ void draw() {
             set_sprite_prop(1, get_sprite_prop(1) & ~S_FLIPX);
             break;
     }
-
+    // Move the player sprite. 
     move_sprite(0, player.x, player.y);
+    // Move the projectile sprite if it's alive.
     if (projectile.alive)
         move_sprite(1, projectile.x, projectile.y);
-    move_sprite(2, testEnemy.x, testEnemy.y);
     // Wait until we're done drawing to the screen.
     wait_vbl_done();
 }
