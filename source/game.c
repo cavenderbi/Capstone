@@ -102,11 +102,8 @@ void logic() {
             break;
     }
     
-    if (spritecollision(projectile.x, projectile.y, 8, 3, testEnemy.x, testEnemy.y, 8, 8)) {
+    if (testEnemy.health > 0 && spritecollision(projectile.x, projectile.y, 8, 3, testEnemy.x, testEnemy.y, 8, 8))
         testEnemy.health--;
-        if (testEnemy.health == 0) 
-            hide_sprite(2);
-    }
 }
 
 // Every ten frames, update the animation. 
@@ -157,6 +154,9 @@ void draw() {
     // Move the projectile sprite if it's alive.
     if (projectile.alive)
         move_sprite(1, projectile.x, projectile.y);
+    if (testEnemy.health > 0)
+        move_sprite(2, testEnemy.x, testEnemy.y);
+    else hide_sprite(2);
     // Wait until we're done drawing to the screen.
     wait_vbl_done();
 }
