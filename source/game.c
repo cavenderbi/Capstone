@@ -40,7 +40,7 @@ inline bool spritecollision(UBYTE x1, UBYTE y1, UBYTE w1, UBYTE h1, UBYTE x2, UB
 }
 
 // Reads the user input and responds apropriately. 
-void input() {
+inline void input() {
     UBYTE j = joypad();
     if (j & J_UP) {
         player.dir = UP;
@@ -66,7 +66,7 @@ void input() {
 }
 
 // Controls other game functions such as moving projectiles. 
-void logic() {
+inline void logic() {
     switch (projectile.dir) {
         case UP:
             if (collision(projectile.x, projectile.y - 4, projectile.dir))
@@ -107,7 +107,7 @@ void logic() {
 }
 
 // Every ten frames, update the animation. 
-void draw() {
+inline void draw() {
     static int frame_count = 0;
     static int anim_count = 0;
     // Only animate every 10 frames. 
@@ -161,8 +161,7 @@ void draw() {
     wait_vbl_done();
 }
 
-void main() {
-    show_title();
+inline void init_sprites() {
     const UWORD brick_palette[] = { RGB_WHITE, RGB_LIGHTGRAY, RGB_DARKGRAY, RGB_BLACK };
     const UWORD heart_palette[] = { 0, RGB_PINK, RGB_RED, RGB_DARKRED };
     const UWORD palette[] = { RGBHTML(0xd0d058), RGBHTML(0xa0a840), RGBHTML(0x708028), RGBHTML(0x405010) };
@@ -179,10 +178,6 @@ void main() {
     set_sprite_data(13, 1, test_enemy);
     set_sprite_tile(2, 13);
 
-    initPlayer();
-    initTestEnemy();
-    move_sprite(0, player.x, player.y);
-
     set_bkg_data(20, 44, testroomtiles);
     set_bkg_tiles(0, 0, testroom2Width, testroom2Height, testroom2);
     set_bkg_palette(0, 1, brick_palette);
@@ -190,6 +185,15 @@ void main() {
     set_win_data(0, 20, hud_data);
     set_win_tiles(0, 0, hud_tilemapWidth, hud_tilemapHeight, hud_tilemap);
     move_win(8, 128);
+}
+
+void main() {
+    show_title();
+
+    initPlayer();
+    initTestEnemy();
+
+    init_sprites();
 
     SHOW_SPRITES;
     SHOW_BKG;
