@@ -39,8 +39,6 @@ struct Player {
     // health values
     uint8_t maxHealth;
     uint8_t health;
-    // is player alive?
-    bool alive;
 } player;
 
 struct Projectile {
@@ -58,11 +56,14 @@ struct TestEnemy {
     UBYTE health;
 } testEnemy;
 
+struct Node * proj_head = NULL;
+struct Node * enemy_head = NULL;
+
 void initPlayer();
 void initTestEnemy();
 void shoot(uint8_t, uint8_t, Direction);
 inline bool collision(UBYTE, UBYTE, Direction);
 inline bool spritecollision(UBYTE, UBYTE, UBYTE, UBYTE, UBYTE, UBYTE, UBYTE, UBYTE);
-void input();
-void logic();
-void draw();
+inline void input();
+inline void logic();
+inline void draw();

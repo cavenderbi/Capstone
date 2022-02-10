@@ -6,7 +6,6 @@ void initPlayer() {
     player.dir = RIGHT;
     player.maxHealth = 4;
     player.health = 4;
-    player.alive = true;
 }
 
 void initTestEnemy() {
@@ -101,8 +100,8 @@ inline void logic() {
             }
             break;
     }
-    
-    if (testEnemy.health > 0 && spritecollision(projectile.x, projectile.y, 8, 3, testEnemy.x, testEnemy.y, 8, 8))
+
+    if (testEnemy.health > 0 && projectile.alive && spritecollision(projectile.x, projectile.y, 8, 3, testEnemy.x, testEnemy.y, 8, 8))
         testEnemy.health--;
 }
 

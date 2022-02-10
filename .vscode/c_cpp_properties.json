@@ -4,13 +4,11 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "~/Downloads/gbdk/include/**",
-                "/home/cavenderbi/Downloads/gbdk/include"
+                "~/Downloads/gbdk/include/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
-            "cStandard": "gnu17",
-            "cppStandard": "c++17",
+            "cStandard": "gnu89",
             "intelliSenseMode": "linux-gcc-x64"
         }
     ],
