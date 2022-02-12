@@ -23,11 +23,18 @@ make.bat: Makefile
 	$(CC) -o $@ $<
 
 clean:
-	rm -f *.o *.lst *.map *.gb *.ihx *.sym *.cdb *.adb *.asm
+	rm -f *.o *.lst *.map *.gb *.ihx *.sym *.cdb *.adb *.asm *.sav ../*.gb
 
 # Link file, and write 0x80 at position 0x143 in header
 game.gb:	game.o
 	$(CC) $(CFLAGS) -Wm-yC -o game.gb game.o
+	mv ./game.gb ../game.gb
 # Run the game in the emulator. 
 emu: game.gb
-	wine ~/Downloads/bgbw64/bgb64.exe game.gb &
+	wine ~/Downloads/bgbw64/bgb64.exe ../game.gb &
+
+vector_test: vector_test.o vector.o
+	$(CC) $(CFLAGS) -Wm-yC -o vector.gb test_vectors.c vector.c
+
+vector_test.o: test_vectors.c vector.h
+	$(CC) $(CFLAGS) -c vector.c
