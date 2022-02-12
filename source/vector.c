@@ -42,7 +42,7 @@ void add(Vector * vector, void * element) {
     @param vector A pointer to the vector to be removed from. 
     @param index The index of the element to be removed. */
 void delete(Vector * vector, int index) {
-    if (index >= 0 && index < vector->size)
+    if (index < 0 || index >= vector->size)
         return;
 
     vector->data[index] = NULL;
