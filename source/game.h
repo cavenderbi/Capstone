@@ -10,6 +10,11 @@
 // Include the title screen. 
 #include "title_screen.c"
 
+#include "direction.h"
+#include "collision.c"
+#include "projectile.c"
+#include "vector.c"
+
 // Include the sprites defined in their respective C folders. 
 // Thanks to GBTD for letting me not have to write 8x8 sprites in hex by hand.
 #include "../sprites/arrow.c"
@@ -28,7 +33,6 @@
 
 #define FRAMES_ANIM_UPDATE 10
 
-typedef enum Direction { UP, DOWN, LEFT, RIGHT, NONE } Direction;
 // Using a player struct to clean up the code a bit.
 struct Player {
     // x and y positions
@@ -41,29 +45,15 @@ struct Player {
     uint8_t health;
 } player;
 
-struct Projectile {
-    uint8_t x;
-    uint8_t y;
-    Direction dir;
-    uint8_t speed;
-    bool alive;
-} projectile;
-
 struct TestEnemy {
-    UBYTE x;
-    UBYTE y; 
+    uint8_t x;
+    uint8_t y; 
     Direction dir;
-    UBYTE health;
+    uint8_t health;
 } testEnemy;
-
-struct Node * proj_head = NULL;
-struct Node * enemy_head = NULL;
 
 void initPlayer();
 void initTestEnemy();
-void shoot(uint8_t, uint8_t, Direction);
-inline bool collision(UBYTE, UBYTE, Direction);
-inline bool spritecollision(UBYTE, UBYTE, UBYTE, UBYTE, UBYTE, UBYTE, UBYTE, UBYTE);
 inline void input();
 inline void logic();
 inline void draw();

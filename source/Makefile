@@ -32,9 +32,3 @@ game.gb:	game.o
 # Run the game in the emulator. 
 emu: game.gb
 	wine ~/Downloads/bgbw64/bgb64.exe ../game.gb &
-
-vector_test: vector_test.o vector.o
-	$(CC) $(CFLAGS) -Wm-yC -o vector.gb test_vectors.c vector.c
-
-vector_test.o: test_vectors.c vector.h
-	$(CC) $(CFLAGS) -c vector.c

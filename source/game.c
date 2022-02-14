@@ -15,47 +15,24 @@ void initTestEnemy() {
     testEnemy.health = 4;
 }
 
-// Shoots a projectile from the given x/y location. 
-void shoot(uint8_t x, uint8_t y, Direction dir) {
-    projectile.x = x;
-    projectile.y = y;
-    projectile.dir = dir;
-    projectile.alive = true;
-    move_sprite(1, x, y);
-}
-
-// Returns false when the player collides with the background tiles.
-inline bool collision(UBYTE x, UBYTE y, Direction dir) {
-    if (dir == DOWN || dir == RIGHT) {
-        x += 7;
-        y += 7;
-    }
-    return get_bkg_tile_xy((x - 8) / 8, ((y - 16) / 8)) == 0x14;
-}
-
-// Returns true when two sprites collide with each other.
-inline bool spritecollision(UBYTE x1, UBYTE y1, UBYTE w1, UBYTE h1, UBYTE x2, UBYTE y2, UBYTE w2, UBYTE h2) {
-    return (x1 < (x2 + w2) && (x1 + w1) > x2 && y1 < (y2 + h2) && (y1 + h1) > y2);
-}
-
 // Reads the user input and responds apropriately. 
 inline void input() {
-    UBYTE j = joypad();
+    uint8_t j = joypad();
     if (j & J_UP) {
         player.dir = UP;
-        if (collision(player.x, player.y - 1, player.dir))
+        if (sprite_tile_collision(player.x, player.y - 1, player.dir))
             player.y--;
     } else if (j & J_DOWN) {
         player.dir = DOWN;
-        if(collision(player.x, player.y + 1, player.dir))
+        if(sprite_tile_collision(player.x, player.y + 1, player.dir))
             player.y++;
     } else if (j & J_LEFT) {
         player.dir = LEFT;
-        if (collision(player.x - 1, player.y, player.dir))
+        if (sprite_tile_collision(player.x - 1, player.y, player.dir))
             player.x--;
     } else if (j & J_RIGHT) {
         player.dir = RIGHT;
-        if (collision(player.x + 1, player.y, player.dir))
+        if (sprite_tile_collision(player.x + 1, player.y, player.dir))
             player.x++;
     }
 
@@ -66,43 +43,15 @@ inline void input() {
 
 // Controls other game functions such as moving projectiles. 
 inline void logic() {
-    switch (projectile.dir) {
-        case UP:
-            if (collision(projectile.x, projectile.y - 4, projectile.dir))
-                projectile.y -= 4;
-            else {
-                hide_sprite(1);
-                projectile.alive = false;
-            }
-            break;
-        case DOWN:
-            if (collision(projectile.x, projectile.y + 1, projectile.dir))
-                projectile.y += 4;
-            else {
-                hide_sprite(1);
-                projectile.alive = false;
-            }
-            break;
-        case LEFT:
-            if (collision(projectile.x - 4, projectile.y, projectile.dir))
-                projectile.x -= 4;
-            else {
-                hide_sprite(1);
-                projectile.alive = false;
-            }
-            break;
-        case RIGHT:
-            if (collision(projectile.x + 4, projectile.y, projectile.dir))
-                projectile.x += 4;
-            else {
-                hide_sprite(1);
-                projectile.alive = false;
-            }
-            break;
-    }
+    updateProjs();
 
-    if (testEnemy.health > 0 && projectile.alive && spritecollision(projectile.x, projectile.y, 8, 3, testEnemy.x, testEnemy.y, 8, 8))
-        testEnemy.health--;
+    int i;
+    if (testEnemy.health > 0)
+        for (i = 0; i < VECTOR_SIZE(proj_vector); i++) {
+            Projectile * current = VECTOR_GET(proj_vector, Projectile *, i);
+            if (sprite_sprite_collision(current->x, current->y, 8, 3, testEnemy.x, testEnemy.y, 8, 8))
+                testEnemy.health--;
+        }
 }
 
 // Every ten frames, update the animation. 
@@ -129,30 +78,9 @@ inline void draw() {
             set_sprite_tile(0, anim_count + 2);
             break;
     }
-    // Set the projectile sprite.
-    switch (projectile.dir) {
-        case UP:
-            set_sprite_tile(1, 9);
-            set_sprite_prop(1, get_sprite_prop(1) | S_FLIPY);
-            break;
-        case DOWN:
-            set_sprite_tile(1, 9);
-            set_sprite_prop(1, get_sprite_prop(1) & ~S_FLIPY);
-            break;
-        case LEFT:
-            set_sprite_tile(1, 8);
-            set_sprite_prop(1, get_sprite_prop(1) | S_FLIPX);
-            break;
-        case RIGHT:
-            set_sprite_tile(1, 8);
-            set_sprite_prop(1, get_sprite_prop(1) & ~S_FLIPX);
-            break;
-    }
     // Move the player sprite. 
     move_sprite(0, player.x, player.y);
     // Move the projectile sprite if it's alive.
-    if (projectile.alive)
-        move_sprite(1, projectile.x, projectile.y);
     if (testEnemy.health > 0)
         move_sprite(2, testEnemy.x, testEnemy.y);
     else hide_sprite(2);
@@ -160,10 +88,10 @@ inline void draw() {
     wait_vbl_done();
 }
 
-inline void init_sprites() {
-    const UWORD brick_palette[] = { RGB_WHITE, RGB_LIGHTGRAY, RGB_DARKGRAY, RGB_BLACK };
-    const UWORD heart_palette[] = { 0, RGB_PINK, RGB_RED, RGB_DARKRED };
-    const UWORD palette[] = { RGBHTML(0xd0d058), RGBHTML(0xa0a840), RGBHTML(0x708028), RGBHTML(0x405010) };
+inline void initSprites() {
+    const uint16_t brick_palette[] = { RGB_WHITE, RGB_LIGHTGRAY, RGB_DARKGRAY, RGB_BLACK };
+    const uint16_t heart_palette[] = { 0, RGB_PINK, RGB_RED, RGB_DARKRED };
+    const uint16_t palette[] = { RGBHTML(0xd0d058), RGBHTML(0xa0a840), RGBHTML(0x708028), RGBHTML(0x405010) };
     set_sprite_palette(0, 1, palette);
     set_sprite_palette(1, 1, heart_palette);
     set_sprite_data(0, 8, arrow);
@@ -191,8 +119,9 @@ void main() {
 
     initPlayer();
     initTestEnemy();
+    initProjs();
 
-    init_sprites();
+    initSprites();
 
     SHOW_SPRITES;
     SHOW_BKG;

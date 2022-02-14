@@ -2,17 +2,15 @@
 
 #include "collision.h"
 #include "direction.h"
-//#include "node.h"
-
-//#include <malloc.h>
+#include "vector.h"
 
 typedef struct {
     Direction dir;
     int x, y;
 } Projectile;
-// Head of the list of projectiles.
-/* struct Node * proj_head;
-int new_index = 0;
+Vector proj_vector;
 
+void initProjs();
 void shoot(uint8_t, uint8_t, Direction);
-void update_projs(); */
+void updateProjs();
+void drawProjs();
