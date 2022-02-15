@@ -16,7 +16,7 @@ void initTestEnemy() {
 }
 
 // Reads the user input and responds apropriately. 
-inline void input(uint8_t frame_count) {
+inline void input() {
     uint8_t j = joypad();
     if (j & J_UP) {
         player.dir = UP;
@@ -37,8 +37,13 @@ inline void input(uint8_t frame_count) {
     }
 
     // If player presses A, shoot test projectile.
-    if (j & J_A && frame_count == 0) 
-        shoot(player.x, player.y, player.dir);
+    static bool shot = true;
+    if (j & J_A) {
+        if (shot) {
+            shot = false;
+            shoot(player.x, player.y, player.dir);
+        }
+    } else shot = true;
 }
 
 // Controls other game functions such as moving projectiles. 
@@ -130,7 +135,7 @@ void main() {
             anim_count = !anim_count;
         }
 
-        input(frame_count);
+        input();
         logic();
         draw(anim_count);
     }

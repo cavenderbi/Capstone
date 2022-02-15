@@ -1,4 +1,4 @@
-CC	= ~/Downloads/gbdk/bin/lcc -Wa-l -Wl-m -Wf--std-c2x
+CC	= ~/Downloads/gbdk/bin/lcc -Wa-l -Wl-m -Wf--std-c2x -tempdir=tmp/
 
 # CFLAGS	=
 
