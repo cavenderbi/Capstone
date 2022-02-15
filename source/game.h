@@ -54,6 +54,6 @@ struct TestEnemy {
 
 void initPlayer();
 void initTestEnemy();
-inline void input();
+inline void input(uint8_t);
 inline void logic();
-inline void draw();
+inline void draw(uint8_t);

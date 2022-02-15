@@ -23,7 +23,7 @@ inline bool sprite_sprite_collision(uint8_t x_1, uint8_t y_1, uint8_t width_1, u
     @param y The y-coordinate of the sprite.
     @param width The width of the sprite. 
     @param height The height of the sprite.
-    @returns Returns true if the sprite overlaps with a collidable background tile. */
+    @returns Returns false if the sprite overlaps with a collidable background tile. */
 inline bool sprite_tile_collision(uint8_t x, uint8_t y, Direction dir) {
     if (dir == DOWN || dir == RIGHT) {
         x += 7;

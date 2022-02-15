@@ -16,7 +16,7 @@ void initTestEnemy() {
 }
 
 // Reads the user input and responds apropriately. 
-inline void input() {
+inline void input(uint8_t frame_count) {
     uint8_t j = joypad();
     if (j & J_UP) {
         player.dir = UP;
@@ -37,7 +37,7 @@ inline void input() {
     }
 
     // If player presses A, shoot test projectile.
-    if (j & J_A) 
+    if (j & J_A && frame_count == 0) 
         shoot(player.x, player.y, player.dir);
 }
 
@@ -46,24 +46,17 @@ inline void logic() {
     updateProjs();
 
     int i;
+    Projectile * current;
     if (testEnemy.health > 0)
-        for (i = 0; i < VECTOR_SIZE(proj_vector); i++) {
-            Projectile * current = VECTOR_GET(proj_vector, Projectile *, i);
+        for (i = 0; i < projectiles.count; i++) {
+            current = &projectiles.array[i];
             if (sprite_sprite_collision(current->x, current->y, 8, 3, testEnemy.x, testEnemy.y, 8, 8))
                 testEnemy.health--;
         }
 }
 
 // Every ten frames, update the animation. 
-inline void draw() {
-    static int frame_count = 0;
-    static int anim_count = 0;
-    // Only animate every 10 frames. 
-    frame_count++;
-    if (frame_count >= FRAMES_ANIM_UPDATE) {
-        frame_count = 0;
-        anim_count = !anim_count;
-    }
+inline void draw(uint8_t anim_count) {
     switch (player.dir) {
         case UP:
             set_sprite_tile(0, anim_count);
@@ -82,8 +75,8 @@ inline void draw() {
     move_sprite(0, player.x, player.y);
     // Move the projectile sprite if it's alive.
     if (testEnemy.health > 0)
-        move_sprite(2, testEnemy.x, testEnemy.y);
-    else hide_sprite(2);
+        move_sprite(17, testEnemy.x, testEnemy.y);
+    else hide_sprite(17);
     // Wait until we're done drawing to the screen.
     wait_vbl_done();
 }
@@ -103,7 +96,7 @@ inline void initSprites() {
     hide_sprite(1);
 
     set_sprite_data(13, 1, test_enemy);
-    set_sprite_tile(2, 13);
+    set_sprite_tile(17, 13);
 
     set_bkg_data(20, 44, testroomtiles);
     set_bkg_tiles(0, 0, testroom2Width, testroom2Height, testroom2);
@@ -128,9 +121,17 @@ void main() {
     SHOW_WIN;
     DISPLAY_ON;
     
+    uint8_t frame_count = 0;
+    uint8_t anim_count = 0; 
     while (true) {
-        input();
+        frame_count++;
+        if (frame_count >= FRAMES_ANIM_UPDATE) {
+            frame_count = 0;
+            anim_count = !anim_count;
+        }
+
+        input(frame_count);
         logic();
-        draw();
+        draw(anim_count);
     }
 }

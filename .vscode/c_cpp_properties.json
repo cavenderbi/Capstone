@@ -8,7 +8,7 @@
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
-            "cStandard": "gnu89",
+            "cStandard": "gnu17",
             "intelliSenseMode": "linux-gcc-x64"
         }
     ],

@@ -1,4 +1,4 @@
-CC	= ~/Downloads/gbdk/bin/lcc -Wa-l -Wl-m
+CC	= ~/Downloads/gbdk/bin/lcc -Wa-l -Wl-m -Wf--std-c2x
 
 # CFLAGS	=
 

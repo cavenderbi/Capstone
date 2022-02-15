@@ -79,5 +79,10 @@ void vector_free(Vector * vector) {
 
 /*  Returns the current size of the vector, not counting empty indecies. 
     @param vector A pointer to the vector to be sized. 
-    @returns The size of the vecter, not counting empty indecies. */
+    @returns The size of the vector, not counting empty indecies. */
 int get_size(Vector * vector) { return vector->size; }
+
+/*  Returns the current capacity of the vector. 
+    @param vector A pointer to the vector to get the capacity of. 
+    @returns The capacity of the vector. */
+int get_capacity(Vector * vector) { return vector->capacity; }

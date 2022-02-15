@@ -2,13 +2,18 @@
 
 #include "collision.h"
 #include "direction.h"
-#include "vector.h"
+
+const int max_projs = 16;
 
 typedef struct {
     Direction dir;
-    int x, y;
+    uint8_t x, y;
+    bool valid;
 } Projectile;
-Vector proj_vector;
+struct {
+    Projectile array[16];
+    uint8_t count;
+} projectiles;
 
 void initProjs();
 void shoot(uint8_t, uint8_t, Direction);

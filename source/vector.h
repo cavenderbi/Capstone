@@ -10,6 +10,7 @@
 #define VECTOR_GET(vec, type, index) ((type) get(&vec, index))
 #define VECTOR_FREE(vec) vector_free(&vec)
 #define VECTOR_SIZE(vec) get_size(&vec)
+#define VECTOR_CAPACITY(vec) get_capacity(&vec)
 
 typedef struct {
     // An array of pointers to structs.
@@ -27,3 +28,4 @@ void delete(Vector *, int);
 void * get(Vector *, int);
 void vector_free(Vector *);
 int get_size(Vector *);
+int get_capacity(Vector *);
