@@ -10,10 +10,11 @@
 // Include the title screen. 
 #include "title_screen.c"
 
-#include "direction.h"
+
 #include "collision.c"
+#include "direction.h"
+#include "enemy.c"
 #include "projectile.c"
-#include "vector.c"
 
 // Include the sprites defined in their respective C folders. 
 // Thanks to GBTD for letting me not have to write 8x8 sprites in hex by hand.
@@ -45,15 +46,7 @@ struct Player {
     uint8_t health;
 } player;
 
-struct TestEnemy {
-    uint8_t x;
-    uint8_t y; 
-    Direction dir;
-    uint8_t health;
-} testEnemy;
-
 void initPlayer();
-void initTestEnemy();
 inline void input();
 inline void logic();
 inline void draw(uint8_t);

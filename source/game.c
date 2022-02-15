@@ -8,13 +8,6 @@ void initPlayer() {
     player.health = 4;
 }
 
-void initTestEnemy() {
-    testEnemy.x = 60;
-    testEnemy.y = 60;
-    testEnemy.dir = UP;
-    testEnemy.health = 4;
-}
-
 // Reads the user input and responds apropriately. 
 inline void input() {
     uint8_t j = joypad();
@@ -49,15 +42,6 @@ inline void input() {
 // Controls other game functions such as moving projectiles. 
 inline void logic() {
     updateProjs();
-
-    int i;
-    Projectile * current;
-    if (testEnemy.health > 0)
-        for (i = 0; i < projectiles.count; i++) {
-            current = &projectiles.array[i];
-            if (sprite_sprite_collision(current->x, current->y, 8, 3, testEnemy.x, testEnemy.y, 8, 8))
-                testEnemy.health--;
-        }
 }
 
 // Every ten frames, update the animation. 

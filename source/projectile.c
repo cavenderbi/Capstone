@@ -33,6 +33,7 @@ void updateProjs() {
     Projectile * current;
     for (i = 0; i < sizeof(projectiles.array) / sizeof(projectiles.array[0]); i++) {
         current = &projectiles.array[i];
+        /*  Move valid projectiles. */
         if (current->valid) {
             switch (current->dir) {
                 case UP:
@@ -67,6 +68,12 @@ void updateProjs() {
                         move_sprite(1 + i, current->x, current->y);
                     } else { current->valid = false; projectiles.count--; }
                     break;
+            }
+            /*  Projectile enemy collision. */
+            if (testEnemy.health > 0 && sprite_sprite_collision(current->x, current->y, 8, 4, testEnemy.x, testEnemy.y, 8, 8)) {
+                testEnemy.health--;
+                projectiles.count--;
+                current->valid = false;
             }
         } else hide_sprite(1 + i);
     }
