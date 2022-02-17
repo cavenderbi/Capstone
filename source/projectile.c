@@ -1,10 +1,9 @@
 #include "projectile.h"
 
-/*  Initialize the projectile vector. */
+/*  Initialize the projectile array. */
 void initProjs() {
     projectiles.count = 0;
-    int i;
-    for (i = 0; i < sizeof(projectiles.array) / sizeof(projectiles.array[0]); i++)
+    for (int i = 0; i < sizeof(projectiles.array) / sizeof(projectiles.array[0]); i++)
         projectiles.array[i].valid = false;
 }
 
@@ -28,20 +27,18 @@ void shoot(uint8_t x, uint8_t y, Direction dir) {
 /*  Updates the projectiles position and detects projectile collision. 
     Then updates the relevant sprites. */
 void updateProjs() {
-    int i;
     const int speed = 4;
     Projectile * current;
-    for (i = 0; i < sizeof(projectiles.array) / sizeof(projectiles.array[0]); i++) {
+    for (int i = 0; i < sizeof(projectiles.array) / sizeof(projectiles.array[0]); i++) {
         current = &projectiles.array[i];
-        /*  Move valid projectiles. */
         if (current->valid) {
+            /*  Move valid projectiles. */
             switch (current->dir) {
                 case UP:
                     if (sprite_tile_collision(current->x, current->y - speed, current->dir)) {
                         current->y -= speed;
                         set_sprite_tile(1 + i, 9);
                         set_sprite_prop(1 + i, get_sprite_prop(1 + i) | S_FLIPY);
-                        move_sprite(1 + i, current->x, current->y);
                     } else { current->valid = false; projectiles.count--; }
                     break;
                 case DOWN:
@@ -49,7 +46,6 @@ void updateProjs() {
                         current->y += speed;
                         set_sprite_tile(1 + i, 9);
                         set_sprite_prop(1 + i, get_sprite_prop(1 + i) & ~S_FLIPY);
-                        move_sprite(1 + i, current->x, current->y);
                     } else { current->valid = false; projectiles.count--; }
                     break;
                 case LEFT:
@@ -57,7 +53,6 @@ void updateProjs() {
                         current->x -= speed;
                         set_sprite_tile(1 + i, 8);
                         set_sprite_prop(1 + i, get_sprite_prop(1 + i) | S_FLIPX);
-                        move_sprite(1 + i, current->x, current->y);
                     } else { current->valid = false; projectiles.count--; }
                     break;
                 case RIGHT:
@@ -65,15 +60,19 @@ void updateProjs() {
                         current->x += speed;
                         set_sprite_tile(1 + i, 8);
                         set_sprite_prop(1 + i, get_sprite_prop(1 + i) & ~S_FLIPX);
-                        move_sprite(1 + i, current->x, current->y);
                     } else { current->valid = false; projectiles.count--; }
                     break;
             }
+            move_sprite(1 + i, current->x, current->y);
             /*  Projectile enemy collision. */
-            if (testEnemy.health > 0 && sprite_sprite_collision(current->x, current->y, 8, 4, testEnemy.x, testEnemy.y, 8, 8)) {
-                testEnemy.health--;
-                projectiles.count--;
-                current->valid = false;
+            Enemy * currentEnemy;
+            for (int i = 0; i < sizeof(enemies.array) / sizeof(enemies.array[0]); i++) {
+                currentEnemy = &enemies.array[i];
+                if (currentEnemy->health > 0 && sprite_sprite_collision(current->x, current->y, 8, 4, currentEnemy->x, currentEnemy->y, 8, 8)) {
+                    currentEnemy->health--;
+                    projectiles.count--;
+                    current->valid = false;
+                } 
             }
         } else hide_sprite(1 + i);
     }

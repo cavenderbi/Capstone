@@ -42,6 +42,7 @@ inline void input() {
 // Controls other game functions such as moving projectiles. 
 inline void logic() {
     updateProjs();
+    updateEnemies();
 }
 
 // Every ten frames, update the animation. 
@@ -100,10 +101,13 @@ void main() {
     show_title();
 
     initPlayer();
-    initTestEnemy();
+    initEnemies();
     initProjs();
 
     initSprites();
+
+    spawnEnemy(60, 60, UP, 2);
+    spawnEnemy(80, 60, UP, 4);
 
     SHOW_SPRITES;
     SHOW_BKG;
