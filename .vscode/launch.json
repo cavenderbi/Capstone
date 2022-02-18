@@ -9,6 +9,7 @@
             "request": "launch",
             "name": "Launch in Emulicious",
             "program": "/home/cavenderbi/Documents/Spring 2022/Capstone/source/game.gb",
+            "emuliciousPath": "/home/cavenderbi/Downloads/emulicious/Emulicious.jar",
             "port": 58870,
             "stopOnEntry": true
         }

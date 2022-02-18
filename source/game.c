@@ -63,10 +63,6 @@ inline void draw(uint8_t anim_count) {
     }
     // Move the player sprite. 
     move_sprite(0, player.x, player.y);
-    // Move the projectile sprite if it's alive.
-    if (testEnemy.health > 0)
-        move_sprite(17, testEnemy.x, testEnemy.y);
-    else hide_sprite(17);
     // Wait until we're done drawing to the screen.
     wait_vbl_done();
 }
@@ -106,8 +102,9 @@ void main() {
 
     initSprites();
 
-    spawnEnemy(60, 60, UP, 2);
-    spawnEnemy(80, 60, UP, 4);
+    spawnEnemy(60, 60, UP, 4);
+    spawnEnemy(80, 60, UP, 8);
+    spawnEnemy(120, 60, UP, 4);
 
     SHOW_SPRITES;
     SHOW_BKG;

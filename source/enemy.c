@@ -11,8 +11,8 @@ void initTestEnemy() {
 /*  Initialize the enemies array. */
 void initEnemies() {
     enemies.count = 0;
-    for (int i = 0; i < sizeof(enemies.array) / sizeof(enemies.array[0]); i++)
-        enemies.array[i].health = 0;
+    for (Enemy * current = enemies.array; current < &enemies.array[15]; current++)
+        current->health = 0;
 }
 
 /*  Spawns in an enemy at the given x,y location, facing the given direction,
@@ -34,9 +34,9 @@ void spawnEnemy(uint8_t x, uint8_t y, Direction dir, uint8_t health) {
 
 /*  Updates enemy and relevant sprites. */
 void updateEnemies() {
-    Enemy * current;
-    for (int i = 0; i < sizeof(enemies.array) / sizeof(enemies.array[0]); i++) {
-        current = &enemies.array[i];
+    int i = 0;
+    for (Enemy * current = enemies.array; current < &enemies.array[15]; current++, i++) {
+        //printf("%d\n", current->health);
         if (current->health > 0) {
             set_sprite_tile(17 + i, 13);
             move_sprite(17 + i, current->x, current->y);
