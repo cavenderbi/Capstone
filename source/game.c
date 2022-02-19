@@ -102,6 +102,8 @@ void main() {
 
     initSprites();
 
+    Game roguelight;
+
     spawnEnemy(60, 60, UP, 4);
     spawnEnemy(80, 60, UP, 8);
     spawnEnemy(120, 60, UP, 4);
