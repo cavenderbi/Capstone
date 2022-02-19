@@ -1,34 +1,22 @@
-CC	= ~/Downloads/gbdk/bin/lcc -Wa-l -Wl-m -Wf--std-c2x
+CC	= ~/Downloads/gbdk/bin/lcc 
 
-# CFLAGS	=
+CFLAGS	= -Wa-l -Wl-m -Wf--std-c2x -Wm-yC
 
-BINS	= game.gb
+DEBUGFLAGS = -Wf-debug -Wl-y -Wl-j
 
-all:	$(BINS)
+BINS = game.gb
 
-make.bat: Makefile
-	@echo "REM Automatically generated from Makefile" > make.bat
-	@make -sn | sed y/\\//\\\\/ | grep -v make >> make.bat
-
-%.o:	%.c
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-%.o:	%.s
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-%.s:	%.c
-	$(CC) $(CFLAGS) -S -o $@ $<
-
-%.gb:	%.o
-	$(CC) -o $@ $<
+all: $(BINS)
 
 clean:
-	rm -f *.o *.lst *.map *.gb *.ihx *.sym *.cdb *.adb *.asm *.sav ../*.gb
+	rm -f *.o *.lst *.map *.gb *.ihx *.sym *.cdb *.adb *.asm *.sav *.noi *.cdb
 
 # Link file, and write 0x80 at position 0x143 in header
-game.gb:	game.o
-	$(CC) $(CFLAGS) -Wm-yC -o game.gb game.o
-	mv ./game.gb ../game.gb
+game.gb: game.o
+	$(CC) $(CFLAGS) -o game.gb game.c
+# Compile with debug flags.
+debug: game.o
+	$(CC) $(CFLAGS) -debug -o game.gb game.c
 # Run the game in the emulator. 
 emu: game.gb
-	wine ~/Downloads/bgbw64/bgb64.exe ../game.gb &
+	wine ~/Downloads/bgbw64/bgb64.exe game.gb &

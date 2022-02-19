@@ -18,4 +18,3 @@ struct {
 void initProjs();
 void shoot(uint8_t, uint8_t, Direction);
 void updateProjs();
-void drawProjs();

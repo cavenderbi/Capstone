@@ -6,3 +6,7 @@
 *.sym
 *.gb
 *.sav
+*.adb
+*.cdb
+*.noi
+/.vscode
