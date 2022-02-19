@@ -1,12 +1,4 @@
 #include "enemy.h"
-/*  Initialize the test enemy.
-    TODO: Remove this and never use it. */
-void initTestEnemy() {
-    testEnemy.x = 60;
-    testEnemy.y = 60;
-    testEnemy.dir = UP;
-    testEnemy.health = 2;
-}
 
 /*  Initialize the enemies array. */
 void initEnemies() {
@@ -32,13 +24,29 @@ void spawnEnemy(uint8_t x, uint8_t y, Direction dir, uint8_t health) {
         }
 }
 
-/*  Updates enemy and relevant sprites. */
+/*  Updates enemy and relevant sprites. 
+    For now, they bounce back and forth against the wall.
+    TODO: Implement true pathfinding. A* pathfinding maybe? */
 void updateEnemies() {
     int i = 0;
+    const int speed = 1;
     for (Enemy * current = enemies.array; current < &enemies.array[15]; current++, i++) {
         //printf("%d\n", current->health);
         if (current->health > 0) {
-            set_sprite_tile(17 + i, 13);
+            switch (current->dir) {
+                case UP:
+                    if (sprite_tile_collision(current->x, current->y - speed, current->dir)) {
+                        current->y -= speed;
+                        set_sprite_tile(17 + i, 13);
+                    } else { current->dir = DOWN; }
+                    break;
+                case DOWN:
+                    if (sprite_tile_collision(current->x, current->y + speed, current->dir)) {
+                        current->y += speed;
+                        set_sprite_tile(17 + i, 13);
+                    } else { current->dir = UP; }
+                    break;
+            }
             move_sprite(17 + i, current->x, current->y);
         } else hide_sprite(17 + i);
     }

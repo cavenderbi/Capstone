@@ -65,7 +65,7 @@ void updateProjs() {
             }
             move_sprite(1 + i, current->x, current->y);
             /*  Projectile enemy collision. */
-            for (Enemy * currentEnemy = enemies.array; currentEnemy < &enemies.array[15]; currentEnemy++) {
+            for (Enemy * currentEnemy = enemies.array; currentEnemy != enemies.array + 16; currentEnemy++) {
                 if (currentEnemy->health > 0 && sprite_sprite_collision(current->x, current->y, 8, 4, currentEnemy->x, currentEnemy->y, 8, 8)) {
                     currentEnemy->health--;
                     projectiles.count--;

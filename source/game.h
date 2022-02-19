@@ -9,28 +9,12 @@
 #include <stdio.h>
 // Include the title screen. 
 #include "title_screen.c"
-
-
 #include "collision.c"
 #include "direction.h"
+#include "entity.h"
 #include "enemy.c"
 #include "projectile.c"
-
-// Include the sprites defined in their respective C folders. 
-// Thanks to GBTD for letting me not have to write 8x8 sprites in hex by hand.
-#include "../sprites/arrow.c"
-#include "../sprites/test_projectile.c"
-#include "../sprites/test_enemy.c"
-
-// Include the tiles and tilemap for the HUD. 
-#include "../sprites/hud.c"
-#include "../tilemaps/hud.c"
-
-#include "../sprites/test.c"
-#include "../tilemaps/test.c"
-
-#include "../tilemaps/testroom_tilemap2.c"
-#include "../sprites/testroomtiles.c"
+#include "sprites.h"
 
 #define FRAMES_ANIM_UPDATE 10
 
@@ -45,6 +29,17 @@ struct Player {
     uint8_t maxHealth;
     uint8_t health;
 } player;
+
+typedef struct {
+    Entity player, enemies[16];
+    struct _map {
+        uint8_t x_pos, y_pos;
+    } map, old_map;
+    struct _camera {
+        uint16_t x_pos, y_pos;
+    } camera, old_camera;
+} Game;
+int i = sizeof(Game);
 
 void initPlayer();
 inline void input();

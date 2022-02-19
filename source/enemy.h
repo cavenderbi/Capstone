@@ -1,13 +1,7 @@
 #pragma once 
 
+#include "collision.h"
 #include "direction.h"
-
-struct TestEnemy {
-    uint8_t x;
-    uint8_t y; 
-    Direction dir;
-    uint8_t health;
-} testEnemy;
 
 typedef struct {
     uint8_t x;
