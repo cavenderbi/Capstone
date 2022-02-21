@@ -1,6 +1,6 @@
 /*
 
- BEANMAN.H
+ LAMPBOY.H
 
  Include File.
 
@@ -10,7 +10,7 @@
   Compression          : None.
   Counter              : None.
   Tile size            : 8 x 8
-  Tiles                : 0 to 3
+  Tiles                : 0 to 12
 
   Palette colors       : None.
   SGB Palette          : None.
@@ -24,8 +24,8 @@
 
 
 /* Bank of tiles. */
-#define beanman_spritesBank 0
+#define lampboyBank 0
 /* Start of tile array. */
-extern unsigned char beanman_sprites[];
+extern unsigned char lampboy[];
 
-/* End of BEANMAN.H */
+/* End of LAMPBOY.H */
