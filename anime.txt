@@ -3,6 +3,6 @@
 0 : head
 1 : idle
 2-3 (repeating) : walking down
-4-6 (repeating) : waling right
-7-9 (repeating) : walking left
+4-7 (repeating) : waling right
+7-9 (+ 4 at the end) (repeating) : walking left
 10 - 11 (repeating) : walking up
