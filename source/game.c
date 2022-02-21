@@ -37,6 +37,14 @@ inline void input() {
             shoot(player.x, player.y, player.dir);
         }
     } else shot = true;
+    static bool not_moved = true;
+    if (!sprite_sprite_collision(camera.x_pos, camera.y_pos, 20, 16, player.x >> 3, player.y >> 3, 1, 1)){
+        if (not_moved) {
+            not_moved = false;
+            player.x += 8;
+            scroll_camera(player.dir);
+        } 
+    } else not_moved = true;
 }
 
 // Controls other game functions such as moving projectiles. 
@@ -62,7 +70,7 @@ inline void draw(uint8_t anim_count) {
             break;
     }
     // Move the player sprite. 
-    move_sprite(0, player.x, player.y);
+    move_sprite(0, player.x - camera.x_pos, player.y - camera.y_pos);
     // Wait until we're done drawing to the screen.
     wait_vbl_done();
 }
@@ -83,9 +91,9 @@ inline void initSprites() {
 
     set_sprite_data(13, 1, test_enemy);
     set_sprite_tile(17, 13);
-
-    set_bkg_data(20, 44, testroomtiles);
-    set_bkg_submap(0, 0, 31, 31, testroom_big, BigWidth);
+/* 
+    set_bkg_data(20, 7, testroom_big_data);
+    set_bkg_submap(0, 0, 31, 31, testroom_big, BigWidth); */
     set_bkg_palette(0, 1, brick_palette);
 
     set_win_data(0, 20, hud_data);
@@ -101,8 +109,9 @@ void main() {
     initProjs();
 
     initSprites();
+    init_camera(testroom_big_data, 20, 7, testroom_big, BigWidth, BigHeight);
 
-    Game roguelight;
+    //Game roguelight;
 
     spawnEnemy(60, 60, UP, 4);
     spawnEnemy(80, 60, UP, 8);

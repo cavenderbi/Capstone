@@ -9,6 +9,7 @@
 #include <stdio.h>
 // Include the title screen. 
 #include "title_screen.c"
+#include "camera.c"
 #include "collision.c"
 #include "direction.h"
 #include "entity.h"
@@ -39,7 +40,6 @@ typedef struct {
         uint16_t x_pos, y_pos;
     } camera, old_camera;
 } Game;
-int i = sizeof(Game);
 
 void initPlayer();
 inline void input();

@@ -1,6 +1,7 @@
 {
     "files.associations": {
-        "test.c": "cpp"
+        "test.c": "cpp",
+        "collision.c": "cpp"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }

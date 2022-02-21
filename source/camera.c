@@ -1,21 +1,5 @@
 #include "camera.h"
 
-static struct _cam {
-    uint16_t x_pos, y_pos;
-} camera, old_camera;
-static struct _tilemap {
-    uint8_t x_pos, y_pos;
-} map, old_map;
-
-static uint8_t * tilemap;
-static uint8_t tilemap_height;
-static uint8_t tilemap_width;
-
-#define CAMERA_MAX_X ((tilemap_width - 20) * 8)
-#define CAMERA_MAX_Y ((tilemap_width - 18) * 8)
-
-#define MIN(A, B) A < B ? A : B
-
 /*  Initializes the camera scrolling behavior.  
     @param tiles Pointer to the tiles.
     @param tile_offset Which index do the tiles start at in VRAM? 
@@ -52,31 +36,31 @@ void init_camera(uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, uint8_
 /*  Scrolls the camera in the given direction for the given distance in tiles. 
     @param dir Direction to scroll the camera. 
     @param dist Distance in 8x8 tiles to scroll the camera. */
-void scroll_camera(Direction dir, uint8_t dist) {
+void scroll_camera(Direction dir) {
     switch (dir) {
         case UP:
-            for (int i = 0; i <= dist << 3u; i++) {
+            for (int i = 0; i <= 16 << 3u; i++) {
                 camera.y_pos--;
                 wait_vbl_done();
                 set_camera();
             }
             break;
         case DOWN: 
-            for (int i = 0; i <= dist << 3u; i++) {
+            for (int i = 0; i <= 16 << 3u; i++) {
                 camera.y_pos++;
                 wait_vbl_done();
                 set_camera();
             }
             break;
         case LEFT:
-            for (int i = 0; i <= dist << 3u; i++) {
+            for (int i = 0; i <= 20 << 3u; i++) {
                 camera.x_pos--;
                 wait_vbl_done();
                 set_camera();
             }
             break;
         case RIGHT:
-            for (int i = 0; i <= dist << 3u; i++) {
+            for (int i = 0; i <= 20 << 3u; i++) {
                 camera.x_pos++;
                 wait_vbl_done();
                 set_camera();

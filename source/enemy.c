@@ -47,7 +47,7 @@ void updateEnemies() {
                     } else { current->dir = UP; }
                     break;
             }
-            move_sprite(17 + i, current->x, current->y);
+            move_sprite(17 + i, current->x - camera.x_pos, current->y - camera.y_pos);
         } else hide_sprite(17 + i);
     }
 }

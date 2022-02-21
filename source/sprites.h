@@ -13,6 +13,5 @@
 #include "../sprites/test.c"
 #include "../tilemaps/test.c"
 
-#include "../tilemaps/testroom_tilemap2.c"
-#include "../sprites/testroomtiles.c"
+#include "../sprites/bigtiles.c"
 #include "../tilemaps/TestRoomBig.c"
