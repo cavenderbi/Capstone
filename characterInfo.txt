@@ -5,4 +5,4 @@
 2-3 (repeating) : walking down
 4-7 (repeating) : waling right
 7-10 (repeating) : walking left
-11 - 12 (repeating) : walking up
+11-12 (repeating) : walking up
