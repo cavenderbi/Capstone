@@ -85,7 +85,7 @@ inline void initSprites() {
     set_sprite_tile(17, 13);
 
     set_bkg_data(20, 44, testroomtiles);
-    set_bkg_tiles(0, 0, testroom2Width, testroom2Height, testroom2);
+    set_bkg_tiles(0, 0, 31, 31, testroom_big);
     set_bkg_palette(0, 1, brick_palette);
 
     set_win_data(0, 20, hud_data);

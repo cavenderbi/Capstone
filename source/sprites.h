@@ -15,3 +15,4 @@
 
 #include "../tilemaps/testroom_tilemap2.c"
 #include "../sprites/testroomtiles.c"
+#include "../tilemaps/TestRoomBig.c"

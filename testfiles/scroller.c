@@ -91,7 +91,7 @@ void scroll_cam(Direction dir) {
 void main() {
     DISPLAY_OFF;
     SHOW_BKG;
-    set_bkg_data(0, 241u, bigmap_tiles);
+    set_bkg_data(0, sizeof(bigmap_tiles) >> 3u, bigmap_tiles);
 
     map.x = 0;
     map.y = 0;

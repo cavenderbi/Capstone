@@ -10,5 +10,5 @@ void scroll_camera(Direction dir, uint8_t dist);
 static void set_camera();
 inline uint8_t get_camera_x_pos() { return camera.x_pos; }
 inline uint8_t get_camera_y_pos() { return camera.y_pos; }
-inline uint8_t get_tilemap_x_pos() { return tilemap.x_pos; }
-inline uint8_t get_tilemap_x_pos() { return tilemap.y_pos; }
+inline uint8_t get_tilemap_x_pos() { return map.x_pos; }
+inline uint8_t get_tilemap_x_pos() { return map.y_pos; }
