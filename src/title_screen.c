@@ -1,7 +1,5 @@
-#include <gb/gb.h>
-#include <gb/cgb.h>
-#include "../sprites/test_title_data.c"
-#include "../tilemaps/test_title_map.c"
+#include "title_screen.h"
+
 /*  Displays the tite screen and waits for the player to press start. */
 void show_title() {
     // Load in the title screen tiles.

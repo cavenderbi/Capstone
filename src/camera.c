@@ -1,5 +1,13 @@
 #include "camera.h"
 
+Cam camera, old_camera;
+
+Map map, old_map;
+
+static uint8_t * tilemap;
+static uint8_t tilemap_height;
+static uint8_t tilemap_width;
+
 /*  Initializes the camera scrolling behavior.  
     @param tiles Pointer to the tiles.
     @param tile_offset Which index do the tiles start at in VRAM? 
@@ -21,7 +29,7 @@ void init_camera(uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, uint8_
     old_map.x_pos = 0xff;
     old_map.y_pos = 0xff;
     /*  Draw a 20x18 (Gameboy screen sized) submap of the tilemap. */
-    set_bkg_submap(map.x_pos, map.y_pos, 20, 18, tilemap, tilemap_width);
+    set_bkg_submap(map.x_pos, map.y_pos, 20, 16, tilemap, tilemap_width);
     DISPLAY_ON;
 
     camera.x_pos = 0;
@@ -36,36 +44,58 @@ void init_camera(uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, uint8_
 /*  Scrolls the camera in the given direction for the given distance in tiles. 
     @param dir Direction to scroll the camera. 
     @param dist Distance in 8x8 tiles to scroll the camera. */
-void scroll_camera(Direction dir) {
-    switch (dir) {
-        case UP:
-            for (int i = 0; i <= 16 << 3u; i++) {
-                camera.y_pos--;
-                wait_vbl_done();
-                set_camera();
-            }
-            break;
-        case DOWN: 
-            for (int i = 0; i <= 16 << 3u; i++) {
-                camera.y_pos++;
-                wait_vbl_done();
-                set_camera();
-            }
-            break;
-        case LEFT:
-            for (int i = 0; i <= 20 << 3u; i++) {
-                camera.x_pos--;
-                wait_vbl_done();
-                set_camera();
-            }
-            break;
-        case RIGHT:
-            for (int i = 0; i <= 20 << 3u; i++) {
-                camera.x_pos++;
-                wait_vbl_done();
-                set_camera();
-            }
-            break;
+void scroll_camera(Player * player) {
+    /*  If the player is below the y-minPt and below the x-maxPt, then they left the room from the top*/
+    /*  UP  */
+    switch (player->dir) {
+    case UP:
+        hideEnemies();
+        for (int i = 0; i <= 128; i++) {
+            camera.y_pos--;
+            wait_vbl_done();
+            set_camera();
+            if (player->y_pos - 16 > camera.y_pos)
+                scroll_sprite(0, 0, 1);
+            else player->y_pos--;
+        }
+        player->room_j--;
+        break;
+    case DOWN:
+        hideEnemies();
+        for (int i = 0; i <= 128; i++) {
+            camera.y_pos++;
+            wait_vbl_done();
+            set_camera();
+            if (player->y_pos - 16 > camera.y_pos)
+                scroll_sprite(0, 0, -1);
+            else player->y_pos++;
+        }
+        player->room_j++;
+        break;
+    case LEFT:
+        hideEnemies();
+        for (int i = 0; i <= 160; i++) {
+            camera.x_pos--;
+            wait_vbl_done();
+            set_camera();
+            if (player->x_pos > camera.x_pos)
+                scroll_sprite(0, 1, 0);
+            else player->x_pos--;
+        }
+        player->room_i--;
+        break;
+    case RIGHT:
+        hideEnemies();
+        for (int i = 0; i <= 160; i++) {
+            camera.x_pos++;
+            wait_vbl_done();
+            set_camera();
+            if (player->x_pos - 8 > camera.x_pos)
+                scroll_sprite(0, -1, 0);
+            else player->x_pos++;
+        }
+        player->room_i++;
+        break;
     }
 }
 
@@ -101,3 +131,7 @@ static void set_camera() {
     old_camera.x_pos = camera.x_pos;
     old_camera.y_pos = camera.y_pos;
 }
+inline uint8_t get_camera_x_pos() { return camera.x_pos; }
+inline uint8_t get_camera_y_pos() { return camera.y_pos; }
+inline uint8_t get_tilemap_x_pos() { return map.x_pos; }
+inline uint8_t get_tilemap_y_pos() { return map.y_pos; }

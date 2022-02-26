@@ -1,6 +1,6 @@
 /*
 
- TEST.H
+ BIGTILES.H
 
  Include File.
 
@@ -10,7 +10,7 @@
   Compression          : None.
   Counter              : None.
   Tile size            : 8 x 8
-  Tiles                : 0 to 8
+  Tiles                : 0 to 6
 
   Palette colors       : None.
   SGB Palette          : None.
@@ -24,8 +24,8 @@
 
 
 /* Bank of tiles. */
-#define test_dataBank 0
+#define testroom_big_dataBank 0
 /* Start of tile array. */
-extern unsigned char test_data[];
+extern unsigned char testroom_big_data[];
 
-/* End of TEST.H */
+/* End of BIGTILES.H */

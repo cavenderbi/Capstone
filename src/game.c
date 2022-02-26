@@ -1,10 +1,9 @@
 #include "game.h"
 
 void initPlayer() {
-    player.x = 88;
-    player.y = 78;
+    player.x_pos = 88;
+    player.y_pos = 78;
     player.dir = RIGHT;
-    player.maxHealth = 4;
     player.health = 4;
 }
 
@@ -13,20 +12,20 @@ inline void input() {
     uint8_t j = joypad();
     if (j & J_UP) {
         player.dir = UP;
-        if (sprite_tile_collision(player.x, player.y - 1, player.dir))
-            player.y--;
+        if (sprite_tile_collision(player.x_pos, player.y_pos - 1, player.dir))
+            player.y_pos--;
     } else if (j & J_DOWN) {
         player.dir = DOWN;
-        if(sprite_tile_collision(player.x, player.y + 1, player.dir))
-            player.y++;
+        if(sprite_tile_collision(player.x_pos, player.y_pos + 1, player.dir))
+            player.y_pos++;
     } else if (j & J_LEFT) {
         player.dir = LEFT;
-        if (sprite_tile_collision(player.x - 1, player.y, player.dir))
-            player.x--;
+        if (sprite_tile_collision(player.x_pos - 1, player.y_pos, player.dir))
+            player.x_pos--;
     } else if (j & J_RIGHT) {
         player.dir = RIGHT;
-        if (sprite_tile_collision(player.x + 1, player.y, player.dir))
-            player.x++;
+        if (sprite_tile_collision(player.x_pos + 1, player.y_pos, player.dir))
+            player.x_pos++;
     }
 
     // If player presses A, shoot test projectile.
@@ -34,17 +33,11 @@ inline void input() {
     if (j & J_A) {
         if (shot) {
             shot = false;
-            shoot(player.x, player.y, player.dir);
+            shoot(player.x_pos, player.y_pos, player.dir);
         }
     } else shot = true;
-    static bool not_moved = true;
-    if (!sprite_sprite_collision(camera.x_pos, camera.y_pos, 20, 16, player.x >> 3, player.y >> 3, 1, 1)){
-        if (not_moved) {
-            not_moved = false;
-            player.x += 8;
-            scroll_camera(player.dir);
-        } 
-    } else not_moved = true;
+    if (!sprite_sprite_collision(get_min_x(player.room_i), get_min_y(player.room_j), 19 * 8, 15 * 8, player.x_pos, player.y_pos, 8, 8))
+        scroll_camera(&player);
 }
 
 // Controls other game functions such as moving projectiles. 
@@ -70,7 +63,7 @@ inline void draw(uint8_t anim_count) {
             break;
     }
     // Move the player sprite. 
-    move_sprite(0, player.x - camera.x_pos, player.y - camera.y_pos);
+    move_sprite(0, player.x_pos - camera.x_pos, player.y_pos - camera.y_pos);
     // Wait until we're done drawing to the screen.
     wait_vbl_done();
 }
@@ -109,7 +102,7 @@ void main() {
     initProjs();
 
     initSprites();
-    init_camera(testroom_big_data, 20, 7, testroom_big, BigWidth, BigHeight);
+    init_camera(testroom_big_data, 20, 7, testroom_big, testroom_bigWidth, testroom_bigHeight);
 
     //Game roguelight;
 

@@ -18,10 +18,10 @@
 
 */
 
-#define BigWidth 40
-#define BigHeight 32
-#define BigBank 0
+#define testroom_bigWidth 40
+#define testroom_bigHeight 32
+#define testroom_bigBank 0
 
-extern unsigned char Big[];
+extern unsigned char testroom_big[];
 
 /* End of TESTROOMBIG.H */
