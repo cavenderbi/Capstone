@@ -41,7 +41,11 @@ inline void input() {
 // Controls other game functions such as moving projectiles. 
 inline void logic() {
     //  Has player left the room?
-    if (!sprite_sprite_collision(get_min_x(player.room_i) + 8, get_min_y(player.room_j) + 8, 18 * 8, 14 * 8, player.x_pos, player.y_pos, 8, 8))
+    int minx = (20*8 * player.room_i) + 8, 
+        miny = (16*8 * player.room_j) + 8, 
+        maxx = minx + 144,
+        maxy = miny + 128;
+    if (player.x_pos > maxx || player.x_pos < minx || player.y_pos > maxy || player.y_pos < miny)
         scroll_camera(&player);
     updateProjs();
     updateEnemies();

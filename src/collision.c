@@ -29,5 +29,6 @@ inline bool sprite_tile_collision(uint8_t x, uint8_t y, Direction dir) {
         x += 7;
         y += 7;
     }
-    return get_bkg_tile_xy((x - 8) / 8, ((y - 16) / 8)) == 0x14;
+    uint8_t tile =  get_bkg_tile_xy((x - 8) / 8, ((y - 16) / 8));
+    return tile == 0x14 || tile == 0;
 }
