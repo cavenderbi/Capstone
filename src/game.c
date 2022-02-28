@@ -36,12 +36,13 @@ inline void input() {
             shoot(player.x_pos, player.y_pos, player.dir);
         }
     } else shot = true;
-    if (!sprite_sprite_collision(get_min_x(player.room_i), get_min_y(player.room_j), 19 * 8, 15 * 8, player.x_pos, player.y_pos, 8, 8))
-        scroll_camera(&player);
 }
 
 // Controls other game functions such as moving projectiles. 
 inline void logic() {
+    //  Has player left the room?
+    if (!sprite_sprite_collision(get_min_x(player.room_i) + 8, get_min_y(player.room_j) + 8, 18 * 8, 14 * 8, player.x_pos, player.y_pos, 8, 8))
+        scroll_camera(&player);
     updateProjs();
     updateEnemies();
 }

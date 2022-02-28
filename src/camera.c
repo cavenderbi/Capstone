@@ -29,7 +29,7 @@ void init_camera(uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, uint8_
     old_map.x_pos = 0xff;
     old_map.y_pos = 0xff;
     /*  Draw a 20x18 (Gameboy screen sized) submap of the tilemap. */
-    set_bkg_submap(map.x_pos, map.y_pos, 20, 16, tilemap, tilemap_width);
+    set_bkg_submap(map.x_pos, map.y_pos, 20, 18, tilemap, tilemap_width);
     DISPLAY_ON;
 
     camera.x_pos = 0;
@@ -46,7 +46,6 @@ void init_camera(uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, uint8_
     @param dist Distance in 8x8 tiles to scroll the camera. */
 void scroll_camera(Player * player) {
     /*  If the player is below the y-minPt and below the x-maxPt, then they left the room from the top*/
-    /*  UP  */
     switch (player->dir) {
     case UP:
         hideEnemies();
@@ -54,7 +53,7 @@ void scroll_camera(Player * player) {
             camera.y_pos--;
             wait_vbl_done();
             set_camera();
-            if (player->y_pos - 16 > camera.y_pos)
+            if (player->y_pos > camera.y_pos)
                 scroll_sprite(0, 0, 1);
             else player->y_pos--;
         }
@@ -66,7 +65,7 @@ void scroll_camera(Player * player) {
             camera.y_pos++;
             wait_vbl_done();
             set_camera();
-            if (player->y_pos - 16 > camera.y_pos)
+            if (player->y_pos > camera.y_pos)
                 scroll_sprite(0, 0, -1);
             else player->y_pos++;
         }
@@ -90,7 +89,7 @@ void scroll_camera(Player * player) {
             camera.x_pos++;
             wait_vbl_done();
             set_camera();
-            if (player->x_pos - 8 > camera.x_pos)
+            if (player->x_pos > camera.x_pos)
                 scroll_sprite(0, -1, 0);
             else player->x_pos++;
         }
@@ -114,8 +113,8 @@ static void set_camera() {
     if (map.y_pos != old_map.y_pos) {
         if (camera.y_pos < old_camera.y_pos)
             set_bkg_submap(map.x_pos, map.y_pos, MIN(21u, tilemap_width - map.x_pos), 1, tilemap, tilemap_width);
-        else if (tilemap_height - 18u > map.y_pos)
-            set_bkg_submap(map.x_pos, map.y_pos + 18u, MIN(21u, tilemap_width - map.x_pos), 1, tilemap, tilemap_width);
+        else if (tilemap_height - 16u > map.y_pos)
+            set_bkg_submap(map.x_pos, map.y_pos + 16u, MIN(21u, tilemap_width - map.x_pos), 1, tilemap, tilemap_width);
         old_map.y_pos = map.y_pos;
     }
     /*  Left or right? */
