@@ -53,7 +53,7 @@ void scroll_camera(Player * player) {
             camera.y_pos--;
             wait_vbl_done();
             set_camera();
-            if (player->y_pos > camera.y_pos)
+            if (player->y_pos - camera.y_pos < 136)
                 scroll_sprite(0, 0, 1);
             else player->y_pos--;
         }
@@ -77,7 +77,7 @@ void scroll_camera(Player * player) {
             camera.x_pos--;
             wait_vbl_done();
             set_camera();
-            if (player->x_pos > camera.x_pos)
+            if (player->x_pos - camera.x_pos < 160)
                 scroll_sprite(0, 1, 0);
             else player->x_pos--;
         }

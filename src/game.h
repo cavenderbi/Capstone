@@ -9,6 +9,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 // Include the title screen. 
+#include "logo_splash.h"
 #include "title_screen.h"
 #include "camera.h"
 #include "collision.h"

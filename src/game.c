@@ -43,10 +43,11 @@ inline void logic() {
     //  Has player left the room?
     int minx = (20*8 * player.room_i) + 8, 
         miny = (16*8 * player.room_j) + 16, 
-        maxx = minx + 20*8, //  18 tiles * 8 pixels per tile.
-        maxy = miny + 16*8; //  14 tiles * 8 pixels per tile.
+        maxx = minx + 20*8-7, //  18 tiles * 8 pixels per tile.
+        maxy = miny + 16*8-7; //  14 tiles * 8 pixels per tile.
     if (player.x_pos > maxx || player.x_pos < minx || player.y_pos > maxy || player.y_pos < miny)
         scroll_camera(&player);
+
     updateProjs();
     updateEnemies();
 }
@@ -101,6 +102,7 @@ inline void initSprites() {
 
 void main() {
     show_title();
+    display_logo_splash();
 
     initPlayer();
     initEnemies();
@@ -119,18 +121,10 @@ void main() {
     SHOW_BKG;
     SHOW_WIN;
     DISPLAY_ON;
-    
-    uint8_t frame_count = 0;
-    uint8_t anim_count = 0; 
-    while (true) {
-        frame_count++;
-        if (frame_count >= FRAMES_ANIM_UPDATE) {
-            frame_count = 0;
-            anim_count = !anim_count;
-        }
 
+    while (true) {
         input();
         logic();
-        draw(anim_count);
+        draw((sys_time & 0x10) > 0x8);
     }
 }
