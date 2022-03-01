@@ -42,9 +42,9 @@ inline void input() {
 inline void logic() {
     //  Has player left the room?
     int minx = (20*8 * player.room_i) + 8, 
-        miny = (16*8 * player.room_j) + 8, 
-        maxx = minx + 144,
-        maxy = miny + 128;
+        miny = (16*8 * player.room_j) + 16, 
+        maxx = minx + 20*8, //  18 tiles * 8 pixels per tile.
+        maxy = miny + 16*8; //  14 tiles * 8 pixels per tile.
     if (player.x_pos > maxx || player.x_pos < minx || player.y_pos > maxy || player.y_pos < miny)
         scroll_camera(&player);
     updateProjs();
