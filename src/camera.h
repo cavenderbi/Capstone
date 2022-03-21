@@ -6,7 +6,6 @@
 
 #include "enemy.h"
 #include "player.h"
-#include "rooms.h"
 
 typedef struct _cam {
     uint16_t x_pos, y_pos;
@@ -28,9 +27,5 @@ extern Map map, old_map;
 void init_camera(uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, uint8_t * _tilemap, uint8_t _tilemap_width, uint8_t _tilemap_height);
 void scroll_camera(Player *);
 static void set_camera();
-inline uint8_t get_camera_x_pos();
-inline uint8_t get_camera_y_pos();
-inline uint8_t get_tilemap_x_pos();
-inline uint8_t get_tilemap_y_pos();
 
 #endif

@@ -7,7 +7,7 @@
                 "~/Downloads/gbdk/include/**"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/gcc",
+            "compilerPath": "~/Downloads/gbdk/bin/lcc",
             "cStandard": "gnu17",
             "intelliSenseMode": "linux-gcc-x64",
             "configurationProvider": "ms-vscode.makefile-tools"

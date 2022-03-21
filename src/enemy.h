@@ -1,9 +1,9 @@
 #ifndef _ENEMY_H
 #define _ENEMY_H
 
-#include "camera.h"
 #include "collision.h"
 #include "direction.h"
+#include "camera.h"
 
 typedef struct {
     uint8_t x;
@@ -11,6 +11,7 @@ typedef struct {
     uint8_t health;
     Direction dir;
 } Enemy;
+
 extern Enemy enemies[16];
 
 void initTestEnemy();

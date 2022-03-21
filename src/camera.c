@@ -130,7 +130,3 @@ static void set_camera() {
     old_camera.x_pos = camera.x_pos;
     old_camera.y_pos = camera.y_pos;
 }
-inline uint8_t get_camera_x_pos() { return camera.x_pos; }
-inline uint8_t get_camera_y_pos() { return camera.y_pos; }
-inline uint8_t get_tilemap_x_pos() { return map.x_pos; }
-inline uint8_t get_tilemap_y_pos() { return map.y_pos; }

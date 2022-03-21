@@ -8,8 +8,8 @@
             "type": "emulicious-debugger",
             "request": "launch",
             "name": "Launch in Emulicious",
-            "program": "/home/cavenderbi/Documents/Spring 2022/Capstone/Wizards vs. Warriors.gb",
-            "emuliciousPath": "/home/cavenderbi/Downloads/emulicious/Emulicious.jar",
+            "program": "${workspaceFolder}/Wizards vs. Warriors.gb",
+            "emuliciousPath": "/home/cavenderbi/Downloads/Emulicious/Emulicious.jar",
             "port": 58870,
             "stopOnEntry": true
         }

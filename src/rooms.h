@@ -20,14 +20,10 @@ struct _room {
     /*  The list of enemies left in that room. Each room 
         has at max 16 enemies. */
     uint8_t * tilemap;
-    //Enemy enemies[8];
+    Enemy enemies[8];
 };
 extern struct _room rooms[9][9];
 
 void generate_rooms(Player *);
-inline uint8_t get_min_x(uint8_t i) { return i * 20 * 8; }
-inline uint8_t get_min_y(uint8_t j) { return j * 16 * 8; }
-inline uint8_t get_max_x(uint8_t i) { return (((i + 1) * 20) - 1) * 8; }
-inline uint8_t get_max_y(uint8_t j) { return (((j + 1) * 16) - 1) * 8; }
 
 #endif
