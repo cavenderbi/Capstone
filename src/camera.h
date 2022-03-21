@@ -6,6 +6,7 @@
 
 #include "enemy.h"
 #include "player.h"
+#include "rooms.h"
 
 typedef struct _cam {
     uint16_t x_pos, y_pos;
