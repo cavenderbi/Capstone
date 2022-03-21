@@ -48,8 +48,8 @@ inline void logic() {
     if (player.x_pos > maxx || player.x_pos < minx || player.y_pos > maxy || player.y_pos < miny)
         scroll_camera(&player);
 
-    updateProjs();
-    updateEnemies();
+    updateProjs(rooms[player.room_i][player.room_j].enemies);
+    updateEnemies(rooms[player.room_i][player.room_j].enemies);
 }
 
 // Every ten frames, update the animation. 
@@ -105,7 +105,7 @@ void main() {
     display_logo_splash();
 
     initPlayer();
-    initEnemies();
+    initEnemies(rooms[player.room_i][player.room_j].enemies);
     initProjs();
 
     initSprites();
@@ -113,9 +113,9 @@ void main() {
 
     //Game roguelight;
 
-    spawnEnemy(60, 60, UP, 4);
-    spawnEnemy(80, 60, UP, 8);
-    spawnEnemy(120, 60, UP, 4);
+    spawnEnemy(60, 60, UP, 4, rooms[player.room_i][player.room_j].enemies);
+    spawnEnemy(80, 60, UP, 8, rooms[player.room_i][player.room_j].enemies);
+    spawnEnemy(120, 60, UP, 4, rooms[player.room_i][player.room_j].enemies);
 
     SHOW_SPRITES;
     SHOW_BKG;

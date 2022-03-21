@@ -4,6 +4,7 @@
 #include "camera.h"
 #include "collision.h"
 #include "direction.h"
+#include "rooms.h"
 
 typedef struct {
     Direction dir;
@@ -14,6 +15,6 @@ extern Projectile projectiles[16];
 
 void initProjs();
 void shoot(uint8_t, uint8_t, Direction);
-void updateProjs();
+void updateProjs(Enemy * enemies);
 
 #endif

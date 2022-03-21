@@ -12,13 +12,9 @@ typedef struct {
     Direction dir;
 } Enemy;
 
-extern Enemy enemies[16];
-
-void initTestEnemy();
-
-void initEnemies();
-void spawnEnemy(uint8_t, uint8_t, Direction, uint8_t);
-void updateEnemies();
+void initEnemies(Enemy *);
+void spawnEnemy(uint8_t, uint8_t, Direction, uint8_t, Enemy *);
+void updateEnemies(Enemy *);
 void hideEnemies();
 
 #endif

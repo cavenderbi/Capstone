@@ -26,7 +26,7 @@ void shoot(uint8_t x, uint8_t y, Direction dir) {
 
 /*  Updates the projectiles position and detects projectile collision. 
     Then updates the relevant sprites. */
-void updateProjs() {
+void updateProjs(Enemy * enemies) {
     const int speed = 4;
     int i = 0;
     for (Projectile * current = projectiles; current != projectiles + 16; current++, i++) {

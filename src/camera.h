@@ -17,7 +17,6 @@ typedef struct _tilemap {
 
 extern Cam camera, old_camera;
 extern Map map, old_map;
-//extern uint8_t * tilemap, tilemap_width, tilemap_height;
 
 #define CAMERA_MAX_X ((tilemap_width - 20) * 8)
 #define CAMERA_MAX_Y ((tilemap_width - 18) * 8)

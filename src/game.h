@@ -18,6 +18,7 @@
 #include "projectile.h"
 #include "player.h"
 #include "sprites.h"
+#include "rooms.h"
 
 #define FRAMES_ANIM_UPDATE 10
 

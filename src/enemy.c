@@ -1,9 +1,7 @@
 #include "enemy.h"
 
-Enemy enemies[16];
-
 /*  Initialize the enemies array. */
-void initEnemies() {
+void initEnemies(Enemy * enemies) {
     for (Enemy * current = enemies; current < enemies + 15; current++)
         current->health = 0;
 }
@@ -14,7 +12,7 @@ void initEnemies() {
     @param y y-coordinate to spawn the enemy at. 
     @param dir direction the enemy is facing when it spawns. 
     @param health starting health of the enemy. */
-void spawnEnemy(uint8_t x, uint8_t y, Direction dir, uint8_t health) {
+void spawnEnemy(uint8_t x, uint8_t y, Direction dir, uint8_t health, Enemy * enemies) {
     for (Enemy * current = enemies; current != enemies + 16; current++)
         if (current->health == 0) {
             current->x = x;
@@ -28,11 +26,10 @@ void spawnEnemy(uint8_t x, uint8_t y, Direction dir, uint8_t health) {
 /*  Updates enemy and relevant sprites. 
     For now, they bounce back and forth against the wall.
     TODO: Implement true pathfinding. A* pathfinding maybe? */
-void updateEnemies() {
+void updateEnemies(Enemy * enemies) {
     int i = 0;
     const int speed = 1;
     for (Enemy * current = enemies; current != enemies + 16; current++, i++) {
-        //printf("%d\n", current->health);
         if (current->health > 0) {/*
             switch (current->dir) {
                 case UP:
