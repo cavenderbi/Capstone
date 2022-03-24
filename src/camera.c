@@ -49,49 +49,49 @@ void scroll_camera(Player * player) {
     switch (player->dir) {
     case UP:
         hideEnemies();
-        for (int i = 0; i <= 128; i+=2) {
-            camera.y_pos-=2;
+        for (int i = 0; i <= 128; i++) {
+            camera.y_pos--;
             wait_vbl_done();
             set_camera();
             if (player->y_pos - camera.y_pos < 136)
-                scroll_sprite(0, 0, 2);
-            else player->y_pos-=2;
+                scroll_sprite(0, 0, 1);
+            else player->y_pos--;
         }
         player->room_j--;
         break;
     case DOWN:
         hideEnemies();
-        for (int i = 0; i <= 128; i+=2) {
-            camera.y_pos+=2;
+        for (int i = 0; i <= 128; i++) {
+            camera.y_pos++;
             wait_vbl_done();
             set_camera();
             if (player->y_pos - 16 > camera.y_pos)
-                scroll_sprite(0, 0, -2);
-            else player->y_pos+=2;
+                scroll_sprite(0, 0, -1);
+            else player->y_pos++;
         }
         player->room_j++;
         break;
     case LEFT:
         hideEnemies();
-        for (int i = 0; i <= 160; i+=2) {
-            camera.x_pos-=2;
+        for (int i = 0; i <= 160; i++) {
+            camera.x_pos--;
             wait_vbl_done();
             set_camera();
             if (player->x_pos - camera.x_pos < 160)
-                scroll_sprite(0, 2, 0);
-            else player->x_pos-=2;
+                scroll_sprite(0, 1, 0);
+            else player->x_pos--;
         }
         player->room_i--;
         break;
     case RIGHT:
         hideEnemies();
-        for (int i = 0; i <= 160; i+=2) {
-            camera.x_pos+=2;
+        for (int i = 0; i <= 160; i++) {
+            camera.x_pos++;
             wait_vbl_done();
             set_camera();
             if (player->x_pos - 8 > camera.x_pos)
-                scroll_sprite(0, -2, 0);
-            else player->x_pos+=2;
+                scroll_sprite(0, -1, 0);
+            else player->x_pos++;
         }
         player->room_i++;
         break;
