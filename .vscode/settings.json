@@ -1,7 +1,8 @@
 {
     "files.associations": {
         "test.c": "cpp",
-        "collision.c": "cpp"
+        "collision.c": "cpp",
+        "direction.h": "c"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }

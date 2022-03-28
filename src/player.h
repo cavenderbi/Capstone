@@ -1,9 +1,9 @@
-#ifndef _PLAYER_H
-#define _PLAYER_H
+#pragma once
 
 #include <stdint.h>
 
 #include "direction.h"
+#include "dmgtype.h"
 
 // Using a player struct to clean up the code a bit.
 typedef struct {
@@ -11,6 +11,5 @@ typedef struct {
     uint8_t room_i, room_j;
     uint8_t health;
     Direction dir;
+    PWR_TYPE element;
 } Player;
-
-#endif

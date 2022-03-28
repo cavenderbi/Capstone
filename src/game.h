@@ -1,10 +1,8 @@
-#ifndef _GAME_H
-#define _GAME_H
-
+#pragma once
 // Include the gameboy functions. 
 #include <gb/gb.h>
 #include <gb/cgb.h>
-#include <gb/drawing.h>
+#include <gb/metasprites.h>
 // Booleans are nice to have.
 #include <stdbool.h>
 #include <stdio.h>
@@ -19,6 +17,9 @@
 #include "player.h"
 #include "sprites.h"
 #include "rooms.h"
+#include "hud.h"
+#include "powerup.h"
+#include "dmgtype.h"
 
 #define FRAMES_ANIM_UPDATE 10
 
@@ -27,6 +28,4 @@ Player player;
 void initPlayer();
 inline void input();
 inline void logic();
-inline void draw(uint8_t);
-
-#endif
+inline void draw();

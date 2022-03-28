@@ -8,13 +8,14 @@
 GBDK_HOME = ~/Downloads/gbdk/
 
 LCC = $(GBDK_HOME)bin/lcc 
+PNG2ASSET = $(GBDK_HOME)bin/png2asset
 
 # You can set flags for LCC here
 # For example, you can uncomment the line below to turn on debug output
-# LCCFLAGS = -debug
+LCCFLAGS = -Wm-yc #-debug
 
 # You can set the name of the .gb ROM file here
-PROJECTNAME    = Wizards\ vs.\ Warriors
+PROJECTNAME    = WizardsvsWarriors
 
 SRCDIR      = src
 OBJDIR      = obj
@@ -29,6 +30,31 @@ all:	prepare $(BINS)
 compile.bat: Makefile
 	@echo "REM Automatically generated from Makefile" > compile.bat
 	@make -sn | sed y/\\//\\\\/ | grep -v make >> compile.bat
+
+# Create the wizard.c file from wizard.png
+res/wizard_walk_up.c:	res/wizard_walk_up.png
+	$(PNG2ASSET) res/wizard_walk_up.png -sh 16 -spr8x8
+# Create the wizard.c file from wizard.png
+res/wizard_walk_down.c:	res/wizard_walk_down.png
+	$(PNG2ASSET) res/wizard_walk_down.png -sh 16 -spr8x8
+# Create the wizard.c file from wizard.png
+res/wizard_walk_side.c:	res/wizard_walk_side.png
+	$(PNG2ASSET) res/wizard_walk_side.png -sh 16 -spr8x8
+# Create the player_basic_proj..c file from player_basic_proj.png
+res/player_basic_proj.c: res/player_basic_proj.png
+	$(PNG2ASSET) res/player_basic_proj.png -spr8x8
+# Elemental type icons. 
+res/fire.c: res/fire.png
+	$(PNG2ASSET) res/fire.png -map
+res/frost.c: res/frost.png
+	$(PNG2ASSET) res/frost.png -map
+res/shock.c: res/shock.png
+	$(PNG2ASSET) res/shock.png -map
+
+res/heart.c: res/hearts.png	
+	$(PNG2ASSET) res/hearts.png -map
+res/bar.c: res/bar.png
+	$(PNG2ASSET) res/bar.png -map -noflip
 
 # Compile .c files in "src/" to .o object files
 $(OBJDIR)/%.o:	$(SRCDIR)/%.c

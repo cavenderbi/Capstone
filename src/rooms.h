@@ -9,6 +9,7 @@
 #include "direction.h"
 #include "enemy.h"
 #include "player.h"
+#include "powerup.h"
 
 #include "../res/down_left_tilemap.h"
 #include "../res/down_right_tilemap.h"
@@ -21,6 +22,7 @@ struct _room {
         has at max 16 enemies. */
     uint8_t * tilemap;
     Enemy enemies[8];
+    PowerUP powerups[8];
 };
 extern struct _room rooms[9][9];
 
