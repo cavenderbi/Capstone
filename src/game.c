@@ -30,16 +30,25 @@ inline void input() {
 
     // If player presses A, shoot test projectile.
     static uint16_t prev_shot = UINT16_MAX;
-    static bool shot = true;
     if (j & J_A) {
         if (sys_time - prev_shot > 30) {
-            if (shot) {
-                shot = false;
-                shoot(player.x_pos, player.y_pos, player.dir);
-            }
+            // Shoot sound? 
+            NR10_REG = 0x15;
+            NR11_REG = 0x96;
+            NR12_REG = 0x73;
+            NR13_REG = 0xBB;
+            NR14_REG = 0x85;
+            // Spawn the projectile.
+            shoot(player.x_pos, player.y_pos, player.dir);
+            // If the usage is >= 14, then it isn't valid and shouldn't be updated. 
+            if (--player.usage <= 14 * NUM_SHOTS_PER_BAR && player.usage > 0)
+                draw_HUD_usage(player.usage / NUM_SHOTS_PER_BAR);
+            // If the player uses all of their power-up charge, they revert back to normal. 
+            else
+                draw_HUD_element(player.element = PWR_NONE);
             prev_shot = sys_time;
         }
-    } else shot = true;
+    }
     /* static bool shot = true;
     if (j & J_A) {
         if (shot) {
@@ -54,9 +63,8 @@ inline void input() {
         if (changed) {
             changed = false;
             // Get the next player element.
-            player.element = (player.element + 1) & 3;
             draw_HUD_health(--player.health);
-            draw_HUD_element(player.element);
+            draw_HUD_element(player.element = (player.element + 1) & 3);
         }
     } else changed = true;
 }
@@ -71,7 +79,7 @@ inline void logic() {
     if (player.x_pos > maxx || player.x_pos < minx || player.y_pos > maxy || player.y_pos < miny)
         scroll_camera(&player);
 
-    updateProjs(rooms[player.room_i][player.room_j].enemies, player.room_i, player.room_j);
+    updateProjs(rooms[player.room_i][player.room_j].enemies);
     updateEnemies(rooms[player.room_i][player.room_j].enemies);
     update_powerups(rooms[player.room_i][player.room_j].powerups, &player);
 }
@@ -114,7 +122,6 @@ inline void draw() {
             set_sprite_palette(0, 1, wizard_palettes + 12);
             break;
     }
-    draw_HUD_time((~sys_time / 240) & 7);
 
     // Wait until we're done drawing to the screen.
     wait_vbl_done();
@@ -148,7 +155,7 @@ inline void initSprites() {
     init_HUD();
     draw_HUD_health(player.health);
     draw_HUD_element(player.element);
-    draw_HUD_time(0);
+    draw_HUD_usage(0);
     move_win(8, 128);
 }
 
@@ -161,7 +168,7 @@ void main() {
     initProjs();
 
     initSprites();
-    init_camera(testroom_big_data, 0x20, 7, testroom_big, testroom_bigWidth, testroom_bigHeight);
+    init_camera(testroom_big_data, 0x30, 7, testroom_big, testroom_bigWidth, testroom_bigHeight);
 
     spawnEnemy(60, 60, UP, 4, rooms[player.room_i][player.room_j].enemies);
     spawnEnemy(80, 60, UP, 8, rooms[player.room_i][player.room_j].enemies);
@@ -178,5 +185,5 @@ void main() {
         input();
         logic();
         draw();
-    }
+    } 
 }

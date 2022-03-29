@@ -14,11 +14,5 @@
 // Test Enemy Sprite.
 #include "../res/test_enemy.h"
 
-// HUD heart tiles. 
-#include "../res/hearts.h"
-// Include the tiles and tilemap for the HUD. 
-#include "../res/hud_data.h"
-#include "../res/hud_tilemap.h"
-
 #include "../res/bigtiles.h"
 #include "../res/TestRoomBig.h"

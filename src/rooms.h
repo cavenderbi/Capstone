@@ -11,11 +11,6 @@
 #include "player.h"
 #include "powerup.h"
 
-#include "../res/down_left_tilemap.h"
-#include "../res/down_right_tilemap.h"
-#include "../res/up_left_tilemap.h"
-#include "../res/up_right_tilemap.h"
-
 /*  Each room is defined by the enemies within it and the tilemap it draws. */
 struct _room {
     /*  The list of enemies left in that room. Each room 

@@ -26,6 +26,6 @@
 /* Bank of tiles. */
 #define testroom_big_dataBank 0
 /* Start of tile array. */
-extern unsigned char testroom_big_data[];
+extern const unsigned char testroom_big_data[];
 
 /* End of BIGTILES.H */

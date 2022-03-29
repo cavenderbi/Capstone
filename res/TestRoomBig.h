@@ -22,6 +22,6 @@
 #define testroom_bigHeight 32
 #define testroom_bigBank 0
 
-extern unsigned char testroom_big[];
+extern const unsigned char testroom_big[];
 
 /* End of TESTROOMBIG.H */

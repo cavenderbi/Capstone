@@ -4,10 +4,6 @@ struct _room rooms[9][9];
 
 /*  TODO: Acturally generate rooms. Just sets things up for test tilemap. */
 void generate_rooms(Player * player) {
-    rooms[0][0].tilemap = down_right_tileset;
-    rooms[0][1].tilemap = down_left_tileset;
-    rooms[1][0].tilemap = up_right_tilemap;
-    rooms[1][1].tilemap = up_left_tilemap;
 
     // Starting room is [0][0]
     player->room_i = 0;

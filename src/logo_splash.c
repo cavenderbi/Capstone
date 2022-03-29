@@ -1,3 +1,9 @@
+#include <gb/gb.h>
+#include <gb/cgb.h>
+
+#include "../res/test_logo_data.h"
+#include "../res/test_logo_map.h"
+
 #include "logo_splash.h"
 
 void display_logo_splash() {

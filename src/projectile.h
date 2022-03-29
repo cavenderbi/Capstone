@@ -17,6 +17,6 @@ extern Projectile projectiles[16];
 
 void initProjs();
 void shoot(uint8_t, uint8_t, Direction);
-void updateProjs(Enemy *, uint8_t, uint8_t);
+void updateProjs(Enemy *);
 
 #endif

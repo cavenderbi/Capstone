@@ -26,16 +26,13 @@ void shoot(uint8_t x, uint8_t y, Direction dir) {
 
 /*  Updates the projectiles position and detects projectile collision. 
     Then updates the relevant sprites. */
-void updateProjs(Enemy * enemies, uint8_t pi, uint8_t pj) {
-    //if (!(*projectiles).valid) return;
+void updateProjs(Enemy * enemies) {
     const int speed = 3;
     int i = 4;
     for (Projectile * current = projectiles; current != projectiles + 8; current++, i++) {
+        // If current is invalid, it's the end of the list. 
         // Don't let projectiles leave the screen.
-        if (current->x - (20*8 * pi) > 20*8 || current->y - (16*8 * pj) > 16*8) {
-            hide_sprite(i);
-            current->valid = false;
-        } else if (current->valid) {
+        if (current->valid) {
             /*  Move valid projectiles. */
             switch (current->dir) {
                 case UP:
@@ -77,7 +74,6 @@ void updateProjs(Enemy * enemies, uint8_t pi, uint8_t pj) {
             }
         } else {
             hide_sprite(i);
-            break;
         }
     }
 }
