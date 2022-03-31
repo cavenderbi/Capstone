@@ -23,15 +23,14 @@ void init_camera(uint8_t * tiles, uint8_t _tile_offset, uint8_t num_tiles, uint8
     tilemap = _tilemap;
     tilemap_height = _tilemap_height;
     tilemap_width = _tilemap_width;
-    // TODO: Un-preoffset the tile map.
-    tile_offset = _tile_offset - 20;
+    tile_offset = _tile_offset;
 
     map.x_pos = 0;
     map.y_pos = 0;
     old_map.x_pos = 0xff;
     old_map.y_pos = 0xff;
 
-    set_bkg_data(tile_offset + 20, num_tiles, tiles);
+    set_bkg_data(tile_offset, num_tiles, tiles);
     /*  Draw a 20x18 (Gameboy screen sized) submap of the tilemap. */
     set_bkg_based_submap(map.x_pos, map.y_pos, 20, 18, tilemap, tilemap_width, tile_offset);
     DISPLAY_ON;
@@ -49,10 +48,11 @@ void init_camera(uint8_t * tiles, uint8_t _tile_offset, uint8_t num_tiles, uint8
     @param dir Direction to scroll the camera. 
     @param dist Distance in 8x8 tiles to scroll the camera. */
 void scroll_camera(Player * player) {
+    hideEnemies();
+    hide_powerups();
     /*  If the player is below the y-minPt and below the x-maxPt, then they left the room from the top*/
     switch (player->dir) {
     case UP:
-        hideEnemies();
         for (int i = 0; i <= 128; i+=2) {
             camera.y_pos-=2;
             wait_vbl_done();
@@ -68,7 +68,6 @@ void scroll_camera(Player * player) {
         player->room_j--;
         break;
     case DOWN:
-        hideEnemies();
         for (int i = 0; i <= 128; i+=2) {
             camera.y_pos+=2;
             wait_vbl_done();
@@ -84,7 +83,6 @@ void scroll_camera(Player * player) {
         player->room_j++;
         break;
     case LEFT:
-        hideEnemies();
         for (int i = 0; i <= 160; i+=2) {
             camera.x_pos-=2;
             wait_vbl_done();
@@ -100,7 +98,6 @@ void scroll_camera(Player * player) {
         player->room_i--;
         break;
     case RIGHT:
-        hideEnemies();
         for (int i = 0; i <= 160; i+=2) {
             camera.x_pos+=2;
             wait_vbl_done();

@@ -43,6 +43,9 @@ res/wizard_walk_side.c:	res/wizard_walk_side.png
 # Create the player_basic_proj..c file from player_basic_proj.png
 res/player_basic_proj.c: res/player_basic_proj.png
 	$(PNG2ASSET) res/player_basic_proj.png -spr8x8
+# Power-up sprite.
+res/powerorb.c: res/powerorb.png
+	$(PNG2ASSET) res/powerorb.png -spr8x8
 # Elemental type icons. 
 res/fire.c: res/fire.png
 	$(PNG2ASSET) res/fire.png -map
@@ -55,6 +58,9 @@ res/hearts.c: res/hearts.png
 	$(PNG2ASSET) res/hearts.png -map
 res/bar.c: res/bar.png
 	$(PNG2ASSET) res/bar.png -map -noflip
+
+res/test_fourrooms.c: res/test_fourrooms.png
+	$(PNG2ASSET) res/test_fourrooms.png -map -noflip
 
 # Compile .c files in "src/" to .o object files
 $(OBJDIR)/%.o:	$(SRCDIR)/%.c

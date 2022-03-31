@@ -16,7 +16,24 @@ inline bool sprite_sprite_collision(uint8_t x_1, uint8_t y_1, uint8_t width_1, u
     return (x_1 < (x_2 + width_2) && (x_1 + width_1) > x_2 && y_1 < (y_2 + height_2) && (y_1 + height_1) > y_2);
 }
 
-
+const bool collides[] = {
+    true , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 
+    false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 
+    false, false, false, false, false, false, false, false, true , false, false, false, false, false, false, false, 
+    false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 
+    false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+    false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 
+    false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 
+    false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 
+    false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 
+    false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 
+    false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 
+    false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 
+    false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 
+    false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 
+    false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 
+    false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false
+};
 /*  Function used for checking collision between a sprite and a background tile. 
     Common uses for this function would be checking if a player or enemy have walked into a wall. 
     @param x The x-coordinate of the sprite.
@@ -29,6 +46,5 @@ inline bool sprite_tile_collision(uint8_t x, uint8_t y, Direction dir) {
         x += 7;
         y += 7;
     }
-    uint8_t tile =  get_bkg_tile_xy((x - 8) / 8, ((y - 16) / 8));
-    return tile == 0x30 || tile == 0;
+    return collides[get_bkg_tile_xy((x - 8) / 8, ((y - 16) / 8))];
 }

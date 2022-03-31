@@ -32,14 +32,8 @@ inline void input() {
     static uint16_t prev_shot = UINT16_MAX;
     if (j & J_A) {
         if (sys_time - prev_shot > 30) {
-            // Shoot sound? 
-            NR10_REG = 0x15;
-            NR11_REG = 0x96;
-            NR12_REG = 0x73;
-            NR13_REG = 0xBB;
-            NR14_REG = 0x85;
             // Spawn the projectile.
-            shoot(player.x_pos, player.y_pos, player.dir);
+            shoot(player.x_pos, player.y_pos, player.dir, player.element);
             // If the usage is >= 14, then it isn't valid and shouldn't be updated. 
             if (--player.usage <= 14 * NUM_SHOTS_PER_BAR && player.usage > 0)
                 draw_HUD_usage(player.usage / NUM_SHOTS_PER_BAR);
@@ -130,7 +124,6 @@ inline void draw() {
 inline void initSprites() {
     const palette_color_t palettes[] = {RGB_WHITE, RGB_LIGHTGRAY, RGB_DARKGRAY, RGB_BLACK, // GRAYSCALE
                                         0, RGB_RED, RGB_RED, RGB_DARKRED, // TEST ENEMY
-                                        RGBHTML(0xd0d058), RGBHTML(0xa0a840), RGBHTML(0x708028), RGBHTML(0x405010), // DMG CLASSIC
                                         0, RGBHTML(0x7f9de0), RGBHTML(0x4e81db), RGBHTML(0x2c58ce) }; // MAGIC MISSILE
     // Load player color palettes. 
     set_sprite_palette(0, 1, wizard_palettes);
@@ -140,23 +133,25 @@ inline void initSprites() {
     set_sprite_data(8, 8, wizard_walk_side_tiles);
 
     set_sprite_palette(1, 4, palettes);
+    set_sprite_palette(5, 1, fire_palettes);
+    set_sprite_palette(6, 1, frost_palettes);
+    set_sprite_palette(7, 1, shock_palettes);
 
     set_sprite_data(16, 2, player_basic_proj_tiles);
-    // Set projectile color palette. 
-    for (int i = 4; i < 20; i++) 
-        set_sprite_prop(i, 4);
 
     set_sprite_data(18, 1, test_enemy);
-    for (int i = 20; i < 36; i++) 
-        set_sprite_prop(i, 2);
+    for (int i = 11; i < 20; i++) 
+        set_sprite_prop(i, 3);
+
+    set_sprite_data(19, 1, powerorb_tiles);
 
     set_bkg_palette(0, 1, palettes);
 
     init_HUD();
     draw_HUD_health(player.health);
-    draw_HUD_element(player.element);
     draw_HUD_usage(0);
-    move_win(8, 128);
+    draw_HUD_element(player.element);
+    move_win(7, 128);
 }
 
 void main() {
@@ -168,13 +163,15 @@ void main() {
     initProjs();
 
     initSprites();
-    init_camera(testroom_big_data, 0x30, 7, testroom_big, testroom_bigWidth, testroom_bigHeight);
+    init_camera(test_fourrooms_tiles, 0x21, test_fourrooms_TILE_COUNT, test_fourrooms_map, test_fourrooms_WIDTH/8, test_fourrooms_HEIGHT/8);
 
     spawnEnemy(60, 60, UP, 4, rooms[player.room_i][player.room_j].enemies);
     spawnEnemy(80, 60, UP, 8, rooms[player.room_i][player.room_j].enemies);
     spawnEnemy(120, 60, UP, 4, rooms[player.room_i][player.room_j].enemies);
 
     spawn_powerup(120, 120, PWR_FIRE, rooms[player.room_i][player.room_j].powerups);
+    spawn_powerup(80, 120, PWR_FROST, rooms[player.room_i][player.room_j].powerups);
+    spawn_powerup(60, 120, PWR_SHOCK, rooms[player.room_i][player.room_j].powerups);
 
     SHOW_SPRITES;
     SHOW_BKG;

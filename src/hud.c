@@ -39,7 +39,7 @@ void draw_HUD_element(PWR_TYPE element) {
     // Draw element icon.
     switch(element) {
         case PWR_NONE:
-            fill_win_rect(10, 0, 12, 2, 2);
+            fill_win_rect(8, 0, 12, 2, 2);
             break;
         case PWR_FIRE:
             set_bkg_palette(2, 1, fire_palettes);
