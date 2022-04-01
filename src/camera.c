@@ -53,7 +53,7 @@ void scroll_camera(Player * player) {
     /*  If the player is below the y-minPt and below the x-maxPt, then they left the room from the top*/
     switch (player->dir) {
     case UP:
-        for (int i = 0; i <= 128; i+=2) {
+        for (int i = 0; i < 128; i+=2) {
             camera.y_pos-=2;
             wait_vbl_done();
             set_camera();
@@ -68,7 +68,7 @@ void scroll_camera(Player * player) {
         player->room_j--;
         break;
     case DOWN:
-        for (int i = 0; i <= 128; i+=2) {
+        for (int i = 0; i < 128; i+=2) {
             camera.y_pos+=2;
             wait_vbl_done();
             set_camera();
@@ -83,7 +83,7 @@ void scroll_camera(Player * player) {
         player->room_j++;
         break;
     case LEFT:
-        for (int i = 0; i <= 160; i+=2) {
+        for (int i = 0; i < 160; i+=2) {
             camera.x_pos-=2;
             wait_vbl_done();
             set_camera();
@@ -98,7 +98,7 @@ void scroll_camera(Player * player) {
         player->room_i--;
         break;
     case RIGHT:
-        for (int i = 0; i <= 160; i+=2) {
+        for (int i = 0; i < 160; i+=2) {
             camera.x_pos+=2;
             wait_vbl_done();
             set_camera();

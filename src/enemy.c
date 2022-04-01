@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <rand.h>
 
 #include "enemy.h"
 
