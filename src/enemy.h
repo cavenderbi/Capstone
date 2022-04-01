@@ -4,17 +4,18 @@
 #include "collision.h"
 #include "direction.h"
 #include "camera.h"
+#include "player.h"
 
 typedef struct {
-    uint8_t x;
-    uint8_t y;
+    uint8_t x_pos;
+    uint8_t y_pos;
     uint8_t health;
     Direction dir;
 } Enemy;
 
 void initEnemies(Enemy *);
 void spawnEnemy(uint8_t, uint8_t, Direction, uint8_t, Enemy *);
-void updateEnemies(Enemy *);
+void updateEnemies(Enemy *, Player *);
 void hideEnemies();
 
 #endif

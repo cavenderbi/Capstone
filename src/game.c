@@ -74,7 +74,7 @@ inline void logic() {
         scroll_camera(&player);
 
     updateProjs(rooms[player.room_i][player.room_j].enemies);
-    updateEnemies(rooms[player.room_i][player.room_j].enemies);
+    updateEnemies(rooms[player.room_i][player.room_j].enemies, &player);
     update_powerups(rooms[player.room_i][player.room_j].powerups, &player);
 }
 

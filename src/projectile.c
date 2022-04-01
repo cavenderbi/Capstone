@@ -1,4 +1,5 @@
 #include "projectile.h"
+#include "player.h"
 
 Projectile projectiles[4];
 
@@ -97,7 +98,7 @@ void updateProjs(Enemy * enemies) {
             move_sprite(i, current->x - camera.x_pos, current->y - camera.y_pos);
             /*  Projectile enemy collision. */
             for (Enemy * currentEnemy = enemies; currentEnemy != enemies + 8; currentEnemy++)
-                if (currentEnemy->health > 0 && sprite_sprite_collision(current->x, current->y, 8, 4, currentEnemy->x, currentEnemy->y, 8, 8)) {
+                if (currentEnemy->health > 0 && sprite_sprite_collision(current->x, current->y, 8, 4, currentEnemy->x_pos, currentEnemy->y_pos, 8, 8)) {
                     currentEnemy->health -= current->dmg;
                     current->valid = false;
                     // If the projectile hits an enemy, we don't 

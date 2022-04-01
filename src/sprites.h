@@ -15,6 +15,7 @@
 // TODO: Replace with a more permenant sprite.
 // Test Enemy Sprite.
 #include "../res/test_enemy.h"
+#include "../res/mask.h"
 // TODO: Camera should be able to scroll from one tilemap to another,
 //       as opposed to through one big tilemap like this one.
 // Test tilemap.
