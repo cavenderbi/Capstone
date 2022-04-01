@@ -12,11 +12,12 @@
 typedef struct {
     Direction dir;
     uint8_t x, y;
+    uint8_t dmg;
     bool valid;
     PWR_TYPE type;
 
 } Projectile;
-extern Projectile projectiles[16];
+extern Projectile projectiles[4];
 
 void initProjs();
 void shoot(uint8_t, uint8_t, Direction, PWR_TYPE);

@@ -31,7 +31,7 @@ inline void input() {
     // If player presses A, shoot test projectile.
     static uint16_t prev_shot = UINT16_MAX;
     if (j & J_A) {
-        if (sys_time - prev_shot > 30) {
+        if (sys_time - prev_shot > 15) {
             // Spawn the projectile.
             shoot(player.x_pos, player.y_pos, player.dir, player.element);
             // If the usage is >= 14, then it isn't valid and shouldn't be updated. 
@@ -122,9 +122,9 @@ inline void draw() {
 }
 
 inline void initSprites() {
-    const palette_color_t palettes[] = {RGB_WHITE, RGB_LIGHTGRAY, RGB_DARKGRAY, RGB_BLACK, // GRAYSCALE
-                                        0, RGB_RED, RGB_RED, RGB_DARKRED, // TEST ENEMY
-                                        0, RGBHTML(0x7f9de0), RGBHTML(0x4e81db), RGBHTML(0x2c58ce) }; // MAGIC MISSILE
+    const palette_color_t greyscale[4] = {RGB_WHITE, RGB_LIGHTGRAY, RGB_DARKGRAY, RGB_BLACK};
+    const palette_color_t magic_missile_pal[4] = {0, RGBHTML(0x7f9de0), RGBHTML(0x4e81db), RGBHTML(0x2c58ce)};
+    const palette_color_t test_enemy_pal[4] = {0, RGB_RED, RGB_RED, RGB_DARKRED};
     // Load player color palettes. 
     set_sprite_palette(0, 1, wizard_palettes);
     // Load player sprites.
@@ -132,7 +132,8 @@ inline void initSprites() {
     set_sprite_data(4, 4, wizard_walk_down_tiles);
     set_sprite_data(8, 8, wizard_walk_side_tiles);
 
-    set_sprite_palette(1, 4, palettes);
+    set_sprite_palette(3, 1, test_enemy_pal);
+    set_sprite_palette(4, 1, magic_missile_pal);
     set_sprite_palette(5, 1, fire_palettes);
     set_sprite_palette(6, 1, frost_palettes);
     set_sprite_palette(7, 1, shock_palettes);
@@ -145,7 +146,7 @@ inline void initSprites() {
 
     set_sprite_data(19, 1, powerorb_tiles);
 
-    set_bkg_palette(0, 1, palettes);
+    set_bkg_palette(0, 1, greyscale);
 
     init_HUD();
     draw_HUD_health(player.health);

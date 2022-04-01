@@ -1,10 +1,10 @@
 #include "projectile.h"
 
-Projectile projectiles[16];
+Projectile projectiles[4];
 
 /*  Initialize the projectile array. */
 void initProjs() {
-    for (Projectile * current = projectiles; current != projectiles + 8; current++)
+    for (Projectile * current = projectiles; current != projectiles + 4; current++)
         current->valid = false;
 }
 
@@ -15,23 +15,31 @@ void initProjs() {
 void shoot(uint8_t x, uint8_t y, Direction dir, PWR_TYPE type) {
     /*  Limit the number of projectiles, at least for now. */
     int i = 4;
-    for (Projectile * current = projectiles; current != projectiles + 8; current++, i++)
+    for (Projectile * current = projectiles; current != projectiles + 4; current++, i++)
         if (!current->valid) {
             current->x = x;
             current->y = y;
             current->dir = dir;
             current->valid = true;
+            // Set color palette and projectile damage based on damage type. 
             switch(type) {
+                case PWR_NONE:
+                    set_sprite_prop(i, 4);
+                    break;
                 case PWR_FIRE:
                     set_sprite_prop(i, 5);
+                    current->dmg = 2;
                     break;
                 case PWR_FROST:
                     set_sprite_prop(i, 6);
+                    current->dmg = 1;
                     break;
                 case PWR_SHOCK:
                     set_sprite_prop(i, 7);
+                    current->dmg = 1;
                     break;
             }
+            // Rotate sprite based on the direction. 
             switch(dir) {
                 case UP:
                     set_sprite_tile(i, 0x11);
@@ -59,7 +67,7 @@ void shoot(uint8_t x, uint8_t y, Direction dir, PWR_TYPE type) {
 void updateProjs(Enemy * enemies) {
     const int speed = 3;
     int i = 4;
-    for (Projectile * current = projectiles; current != projectiles + 8; current++, i++) {
+    for (Projectile * current = projectiles; current != projectiles + 4; current++, i++) {
         // If current is invalid, it's the end of the list. 
         // Don't let projectiles leave the screen.
         if (current->valid) {
@@ -88,9 +96,9 @@ void updateProjs(Enemy * enemies) {
             }
             move_sprite(i, current->x - camera.x_pos, current->y - camera.y_pos);
             /*  Projectile enemy collision. */
-            for (Enemy * currentEnemy = enemies; currentEnemy != enemies + 16; currentEnemy++)
+            for (Enemy * currentEnemy = enemies; currentEnemy != enemies + 8; currentEnemy++)
                 if (currentEnemy->health > 0 && sprite_sprite_collision(current->x, current->y, 8, 4, currentEnemy->x, currentEnemy->y, 8, 8)) {
-                    currentEnemy->health--;
+                    currentEnemy->health -= current->dmg;
                     current->valid = false;
                     // If the projectile hits an enemy, we don't 
                     // need to keep looping through the list of enemies. 
