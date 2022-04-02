@@ -26,6 +26,6 @@
 /* Bank of tiles. */
 #define test_enemyBank 0
 /* Start of tile array. */
-extern unsigned char test_enemy[];
+extern const unsigned char test_enemy[];
 
 /* End of TEST_ENEMY.H */

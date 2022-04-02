@@ -30,16 +30,19 @@ inline void input() {
 
     // If player presses A, shoot test projectile.
     static uint16_t prev_shot = UINT16_MAX;
-    static bool shot = true;
     if (j & J_A) {
-        if (sys_time - prev_shot > 30) {
-            if (shot) {
-                shot = false;
-                shoot(player.x_pos, player.y_pos, player.dir);
-            }
+        if (sys_time - prev_shot > 15) {
+            // Spawn the projectile.
+            shoot(player.x_pos, player.y_pos, player.dir, player.element);
+            // If the usage is >= 14, then it isn't valid and shouldn't be updated. 
+            if (--player.usage <= 14 * NUM_SHOTS_PER_BAR && player.usage > 0)
+                draw_HUD_usage(player.usage / NUM_SHOTS_PER_BAR);
+            // If the player uses all of their power-up charge, they revert back to normal. 
+            else
+                draw_HUD_element(player.element = PWR_NONE);
             prev_shot = sys_time;
         }
-    } else shot = true;
+    }
     /* static bool shot = true;
     if (j & J_A) {
         if (shot) {
@@ -54,9 +57,8 @@ inline void input() {
         if (changed) {
             changed = false;
             // Get the next player element.
-            player.element = (player.element + 1) & 3;
             draw_HUD_health(--player.health);
-            draw_HUD_element(player.element);
+            draw_HUD_element(player.element = (player.element + 1) & 3);
         }
     } else changed = true;
 }
@@ -71,8 +73,8 @@ inline void logic() {
     if (player.x_pos > maxx || player.x_pos < minx || player.y_pos > maxy || player.y_pos < miny)
         scroll_camera(&player);
 
-    updateProjs(rooms[player.room_i][player.room_j].enemies, player.room_i, player.room_j);
-    updateEnemies(rooms[player.room_i][player.room_j].enemies);
+    updateProjs(rooms[player.room_i][player.room_j].enemies);
+    updateEnemies(rooms[player.room_i][player.room_j].enemies, &player);
     update_powerups(rooms[player.room_i][player.room_j].powerups, &player);
 }
 
@@ -114,17 +116,15 @@ inline void draw() {
             set_sprite_palette(0, 1, wizard_palettes + 12);
             break;
     }
-    draw_HUD_time((~sys_time / 240) & 7);
 
     // Wait until we're done drawing to the screen.
     wait_vbl_done();
 }
 
 inline void initSprites() {
-    const palette_color_t palettes[] = {RGB_WHITE, RGB_LIGHTGRAY, RGB_DARKGRAY, RGB_BLACK, // GRAYSCALE
-                                        0, RGB_RED, RGB_RED, RGB_DARKRED, // TEST ENEMY
-                                        RGBHTML(0xd0d058), RGBHTML(0xa0a840), RGBHTML(0x708028), RGBHTML(0x405010), // DMG CLASSIC
-                                        0, RGBHTML(0x7f9de0), RGBHTML(0x4e81db), RGBHTML(0x2c58ce) }; // MAGIC MISSILE
+    const palette_color_t greyscale[4] = {RGB_WHITE, RGB_LIGHTGRAY, RGB_DARKGRAY, RGB_BLACK};
+    const palette_color_t magic_missile_pal[4] = {0, RGBHTML(0x7f9de0), RGBHTML(0x4e81db), RGBHTML(0x2c58ce)};
+    const palette_color_t test_enemy_pal[4] = {0, RGB_RED, RGB_RED, RGB_DARKRED};
     // Load player color palettes. 
     set_sprite_palette(0, 1, wizard_palettes);
     // Load player sprites.
@@ -132,24 +132,25 @@ inline void initSprites() {
     set_sprite_data(4, 4, wizard_walk_down_tiles);
     set_sprite_data(8, 8, wizard_walk_side_tiles);
 
-    set_sprite_palette(1, 4, palettes);
+    set_sprite_palette(3, 1, test_enemy_pal);
+    set_sprite_palette(4, 1, magic_missile_pal);
+    set_sprite_palette(5, 1, fire_palettes);
+    set_sprite_palette(6, 1, frost_palettes);
+    set_sprite_palette(7, 1, shock_palettes);
 
-    set_sprite_data(16, 2, player_basic_proj_tiles);
-    // Set projectile color palette. 
-    for (int i = 4; i < 20; i++) 
-        set_sprite_prop(i, 4);
+    set_sprite_data(16, player_basic_proj_TILE_COUNT, player_basic_proj_tiles);
 
-    set_sprite_data(18, 1, test_enemy);
-    for (int i = 20; i < 36; i++) 
-        set_sprite_prop(i, 2);
+    set_sprite_data(18, test_goombah_TILE_COUNT, test_goombah_tiles);
 
-    set_bkg_palette(0, 1, palettes);
+    set_sprite_data(21, 1, powerorb_tiles);
+
+    set_bkg_palette(0, 1, greyscale);
 
     init_HUD();
     draw_HUD_health(player.health);
+    draw_HUD_usage(0);
     draw_HUD_element(player.element);
-    draw_HUD_time(0);
-    move_win(8, 128);
+    move_win(7, 128);
 }
 
 void main() {
@@ -158,15 +159,11 @@ void main() {
 
     initPlayer();
     initEnemies(rooms[player.room_i][player.room_j].enemies);
-    initProjs();
 
     initSprites();
-    init_camera(testroom_big_data, 0x20, 7, testroom_big, testroom_bigWidth, testroom_bigHeight);
+    init_camera(test_fourrooms_tiles, 0x21, test_fourrooms_TILE_COUNT, test_fourrooms_map, test_fourrooms_WIDTH/8, test_fourrooms_HEIGHT/8);
 
     spawnEnemy(60, 60, UP, 4, rooms[player.room_i][player.room_j].enemies);
-    spawnEnemy(80, 60, UP, 8, rooms[player.room_i][player.room_j].enemies);
-    spawnEnemy(120, 60, UP, 4, rooms[player.room_i][player.room_j].enemies);
-
     spawn_powerup(120, 120, PWR_FIRE, rooms[player.room_i][player.room_j].powerups);
 
     SHOW_SPRITES;
@@ -178,5 +175,5 @@ void main() {
         input();
         logic();
         draw();
-    }
+    } 
 }

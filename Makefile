@@ -12,7 +12,7 @@ PNG2ASSET = $(GBDK_HOME)bin/png2asset
 
 # You can set flags for LCC here
 # For example, you can uncomment the line below to turn on debug output
-LCCFLAGS = -Wm-yc #-debug
+LCCFLAGS = -Wm-yc -debug
 
 # You can set the name of the .gb ROM file here
 PROJECTNAME    = WizardsvsWarriors
@@ -43,6 +43,9 @@ res/wizard_walk_side.c:	res/wizard_walk_side.png
 # Create the player_basic_proj..c file from player_basic_proj.png
 res/player_basic_proj.c: res/player_basic_proj.png
 	$(PNG2ASSET) res/player_basic_proj.png -spr8x8
+# Power-up sprite.
+res/powerorb.c: res/powerorb.png
+	$(PNG2ASSET) res/powerorb.png -spr8x8
 # Elemental type icons. 
 res/fire.c: res/fire.png
 	$(PNG2ASSET) res/fire.png -map
@@ -51,10 +54,15 @@ res/frost.c: res/frost.png
 res/shock.c: res/shock.png
 	$(PNG2ASSET) res/shock.png -map
 
-res/heart.c: res/hearts.png	
+res/hearts.c: res/hearts.png	
 	$(PNG2ASSET) res/hearts.png -map
 res/bar.c: res/bar.png
 	$(PNG2ASSET) res/bar.png -map -noflip
+
+res/test_fourrooms.c: res/test_fourrooms.png
+	$(PNG2ASSET) res/test_fourrooms.png -map -noflip
+res/test_goombah.c: res/test_goombah.png
+	$(PNG2ASSET) res/test_goombah.png  -spr8x8 -sh 16
 
 # Compile .c files in "src/" to .o object files
 $(OBJDIR)/%.o:	$(SRCDIR)/%.c
@@ -84,3 +92,5 @@ clean:
 # 	rm -f  *.gb *.ihx *.cdb *.adb *.noi *.map
 	rm -f  $(OBJDIR)/*.*
 
+flash: WizardsvsWarriors.gb
+	sudo ~/Downloads/gameboyflasher/MacLinuxScript\(1\)/joey.sh ROM WizardsvsWarriors.gb

@@ -10,15 +10,18 @@
 #include "../res/wizard_palettes.h" 
 // Player projectile.
 #include "../res/player_basic_proj.h"
+// TODO: make a better power-up sprite. 
+#include "../res/powerorb.h"
 // TODO: Replace with a more permenant sprite.
 // Test Enemy Sprite.
 #include "../res/test_enemy.h"
+#include "../res/mask.h"
+#include "../res/test_goombah.h"
+// TODO: Camera should be able to scroll from one tilemap to another,
+//       as opposed to through one big tilemap like this one.
+// Test tilemap.
+#include "../res/test_fourrooms.h"
 
-// HUD heart tiles. 
-#include "../res/hearts.h"
-// Include the tiles and tilemap for the HUD. 
-#include "../res/hud_data.h"
-#include "../res/hud_tilemap.h"
-
-#include "../res/bigtiles.h"
-#include "../res/TestRoomBig.h"
+#include "../res/fire.h"
+#include "../res/frost.h"
+#include "../res/shock.h"

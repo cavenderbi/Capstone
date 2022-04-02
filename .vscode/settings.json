@@ -2,7 +2,10 @@
     "files.associations": {
         "test.c": "cpp",
         "collision.c": "cpp",
-        "direction.h": "c"
+        "direction.h": "c",
+        "limits": "c",
+        "*.tcc": "c",
+        "projectile.h": "c"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }
