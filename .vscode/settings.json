@@ -4,7 +4,8 @@
         "collision.c": "cpp",
         "direction.h": "c",
         "limits": "c",
-        "*.tcc": "c"
+        "*.tcc": "c",
+        "projectile.h": "c"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }

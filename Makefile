@@ -61,6 +61,8 @@ res/bar.c: res/bar.png
 
 res/test_fourrooms.c: res/test_fourrooms.png
 	$(PNG2ASSET) res/test_fourrooms.png -map -noflip
+res/test_goombah.c: res/test_goombah.png
+	$(PNG2ASSET) res/test_goombah.png  -spr8x8 -sh 16
 
 # Compile .c files in "src/" to .o object files
 $(OBJDIR)/%.o:	$(SRCDIR)/%.c

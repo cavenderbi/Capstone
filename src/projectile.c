@@ -15,7 +15,7 @@ void initProjs() {
     @param dir The direction the projectile is facing. */
 void shoot(uint8_t x, uint8_t y, Direction dir, PWR_TYPE type) {
     /*  Limit the number of projectiles, at least for now. */
-    int i = 4;
+    int i = 0x24;
     for (Projectile * current = projectiles; current != projectiles + 4; current++, i++)
         if (!current->valid) {
             current->x = x;
@@ -67,7 +67,7 @@ void shoot(uint8_t x, uint8_t y, Direction dir, PWR_TYPE type) {
     Then updates the relevant sprites. */
 void updateProjs(Enemy * enemies) {
     const int speed = 3;
-    int i = 4;
+    int i = 0x24;
     for (Projectile * current = projectiles; current != projectiles + 4; current++, i++) {
         // If current is invalid, it's the end of the list. 
         // Don't let projectiles leave the screen.
@@ -98,7 +98,7 @@ void updateProjs(Enemy * enemies) {
             move_sprite(i, current->x - camera.x_pos, current->y - camera.y_pos);
             /*  Projectile enemy collision. */
             for (Enemy * currentEnemy = enemies; currentEnemy != enemies + 8; currentEnemy++)
-                if (currentEnemy->health > 0 && sprite_sprite_collision(current->x, current->y, 8, 4, currentEnemy->x_pos, currentEnemy->y_pos, 8, 8)) {
+                if (currentEnemy->health > 0 && sprite_sprite_collision(current->x - 8, current->y, 8, 4, currentEnemy->x_pos - 8, currentEnemy->y_pos - 8, 16, 16)) {
                     currentEnemy->health -= current->dmg;
                     current->valid = false;
                     // If the projectile hits an enemy, we don't 

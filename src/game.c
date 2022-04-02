@@ -138,13 +138,11 @@ inline void initSprites() {
     set_sprite_palette(6, 1, frost_palettes);
     set_sprite_palette(7, 1, shock_palettes);
 
-    set_sprite_data(16, 2, player_basic_proj_tiles);
+    set_sprite_data(16, player_basic_proj_TILE_COUNT, player_basic_proj_tiles);
 
-    set_sprite_data(18, 1, test_enemy);
-    for (int i = 11; i < 20; i++) 
-        set_sprite_prop(i, 3);
+    set_sprite_data(18, test_goombah_TILE_COUNT, test_goombah_tiles);
 
-    set_sprite_data(19, 1, powerorb_tiles);
+    set_sprite_data(21, 1, powerorb_tiles);
 
     set_bkg_palette(0, 1, greyscale);
 
@@ -161,18 +159,12 @@ void main() {
 
     initPlayer();
     initEnemies(rooms[player.room_i][player.room_j].enemies);
-    initProjs();
 
     initSprites();
     init_camera(test_fourrooms_tiles, 0x21, test_fourrooms_TILE_COUNT, test_fourrooms_map, test_fourrooms_WIDTH/8, test_fourrooms_HEIGHT/8);
 
     spawnEnemy(60, 60, UP, 4, rooms[player.room_i][player.room_j].enemies);
-    spawnEnemy(80, 60, UP, 8, rooms[player.room_i][player.room_j].enemies);
-    spawnEnemy(120, 60, UP, 4, rooms[player.room_i][player.room_j].enemies);
-
     spawn_powerup(120, 120, PWR_FIRE, rooms[player.room_i][player.room_j].powerups);
-    spawn_powerup(80, 120, PWR_FROST, rooms[player.room_i][player.room_j].powerups);
-    spawn_powerup(60, 120, PWR_SHOCK, rooms[player.room_i][player.room_j].powerups);
 
     SHOW_SPRITES;
     SHOW_BKG;

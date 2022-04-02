@@ -26,7 +26,7 @@ void update_powerups(PowerUP * powerups, Player * player) {
                 current->valid = false;
             }
             // Draw sprite. ✍️
-            set_sprite_tile(i, 0x13);
+            set_sprite_tile(i, 21);
             switch (current->type) {
                 case PWR_FIRE:
                     set_sprite_prop(i, get_sprite_prop(i) | 0b101);
