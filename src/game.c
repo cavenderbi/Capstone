@@ -128,8 +128,8 @@ inline void initSprites() {
     set_sprite_data(16, player_basic_proj_TILE_COUNT, player_basic_proj_tiles);
 
     set_sprite_data(0x12, knight_walk_up_TILE_COUNT, knight_walk_up_tiles);
-    set_sprite_data(0x19, knight_walk_down_TILE_COUNT, knight_walk_down_tiles);
-    set_sprite_data(0x20, knight_walk_side_TILE_COUNT, knight_walk_side_tiles);
+    set_sprite_data(0x16, knight_walk_down_TILE_COUNT, knight_walk_down_tiles);
+    set_sprite_data(0x1D, knight_walk_side_TILE_COUNT, knight_walk_side_tiles);
 
     set_sprite_data(0x26, 1, powerorb_tiles);
 

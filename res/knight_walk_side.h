@@ -6,20 +6,21 @@
 #include <gbdk/platform.h>
 #include <gbdk/metasprites.h>
 
-#define knight_walk_side_TILE_H 16
+#define knight_walk_side_TILE_ORIGIN 0
+#define knight_walk_side_TILE_H 8
 #define knight_walk_side_WIDTH 16
-#define knight_walk_side_HEIGHT 32
-#define knight_walk_side_TILE_COUNT 4
+#define knight_walk_side_HEIGHT 16
+#define knight_walk_side_TILE_COUNT 8
 #define knight_walk_side_PIVOT_X 8
-#define knight_walk_side_PIVOT_Y 16
+#define knight_walk_side_PIVOT_Y 8
 #define knight_walk_side_PIVOT_W 16
-#define knight_walk_side_PIVOT_H 32
+#define knight_walk_side_PIVOT_H 16
 
 BANKREF_EXTERN(knight_walk_side)
 
 extern const palette_color_t knight_walk_side_palettes[4];
 extern const uint8_t knight_walk_side_tiles[128];
 
-extern const metasprite_t* const knight_walk_side_metasprites[1];
+extern const metasprite_t* const knight_walk_side_metasprites[2];
 
 #endif
