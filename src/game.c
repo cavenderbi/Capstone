@@ -85,7 +85,8 @@ inline void draw() {
     if (joypad() & (J_UP | J_DOWN | J_LEFT | J_RIGHT)) {
         offset = (sys_time / 12) & 1;
     }
-        
+
+    // Move the player's sprites.
     switch (player.dir) {
         case UP: 
             move_metasprite(wizard_walk_up_metasprites[offset], 0, 0, player.x_pos - camera.x_pos, player.y_pos - camera.y_pos);
@@ -101,22 +102,6 @@ inline void draw() {
             break;
     }
 
-    // Set the player's color palette based on the current damage type.
-    switch (player.element) {
-        case PWR_NONE:
-            set_sprite_palette(0, 1, wizard_palettes);
-            break;
-        case PWR_FIRE: 
-            set_sprite_palette(0, 1, wizard_palettes + 4);
-            break;
-        case PWR_FROST: 
-            set_sprite_palette(0, 1, wizard_palettes + 8);
-            break;
-        case PWR_SHOCK: 
-            set_sprite_palette(0, 1, wizard_palettes + 12);
-            break;
-    }
-
     // Wait until we're done drawing to the screen.
     wait_vbl_done();
 }
@@ -125,24 +110,28 @@ inline void initSprites() {
     const palette_color_t greyscale[4] = {RGB_WHITE, RGB_LIGHTGRAY, RGB_DARKGRAY, RGB_BLACK};
     const palette_color_t magic_missile_pal[4] = {0, RGBHTML(0x7f9de0), RGBHTML(0x4e81db), RGBHTML(0x2c58ce)};
     const palette_color_t test_enemy_pal[4] = {0, RGB_RED, RGB_RED, RGB_DARKRED};
-    // Load player color palettes. 
+    // 1 palette for the player. This will change based on the current damage type. 
     set_sprite_palette(0, 1, wizard_palettes);
-    // Load player sprites.
-    set_sprite_data(0, 4, wizard_walk_up_tiles);
-    set_sprite_data(4, 4, wizard_walk_down_tiles);
-    set_sprite_data(8, 8, wizard_walk_side_tiles);
-
-    set_sprite_palette(3, 1, test_enemy_pal);
+    // 3 palettes for different enemy types.
+    set_sprite_palette(1, 1, knight_walk_side_palettes);
+    // 4 palettes for the different damage types.
     set_sprite_palette(4, 1, magic_missile_pal);
     set_sprite_palette(5, 1, fire_palettes);
     set_sprite_palette(6, 1, frost_palettes);
     set_sprite_palette(7, 1, shock_palettes);
 
+    // Load player sprites.
+    set_sprite_data(0, 4, wizard_walk_up_tiles);
+    set_sprite_data(4, 4, wizard_walk_down_tiles);
+    set_sprite_data(8, 8, wizard_walk_side_tiles);
+
     set_sprite_data(16, player_basic_proj_TILE_COUNT, player_basic_proj_tiles);
 
-    set_sprite_data(18, test_goombah_TILE_COUNT, test_goombah_tiles);
+    set_sprite_data(0x12, knight_walk_up_TILE_COUNT, knight_walk_up_tiles);
+    set_sprite_data(0x19, knight_walk_down_TILE_COUNT, knight_walk_down_tiles);
+    set_sprite_data(0x20, knight_walk_side_TILE_COUNT, knight_walk_side_tiles);
 
-    set_sprite_data(21, 1, powerorb_tiles);
+    set_sprite_data(0x26, 1, powerorb_tiles);
 
     set_bkg_palette(0, 1, greyscale);
 

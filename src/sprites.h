@@ -14,9 +14,9 @@
 #include "../res/powerorb.h"
 // TODO: Replace with a more permenant sprite.
 // Test Enemy Sprite.
-#include "../res/test_enemy.h"
-#include "../res/mask.h"
-#include "../res/test_goombah.h"
+#include "../res/knight_walk_down.h"
+#include "../res/knight_walk_side.h"
+#include "../res/knight_walk_up.h"
 // TODO: Camera should be able to scroll from one tilemap to another,
 //       as opposed to through one big tilemap like this one.
 // Test tilemap.

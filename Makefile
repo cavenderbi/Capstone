@@ -43,6 +43,19 @@ res/wizard_walk_side.c:	res/wizard_walk_side.png
 # Create the player_basic_proj..c file from player_basic_proj.png
 res/player_basic_proj.c: res/player_basic_proj.png
 	$(PNG2ASSET) res/player_basic_proj.png -spr8x8
+
+# Create the knight sprite .c files from the .png files. 
+res/knight_walk_up.c: res/knight_walk_up.png
+	$(PNG2ASSET) res/knight_walk_up.png -sh 16 -spr8x8
+res/knight_walk_down.c: res/knight_walk_down.png
+	$(PNG2ASSET) res/knight_walk_down.png -sh 16 -spr8x8
+res/knight_walk_side.c: res/knight_walk_side.png
+	$(PNG2ASSET) res/knight_walk_side.png -sh 16 -spr8x8
+
+# Create the title screen tilemap and tiles. 
+res/sketch_titlescreen.c: res/sketch_titlescreen.png
+	$(PNG2ASSET) res/sketch_titlescreen.png -map -noflip
+
 # Power-up sprite.
 res/powerorb.c: res/powerorb.png
 	$(PNG2ASSET) res/powerorb.png -spr8x8
@@ -63,6 +76,7 @@ res/test_fourrooms.c: res/test_fourrooms.png
 	$(PNG2ASSET) res/test_fourrooms.png -map -noflip
 res/test_goombah.c: res/test_goombah.png
 	$(PNG2ASSET) res/test_goombah.png  -spr8x8 -sh 16
+
 
 # Compile .c files in "src/" to .o object files
 $(OBJDIR)/%.o:	$(SRCDIR)/%.c

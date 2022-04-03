@@ -1,12 +1,14 @@
-#include "title_screen.h"
+#include <gb/gb.h>
+#include <gb/cgb.h>
+#include "../res/sketch_titlescreen.h"
 
 /*  Displays the tite screen and waits for the player to press start. */
 void show_title() {
-    // Load in the title screen tiles.
-    const uint16_t title_palette[] = { RGB_WHITE, RGB_TEAL, RGB_BLUE, RGB_DARKBLUE };
-    set_bkg_palette(0, 1, title_palette);
-    set_bkg_data(0, 137, test_title_data);
-    set_bkg_tiles(0, 0, 20, 18, test_title_map);
+    DISPLAY_OFF;
+    
+    set_bkg_palette(0, 1, sketch_titlescreen_palettes);
+    set_bkg_data(0, sketch_titlescreen_TILE_COUNT, sketch_titlescreen_tiles);
+    set_bkg_tiles(0, 0, 20, 18, sketch_titlescreen_map);
 
     SHOW_BKG;
     DISPLAY_ON;
