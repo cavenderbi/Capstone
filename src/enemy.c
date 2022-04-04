@@ -7,11 +7,8 @@
 #include "../res/knight_walk_down.h"
 #include "../res/knight_walk_side.h"
 
-/*  Initialize the enemies array. */
-void initEnemies(Enemy * enemies) {
-    for (Enemy * current = enemies; current != enemies + 8; current++)
-        current->health = 0;
-}
+#define LEN(arr) ((int) (sizeof (arr) / sizeof (*arr)))
+
 
 /*  Spawns in an enemy at the given x,y location, facing the given direction,
  *  with the given health. 
@@ -44,7 +41,7 @@ void updateEnemies(Enemy * enemies, Player * player) {
         if (current->health > 0) {
             // Update the enemy position based on the player's position.
             if ((sys_time >> 2) & 1) {
-                if (abs(player->y_pos - current->y_pos) > abs(player->x_pos - current->x_pos)) {
+                if (abs(player->y_pos - current->y_pos) > 0) {
                     if (current->y_pos > player->y_pos) { current->y_pos--; current->dir = UP; }
                     else if (current->y_pos < player->y_pos) { current->y_pos++; current->dir = DOWN; }
                 } else {
@@ -83,6 +80,6 @@ void updateEnemies(Enemy * enemies, Player * player) {
 }
 
 void hideEnemies() {
-    for (int i = 0xB; i <= 0x13; ++i) 
+    for (int i = 0x04; i < 0x14; i++)
         hide_sprite(i);
 }

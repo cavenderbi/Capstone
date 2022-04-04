@@ -12,14 +12,14 @@
 #include "powerup.h"
 
 /*  Each room is defined by the enemies within it and the tilemap it draws. */
-struct _room {
+typedef struct {
     /*  The list of enemies left in that room. Each room 
         has at max 16 enemies. */
     uint8_t * tilemap;
     Enemy enemies[8];
     PowerUP powerups[8];
-};
-extern struct _room rooms[9][9];
+} Room;
+extern Room * rooms[4][4];
 
 void generate_rooms(Player *);
 

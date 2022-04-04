@@ -26,6 +26,7 @@ void shoot(uint8_t x, uint8_t y, Direction dir, PWR_TYPE type) {
             switch(type) {
                 case PWR_NONE:
                     set_sprite_prop(i, 4);
+                    current->dmg = 1;
                     break;
                 case PWR_FIRE:
                     set_sprite_prop(i, 5);

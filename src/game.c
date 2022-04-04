@@ -73,9 +73,9 @@ inline void logic() {
     if (player.x_pos > maxx || player.x_pos < minx || player.y_pos > maxy || player.y_pos < miny)
         scroll_camera(&player);
 
-    updateProjs(rooms[player.room_i][player.room_j].enemies);
-    updateEnemies(rooms[player.room_i][player.room_j].enemies, &player);
-    update_powerups(rooms[player.room_i][player.room_j].powerups, &player);
+    updateProjs(rooms[player.room_i][player.room_j]->enemies);
+    updateEnemies(rooms[player.room_i][player.room_j]->enemies, &player);
+    update_powerups(rooms[player.room_i][player.room_j]->powerups, &player);
 }
 
 // Every ten frames, update the animation. 
@@ -128,8 +128,8 @@ inline void initSprites() {
     set_sprite_data(16, player_basic_proj_TILE_COUNT, player_basic_proj_tiles);
 
     set_sprite_data(0x12, knight_walk_up_TILE_COUNT, knight_walk_up_tiles);
-    set_sprite_data(0x16, knight_walk_down_TILE_COUNT, knight_walk_down_tiles);
     set_sprite_data(0x1D, knight_walk_side_TILE_COUNT, knight_walk_side_tiles);
+    set_sprite_data(0x16, knight_walk_down_TILE_COUNT, knight_walk_down_tiles);
 
     set_sprite_data(0x26, 1, powerorb_tiles);
 
@@ -146,21 +146,24 @@ void main() {
     display_logo_splash();
     show_title();
 
-    initPlayer();
-    initEnemies(rooms[player.room_i][player.room_j].enemies);
+    generate_rooms(&player);
 
+    initPlayer();
     initSprites();
     init_camera(test_fourrooms_tiles, 0x21, test_fourrooms_TILE_COUNT, test_fourrooms_map, test_fourrooms_WIDTH/8, test_fourrooms_HEIGHT/8);
 
-    spawnEnemy(60, 60, UP, 4, rooms[player.room_i][player.room_j].enemies);
-    spawn_powerup(120, 120, PWR_FIRE, rooms[player.room_i][player.room_j].powerups);
+    spawnEnemy(60, 60, UP, 4, rooms[player.room_i][player.room_j]->enemies);
+    spawnEnemy(60, 80, UP, 4, rooms[player.room_i][player.room_j]->enemies);
+    spawnEnemy(60, 120, UP, 4, rooms[player.room_i][player.room_j]->enemies);
+
+    spawn_powerup(120, 120, PWR_FIRE, rooms[player.room_i][player.room_j]->powerups);
 
     SHOW_SPRITES;
     SHOW_BKG;
     SHOW_WIN;
     DISPLAY_ON;
 
-    while (true) {
+    while (player.health > 0) {
         input();
         logic();
         draw();

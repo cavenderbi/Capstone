@@ -21,11 +21,15 @@ const uint8_t knight_walk_down_tiles[112] = {
 };
 
 const metasprite_t knight_walk_down_metasprite0[] = {
-	METASPR_ITEM(-8, -8, 0, 1), METASPR_ITEM(0, 8, 1, 1), METASPR_ITEM(8, -8, 2, 1), METASPR_ITEM(0, 8, 3, 1), METASPR_TERM
+	METASPR_ITEM(-8, -8, 0, 1), METASPR_ITEM( 0,  8, 1, 1), METASPR_ITEM( 8, -8, 2, 1), METASPR_ITEM( 0,  8, 3, 1), METASPR_TERM
 };
 
 const metasprite_t knight_walk_down_metasprite1[] = {
-	METASPR_ITEM(-8, -8, 4, 1), METASPR_ITEM(0, 8, 4, 33), METASPR_ITEM(8, -8, 5, 1), METASPR_ITEM(0, 8, 6, 1), METASPR_TERM
+	METASPR_ITEM(-8, -8, 4, 1), 
+	METASPR_ITEM(0, 8, 4, 33), 
+	METASPR_ITEM(8, -8, 5, 1), 
+	METASPR_ITEM(0, 8, 6, 1), 
+	METASPR_TERM
 };
 
 const metasprite_t* const knight_walk_down_metasprites[2] = {

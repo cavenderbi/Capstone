@@ -1,25 +1,33 @@
 #include "rooms.h"
+#include <stdlib.h>
 
-struct _room rooms[9][9];
+#define LEN(arr) ((int) (sizeof (arr) / sizeof (arr)[0]))
+
+Room * rooms[4][4];
+
+/*  Spawns a room at [i][j]. 
+    Uses malloc. 
+*/
+void spawn_room(uint8_t i, uint8_t j) {
+    if (i > LEN(rooms) || j > LEN(*rooms))
+        return;
+
+    rooms[i][j] = (Room *)calloc(1, sizeof(Room));
+}
+
+/*  Loops through and frees allocated rooms. 
+    Uses free. 
+*/
+void free_rooms() {}
 
 /*  TODO: Acturally generate rooms. Just sets things up for test tilemap. */
 void generate_rooms(Player * player) {
+    spawn_room(0, 0);
+    spawn_room(0, 1);
+    spawn_room(1, 0);
+    spawn_room(1, 1);
 
     // Starting room is [0][0]
     player->room_i = 0;
     player->room_j = 0;
 }
-
-/*  TODO: Remove this. It's a good example of how to loop throught a 2D-array 
-    with pointer for-loops. */
-void print_rooms() {
-    for (struct _room (*p1)[9] = rooms; p1 != rooms + 9; ++p1) {
-        for (struct _room *p2 = *p1; p2 != *p1 + 9; ++p2)
-            if (p2->tilemap != 0)
-                printf("R");
-            else 
-                printf("*");
-        printf("\n");
-    }
-}
-
