@@ -11,6 +11,7 @@
 #define test_fourrooms_WIDTH 320
 #define test_fourrooms_HEIGHT 256
 #define test_fourrooms_TILE_COUNT 21
+#define test_fourrooms_PALETTE_COUNT 1
 #define test_fourrooms_MAP_ATTRIBUTES 0
 #define test_fourrooms_TILE_PALS test_fourrooms_tile_pals
 

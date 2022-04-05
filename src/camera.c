@@ -4,7 +4,7 @@ Cam camera, old_camera;
 
 Map map, old_map;
 
-uint8_t * tilemap;
+const uint8_t * tilemap;
 uint8_t tilemap_height;
 uint8_t tilemap_width;
 uint8_t tile_offset;
@@ -32,7 +32,8 @@ void init_camera(uint8_t * tiles, uint8_t _tile_offset, uint8_t num_tiles, uint8
 
     set_bkg_data(tile_offset, num_tiles, tiles);
     /*  Draw a 20x18 (Gameboy screen sized) submap of the tilemap. */
-    set_bkg_based_submap(map.x_pos, map.y_pos, 20, 18, tilemap, tilemap_width, tile_offset);
+    set_bkg_based_submap(map.x_pos, map.y_pos, 20, 16, tilemap, tilemap_width, tile_offset);
+    fill_rect(0, 16, 20, 2, 0);
     DISPLAY_ON;
 
     camera.x_pos = 0;

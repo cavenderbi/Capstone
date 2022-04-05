@@ -22,6 +22,12 @@
 // Test tilemap.
 #include "../res/test_fourrooms.h"
 
+
+#include "../res/bottomleft.h"
+#include "../res/bottomright.h"
+#include "../res/topleft.h"
+#include "../res/topright.h"
+
 #include "../res/fire.h"
 #include "../res/frost.h"
 #include "../res/shock.h"

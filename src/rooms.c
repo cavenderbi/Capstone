@@ -1,6 +1,11 @@
 #include "rooms.h"
 #include <stdlib.h>
 
+#include "../res/bottomleft.h"
+#include "../res/bottomright.h"
+#include "../res/topleft.h"
+#include "../res/topright.h"
+
 #define LEN(arr) ((int) (sizeof (arr) / sizeof (arr)[0]))
 
 Room * rooms[4][4];
@@ -32,10 +37,10 @@ void generate_rooms(Player * player) {
     spawn_room(1, 0);
     spawn_room(1, 1);
     // Set the tileset for each room. 
-    rooms[0][0]->tilemap;
-    rooms[0][1]->tilemap;
-    rooms[1][0]->tilemap;
-    rooms[1][1]->tilemap;
+    rooms[0][0]->tilemap = topleft_map;
+    rooms[0][1]->tilemap = topright_map;
+    rooms[1][0]->tilemap = bottomleft_map;
+    rooms[1][1]->tilemap = bottomright_map;
 
     // Starting room is [0][0]
     player->room_i = 0;

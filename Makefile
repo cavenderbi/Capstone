@@ -42,7 +42,7 @@ res/wizard_walk_side.c:	res/wizard_walk_side.png
 	$(PNG2ASSET) res/wizard_walk_side.png -sh 16 -spr8x8
 # Create the player_basic_proj..c file from player_basic_proj.png
 res/player_basic_proj.c: res/player_basic_proj.png
-	$(PNG2ASSET) res/player_basic_proj.png -spr8x8
+	$(PNG2ASSET) res/player_basic_proj.png -spr8x8 -tiles_only
 
 # Create the knight sprite .c files from the .png files. 
 res/knight_walk_up.c: res/knight_walk_up.png
@@ -58,7 +58,7 @@ res/sketch_titlescreen.c: res/sketch_titlescreen.png
 
 # Power-up sprite.
 res/powerorb.c: res/powerorb.png
-	$(PNG2ASSET) res/powerorb.png -spr8x8
+	$(PNG2ASSET) res/powerorb.png -spr8x8 -tiles_only
 # Elemental type icons. 
 res/fire.c: res/fire.png
 	$(PNG2ASSET) res/fire.png -map
@@ -74,6 +74,11 @@ res/bar.c: res/bar.png
 
 res/test_fourrooms.c: res/test_fourrooms.png
 	$(PNG2ASSET) res/test_fourrooms.png -map -noflip
+
+tileset: res/bricktileset.png res/bottomleft.png res/bottomright.png res/topleft.png res/topright.png res/test_fourrooms.png
+	$(PNG2ASSET) res/test_fourrooms.png res/bottomleft.png res/bottomright.png res/topleft.png res/topright.png -map -noflip -source-tileset res/test_fourrooms.png
+
+
 res/test_goombah.c: res/test_goombah.png
 	$(PNG2ASSET) res/test_goombah.png  -spr8x8 -sh 16
 

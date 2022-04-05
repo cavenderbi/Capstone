@@ -1,4 +1,7 @@
 #include "game.h"
+#include <stdio.h>
+#include <gbdk/console.h>
+#include <gbdk/font.h>
 
 inline void initPlayer() {
     player.dir = RIGHT;
@@ -49,7 +52,6 @@ inline void input() {
             changed = false;
             // Get the next player element.
             draw_HUD_health(--player.health);
-            draw_HUD_element(player.element = (player.element + 1) & 3);
         }
     } else changed = true;
 }
@@ -136,15 +138,13 @@ inline void initSprites() {
 void main() {
     display_logo_splash();
     show_title();
-
+play_again:
     generate_rooms(&player);
     initPlayer();
     initSprites();
     init_camera(test_fourrooms_tiles, 0x21, test_fourrooms_TILE_COUNT, test_fourrooms_map, test_fourrooms_WIDTH/8, test_fourrooms_HEIGHT/8);
 
     spawnEnemy(60, 60, UP, 4, rooms[player.room_i][player.room_j]->enemies);
-    spawnEnemy(60, 80, UP, 4, rooms[player.room_i][player.room_j]->enemies);
-    spawnEnemy(60, 120, UP, 4, rooms[player.room_i][player.room_j]->enemies);
 
     spawn_powerup(120, 120, PWR_FIRE, rooms[player.room_i][player.room_j]->powerups);
 
@@ -158,6 +158,14 @@ void main() {
         logic();
         draw();
     } 
-    free_rooms();
-    // Death screen stuff goes here. ⬇️
+    free_rooms();   // Free the memory used by the rooms. The last thing I need is my 8KB of WRAM being leaky.
+
+    // TODO: Death screen stuff goes here. ⬇️
+    HIDE_WIN;           // Hides the HUD layer offscreen.
+    font_init();        // Temp death screen. Replace the next four lines, if not the rest. 
+    font_load(font_italic);
+    gotoxy(0, 0);
+    puts("You died.\nPress START to play again."); 
+    waitpad(J_START);   // The next two lines do exactly what they say.
+    goto play_again;    // Wait until the player presses start, then jump back up to where the game starts.
 }
