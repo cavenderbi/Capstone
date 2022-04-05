@@ -25,7 +25,6 @@
 
 Player player;
 
-void initPlayer();
 inline void input();
 inline void logic();
 inline void draw();

@@ -15,12 +15,13 @@
 typedef struct {
     /*  The list of enemies left in that room. Each room 
         has at max 16 enemies. */
-    uint8_t * tilemap;
+    const uint8_t * tilemap;
     Enemy enemies[8];
     PowerUP powerups[8];
 } Room;
 extern Room * rooms[4][4];
 
 void generate_rooms(Player *);
+void free_rooms();
 
 #endif

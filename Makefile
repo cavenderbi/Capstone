@@ -108,3 +108,6 @@ clean:
 
 flash: WizardsvsWarriors.gb
 	sudo ~/Downloads/gameboyflasher/MacLinuxScript\(1\)/joey.sh ROM WizardsvsWarriors.gb
+
+test_randwalk: test_randwalk/test_randwalk.c
+	$(LCC) test_randwalk/test_randwalk.c -o test_randwalk/test_randwalk.gb

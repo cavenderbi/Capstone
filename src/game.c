@@ -1,8 +1,6 @@
 #include "game.h"
 
-void initPlayer() {
-    player.x_pos = 88;
-    player.y_pos = 78;
+inline void initPlayer() {
     player.dir = RIGHT;
     player.health = 12;
 }
@@ -43,13 +41,6 @@ inline void input() {
             prev_shot = sys_time;
         }
     }
-    /* static bool shot = true;
-    if (j & J_A) {
-        if (shot) {
-            shot = false;
-            shoot(player.x_pos, player.y_pos, player.dir);
-        }
-    } else shot = true; */
 
     // TODO: Remove this and use power-ups to enable different damage types. 
     static bool changed = true;
@@ -147,7 +138,6 @@ void main() {
     show_title();
 
     generate_rooms(&player);
-
     initPlayer();
     initSprites();
     init_camera(test_fourrooms_tiles, 0x21, test_fourrooms_TILE_COUNT, test_fourrooms_map, test_fourrooms_WIDTH/8, test_fourrooms_HEIGHT/8);
@@ -168,4 +158,6 @@ void main() {
         logic();
         draw();
     } 
+    free_rooms();
+    // Death screen stuff goes here. ⬇️
 }
