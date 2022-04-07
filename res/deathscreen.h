@@ -6,19 +6,20 @@
 #include <gbdk/platform.h>
 #include <gbdk/metasprites.h>
 
-#define deathscreen_TILE_H 8
+#define deathscreen_TILE_H 16
 #define deathscreen_WIDTH 160
 #define deathscreen_HEIGHT 144
-#define deathscreen_TILE_COUNT 81
-#define deathscreen_MAP_ATTRIBUTES 0
-#define deathscreen_TILE_PALS deathscreen_tile_pals
+#define deathscreen_TILE_COUNT 70
+#define deathscreen_PIVOT_X 80
+#define deathscreen_PIVOT_Y 72
+#define deathscreen_PIVOT_W 160
+#define deathscreen_PIVOT_H 144
 
 BANKREF_EXTERN(deathscreen)
 
 extern const palette_color_t deathscreen_palettes[4];
-extern const uint8_t deathscreen_tiles[1296];
+extern const uint8_t deathscreen_tiles[2240];
 
-extern const unsigned char deathscreen_map[360];
-extern const unsigned char* deathscreen_tile_pals[81];
+extern const metasprite_t* const deathscreen_metasprites[1];
 
 #endif
