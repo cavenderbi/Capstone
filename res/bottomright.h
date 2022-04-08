@@ -11,6 +11,7 @@
 #define bottomright_WIDTH 160
 #define bottomright_HEIGHT 128
 #define bottomright_TILE_COUNT 12
+#define bottomright_PALETTE_COUNT 1
 #define bottomright_MAP_ATTRIBUTES 0
 #define bottomright_TILE_PALS bottomright_tile_pals
 

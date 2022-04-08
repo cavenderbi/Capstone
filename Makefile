@@ -75,8 +75,8 @@ res/bar.c: res/bar.png
 res/test_fourrooms.c: res/test_fourrooms.png
 	$(PNG2ASSET) res/test_fourrooms.png -map -noflip
 
-tileset: res/bricktileset.png res/bottomleft.png res/bottomright.png res/topleft.png res/topright.png res/test_fourrooms.png
-	$(PNG2ASSET) res/test_fourrooms.png res/bottomleft.png res/bottomright.png res/topleft.png res/topright.png -map -noflip -source-tileset res/test_fourrooms.png
+tileset: res/bricktileset.png res/bottomleft.png res/bottomright.png res/topleft.png res/topright.png 
+	$(PNG2ASSET) res/bottomleft.png res/bottomright.png res/topleft.png res/topright.png -map -noflip -source-tileset res/bricktileset.png 
 
 
 res/test_goombah.c: res/test_goombah.png

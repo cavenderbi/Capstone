@@ -9,4 +9,4 @@
 *.adb
 *.cdb
 *.noi
-/.vscode
+.vscode

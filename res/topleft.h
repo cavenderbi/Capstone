@@ -11,6 +11,7 @@
 #define topleft_WIDTH 160
 #define topleft_HEIGHT 128
 #define topleft_TILE_COUNT 12
+#define topleft_PALETTE_COUNT 1
 #define topleft_MAP_ATTRIBUTES 0
 #define topleft_TILE_PALS topleft_tile_pals
 
