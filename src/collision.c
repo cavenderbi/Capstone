@@ -19,7 +19,7 @@ inline bool sprite_sprite_collision(uint8_t x_1, uint8_t y_1, uint8_t width_1, u
 const bool collides[] = {
     true , false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 
     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 
-    false, false, false, false, false, false, false, false, true , false, false, false, false, false, false, false, 
+    false, true , false, false, false, false, false, false, false, false, false, false, false, false, false, false, 
     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 
     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
     false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 

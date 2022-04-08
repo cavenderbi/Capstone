@@ -73,11 +73,16 @@ res/bar.c: res/bar.png
 	$(PNG2ASSET) res/bar.png -map -noflip
 
 # Tilemaps
-res/test_fourrooms.c: res/test_fourrooms.png
-	$(PNG2ASSET) res/test_fourrooms.png -map -noflip
-tileset: res/bricktileset.png res/bottomleft.png res/bottomright.png res/topleft.png res/topright.png 
-	$(PNG2ASSET) res/bottomleft.png res/bottomright.png res/topleft.png res/topright.png -map -noflip -source-tileset res/bricktileset.png 
-
+res/topleft.c: res/topleft.png res/bricktileset.png
+	$(PNG2ASSET) res/topleft.png -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
+res/topright.c: res/topright.png res/bricktileset.png
+	$(PNG2ASSET) res/topright.png -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
+res/bottomleft.c: res/bottomleft.png res/bricktileset.png
+	$(PNG2ASSET) res/bottomleft.png -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
+res/bottomright.c: res/bottomright.png res/bricktileset.png
+	$(PNG2ASSET) res/bottomright.png -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
+res/bricktileset.c: res/bricktileset.png
+	$(PNG2ASSET) res/bricktileset.png -map -noflip -tiles_only
 
 # Compile .c files in "src/" to .o object files
 $(OBJDIR)/%.o:	$(SRCDIR)/%.c

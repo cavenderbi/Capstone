@@ -8,23 +8,13 @@
 #include "player.h"
 #include "powerup.h"
 
-typedef struct _cam {
-    uint16_t x_pos, y_pos;
+typedef struct {
+    uint8_t x_pos, y_pos;
 } Cam;
 
-typedef struct _tilemap {
-    uint8_t x_pos, y_pos;
-} Map;
+extern Cam cam;
 
-extern Cam camera, old_camera;
-extern Map map, old_map;
-
-#define CAMERA_MAX_X ((tilemap_width - 20) * 8)
-#define CAMERA_MAX_Y ((tilemap_width - 18) * 8)
-
-#define MIN(A, B) A < B ? A : B
-
-void init_camera(const uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, const uint8_t * _tilemap, uint8_t _tilemap_width, uint8_t _tilemap_height);
+void init_camera(const uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, const uint8_t * _tilemap);
 void scroll_camera(Player *);
 
 #endif

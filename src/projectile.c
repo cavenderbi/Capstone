@@ -96,7 +96,7 @@ void updateProjs(Enemy * enemies) {
                     else current->valid = false;
                     break;
             }
-            move_sprite(i, current->x - camera.x_pos, current->y - camera.y_pos);
+            move_sprite(i, current->x - cam.x_pos, current->y - cam.y_pos);
             /*  Projectile enemy collision. */
             for (Enemy * currentEnemy = enemies; currentEnemy != enemies + 8; currentEnemy++)
                 if (currentEnemy->health > 0 && sprite_sprite_collision(current->x - 8, current->y, 8, 4, currentEnemy->x_pos - 8, currentEnemy->y_pos - 8, 16, 16)) {

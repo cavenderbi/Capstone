@@ -27,6 +27,7 @@
 #include "../res/bottomright.h"
 #include "../res/topleft.h"
 #include "../res/topright.h"
+#include "../res/bricktileset.h"
 
 #include "../res/fire.h"
 #include "../res/frost.h"

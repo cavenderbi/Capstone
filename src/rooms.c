@@ -37,10 +37,10 @@ void generate_rooms(Player * player) {
     spawn_room(1, 0);
     spawn_room(1, 1);
     // Set the tileset for each room. 
-    rooms[0][0]->tilemap = topleft_map;
-    rooms[0][1]->tilemap = topright_map;
-    rooms[1][0]->tilemap = bottomleft_map;
-    rooms[1][1]->tilemap = bottomright_map;
+    rooms[0][0]->tilemap = topright_map;
+    rooms[0][1]->tilemap = bottomright_map;
+    rooms[1][0]->tilemap = topleft_map;
+    rooms[1][1]->tilemap = bottomleft_map;
 
     // Starting room is [0][0]
     player->room_i = 0;

@@ -6,7 +6,7 @@
 #include <gbdk/platform.h>
 #include <gbdk/metasprites.h>
 
-#define topleft_TILE_ORIGIN 0
+#define topleft_TILE_ORIGIN 33
 #define topleft_TILE_H 8
 #define topleft_WIDTH 160
 #define topleft_HEIGHT 128
@@ -18,6 +18,6 @@
 BANKREF_EXTERN(topleft)
 
 
-extern const unsigned char topleft_map[320];
+extern const unsigned char topleft_map[341];
 
 #endif

@@ -82,16 +82,16 @@ inline void draw() {
     // Move the player's sprites.
     switch (player.dir) {
         case UP: 
-            move_metasprite(wizard_walk_up_metasprites[offset], 0, 0, player.x_pos - camera.x_pos, player.y_pos - camera.y_pos);
+            move_metasprite(wizard_walk_up_metasprites[offset], 0, 0, player.x_pos - (cam.x_pos * 8), player.y_pos - (cam.y_pos * 8));
             break;
         case DOWN:
-            move_metasprite(wizard_walk_down_metasprites[offset], 4, 0, player.x_pos - camera.x_pos, player.y_pos - camera.y_pos);
+            move_metasprite(wizard_walk_down_metasprites[offset], 4, 0, player.x_pos - (cam.x_pos * 8), player.y_pos - (cam.y_pos * 8));
             break;
         case LEFT:
-            move_metasprite(wizard_walk_side_metasprites[offset], 8, 0, player.x_pos - camera.x_pos, player.y_pos - camera.y_pos);
+            move_metasprite(wizard_walk_side_metasprites[offset], 8, 0, player.x_pos - (cam.x_pos * 8), player.y_pos - (cam.y_pos * 8));
             break;
         case RIGHT:
-            move_metasprite_vflip(wizard_walk_side_metasprites[offset], 8, 0, player.x_pos - camera.x_pos, player.y_pos - camera.y_pos);
+            move_metasprite_vflip(wizard_walk_side_metasprites[offset], 8, 0, player.x_pos - (cam.x_pos * 8), player.y_pos - (cam.y_pos * 8));
             break;
     }
 
@@ -142,7 +142,7 @@ play_again:
     generate_rooms(&player);
     initPlayer();
     initSprites();
-    init_camera(test_fourrooms_tiles, 0x21, test_fourrooms_TILE_COUNT, rooms[player.room_i][player.room_j]->tilemap, test_fourrooms_WIDTH/8, test_fourrooms_HEIGHT/8);
+    init_camera(bricktileset_tiles, 0x21, test_fourrooms_TILE_COUNT, rooms[player.room_i][player.room_j]->tilemap);
 
     spawnEnemy(60, 60, UP, 4, rooms[player.room_i][player.room_j]->enemies);
 

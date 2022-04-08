@@ -52,16 +52,16 @@ void updateEnemies(Enemy * enemies, Player * player) {
             // Move the enemy sprite to the correct position. 
             switch (current->dir) {
                 case UP:
-                    move_metasprite(knight_walk_up_metasprites[(sys_time / 12) & 1], 0x12, i, current->x_pos - camera.x_pos, current->y_pos - camera.y_pos);
+                    move_metasprite(knight_walk_up_metasprites[(sys_time / 12) & 1], 0x12, i, current->x_pos - cam.x_pos, current->y_pos - cam.y_pos);
                     break;
                 case DOWN:
-                    move_metasprite(knight_walk_down_metasprites[(sys_time / 12) & 1], 0x16, i, current->x_pos - camera.x_pos, current->y_pos - camera.y_pos);
+                    move_metasprite(knight_walk_down_metasprites[(sys_time / 12) & 1], 0x16, i, current->x_pos - cam.x_pos, current->y_pos - cam.y_pos);
                     break;
                 case LEFT:
-                    move_metasprite(knight_walk_side_metasprites[(sys_time / 12) & 1], 0x1D, i, current->x_pos - camera.x_pos, current->y_pos - camera.y_pos);
+                    move_metasprite(knight_walk_side_metasprites[(sys_time / 12) & 1], 0x1D, i, current->x_pos - cam.x_pos, current->y_pos - cam.y_pos);
                     break;
                 case RIGHT:
-                    move_metasprite_vflip(knight_walk_side_metasprites[(sys_time / 12) & 1], 0x1D, i, current->x_pos - camera.x_pos, current->y_pos - camera.y_pos);
+                    move_metasprite_vflip(knight_walk_side_metasprites[(sys_time / 12) & 1], 0x1D, i, current->x_pos - cam.x_pos, current->y_pos - cam.y_pos);
                     break;
             }
         } else switch (current->dir) {

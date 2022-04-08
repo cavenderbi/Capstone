@@ -6,7 +6,7 @@
 #include <gbdk/platform.h>
 #include <gbdk/metasprites.h>
 
-#define bottomleft_TILE_ORIGIN 0
+#define bottomleft_TILE_ORIGIN 33
 #define bottomleft_TILE_H 8
 #define bottomleft_WIDTH 160
 #define bottomleft_HEIGHT 128

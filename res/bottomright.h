@@ -6,7 +6,7 @@
 #include <gbdk/platform.h>
 #include <gbdk/metasprites.h>
 
-#define bottomright_TILE_ORIGIN 0
+#define bottomright_TILE_ORIGIN 33
 #define bottomright_TILE_H 8
 #define bottomright_WIDTH 160
 #define bottomright_HEIGHT 128
@@ -18,6 +18,6 @@
 BANKREF_EXTERN(bottomright)
 
 
-extern const unsigned char bottomright_map[320];
+extern const unsigned char bottomright_map[341];
 
 #endif
