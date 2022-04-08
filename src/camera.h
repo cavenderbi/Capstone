@@ -24,8 +24,7 @@ extern Map map, old_map;
 
 #define MIN(A, B) A < B ? A : B
 
-void init_camera(uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, uint8_t * _tilemap, uint8_t _tilemap_width, uint8_t _tilemap_height);
+void init_camera(const uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, const uint8_t * _tilemap, uint8_t _tilemap_width, uint8_t _tilemap_height);
 void scroll_camera(Player *);
-static void set_camera();
 
 #endif

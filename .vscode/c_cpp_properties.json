@@ -4,8 +4,7 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "~/Downloads/gbdk/include/**",
-                "/home/gato/Downloads/gbdk/include"
+                "~/Downloads/gbdk/include/**"
             ],
             "defines": [],
             "compilerPath": "~/Downloads/gbdk/bin/lcc",

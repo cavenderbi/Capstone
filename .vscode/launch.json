@@ -8,8 +8,25 @@
             "type": "emulicious-debugger",
             "request": "launch",
             "name": "Launch in Emulicious",
+            "program": "${workspaceFolder}/${command:AskForProgramName}",
+            "emuliciousPath": "/home/cavenderbi/Downloads/Emulicious",
+            "port": 58870,
+            "stopOnEntry": true
+        },
+        {
+            "type": "emulicious-debugger",
+            "request": "launch",
+            "name": "Launch Scroll Test in Emulicious",
+            "program": "${workspaceFolder}/test_randwalk/test_submap.gb",
+            "emuliciousPath": "/home/cavenderbi/Downloads/Emulicious",
+            "port": 58870
+        },
+        {
+            "type": "emulicious-debugger",
+            "request": "launch",
+            "name": "Launch Wizards vs. Warriors in Emulicious",
             "program": "${workspaceFolder}/WizardsvsWarriors.gb",
-            "emuliciousPath": "/home/cavenderbi/Downloads/Emulicious/Emulicious.jar",
+            "emuliciousPath": "/home/cavenderbi/Downloads/Emulicious",
             "port": 58870,
             "stopOnEntry": true
         }

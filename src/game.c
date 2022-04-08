@@ -142,7 +142,7 @@ play_again:
     generate_rooms(&player);
     initPlayer();
     initSprites();
-    init_camera(test_fourrooms_tiles, 0x21, test_fourrooms_TILE_COUNT, test_fourrooms_map, test_fourrooms_WIDTH/8, test_fourrooms_HEIGHT/8);
+    init_camera(test_fourrooms_tiles, 0x21, test_fourrooms_TILE_COUNT, rooms[player.room_i][player.room_j]->tilemap, test_fourrooms_WIDTH/8, test_fourrooms_HEIGHT/8);
 
     spawnEnemy(60, 60, UP, 4, rooms[player.room_i][player.room_j]->enemies);
 
@@ -161,7 +161,7 @@ play_again:
     free_rooms();   // Free the memory used by the rooms. The last thing I need is my 8KB of WRAM being leaky.
 
     // TODO: Death screen stuff goes here. ⬇️
-    HIDE_WIN;           // Hides the HUD layer offscreen.
+    HIDE_WIN;           // Hides the HUD layer.
     font_init();        // Temp death screen. Replace the next four lines, if not the rest. 
     font_load(font_italic);
     gotoxy(0, 0);

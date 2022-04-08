@@ -10,17 +10,14 @@
 #define topright_TILE_H 8
 #define topright_WIDTH 160
 #define topright_HEIGHT 128
-#define topright_TILE_COUNT 12
+#define topright_TILE_COUNT 0
 #define topright_PALETTE_COUNT 1
 #define topright_MAP_ATTRIBUTES 0
 #define topright_TILE_PALS topright_tile_pals
 
 BANKREF_EXTERN(topright)
 
-extern const palette_color_t topright_palettes[4];
-extern const uint8_t topright_tiles[192];
 
 extern const unsigned char topright_map[320];
-extern const unsigned char* topright_tile_pals[12];
 
 #endif

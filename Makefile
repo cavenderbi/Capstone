@@ -66,21 +66,17 @@ res/frost.c: res/frost.png
 	$(PNG2ASSET) res/frost.png -map
 res/shock.c: res/shock.png
 	$(PNG2ASSET) res/shock.png -map
-
+# HUD Icons
 res/hearts.c: res/hearts.png	
 	$(PNG2ASSET) res/hearts.png -map
 res/bar.c: res/bar.png
 	$(PNG2ASSET) res/bar.png -map -noflip
 
+# Tilemaps
 res/test_fourrooms.c: res/test_fourrooms.png
 	$(PNG2ASSET) res/test_fourrooms.png -map -noflip
-
 tileset: res/bricktileset.png res/bottomleft.png res/bottomright.png res/topleft.png res/topright.png 
 	$(PNG2ASSET) res/bottomleft.png res/bottomright.png res/topleft.png res/topright.png -map -noflip -source-tileset res/bricktileset.png 
-
-
-res/test_goombah.c: res/test_goombah.png
-	$(PNG2ASSET) res/test_goombah.png  -spr8x8 -sh 16
 
 
 # Compile .c files in "src/" to .o object files
@@ -113,6 +109,3 @@ clean:
 
 flash: WizardsvsWarriors.gb
 	sudo ~/Downloads/gameboyflasher/MacLinuxScript\(1\)/joey.sh ROM WizardsvsWarriors.gb
-
-test_randwalk: test_randwalk/test_randwalk.c
-	$(LCC) test_randwalk/test_randwalk.c -o test_randwalk/test_randwalk.gb

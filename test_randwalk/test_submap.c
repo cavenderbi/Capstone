@@ -3,6 +3,8 @@
 #include "../res/topleft.h"
 #include "../res/bottomright.h"
 #include "../res/bottomleft.h"
+#include "../res/test_fourrooms.h"
+#include "../res/bricktileset.h"
 
 void set_bkg_tiles_col(uint8_t screen_x, uint8_t screen_y, uint8_t row_height, uint8_t map_width, const uint8_t * p_src_map) {
     // Cache returned address of first map tile vram address
@@ -110,11 +112,9 @@ int scroll_right(uint8_t x, uint8_t y, uint8_t * tilemap, uint8_t tilemap_width,
 }
 
 void main() {
-    set_bkg_data(0, topright_TILE_COUNT, topright_tiles);
-    fill_rect(0, 0, 32, 32, 4);
-    fill_win_rect(0, 0, 21, 2, 0xC);
-    move_win(0, 128);
+    set_bkg_data(0, bricktileset_TILE_COUNT, bricktileset_tiles);
     set_bkg_tiles(0, 0, 20, 16, topright_map);
+    scroll_win(0, 128);
     DISPLAY_ON;
     SHOW_BKG;
     SHOW_WIN;
@@ -124,11 +124,11 @@ void main() {
     while (1) {
         if (joypad() & J_UP)
             y = scroll_up(x, y, topright_map, 20u, 16u);
-        else if (joypad() & J_DOWN)
+        else if (joypad() & J_DOWN) 
             y = scroll_down(x, y, bottomright_map, 20u, 16u);
-        else if (joypad() & J_LEFT)
+        else if (joypad() & J_LEFT) 
             x = scroll_left(x, y, topright_map, 20u, 16u);
         else if (joypad() & J_RIGHT)
-            x = scroll_right(x, y, topleft_map, 20u, 16u);
+             x = scroll_right(x, y, topleft_map, 20u, 16u);
     }
 }
