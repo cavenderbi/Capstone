@@ -1,5 +1,6 @@
 #include "game.h"
 #include <stdio.h>
+#include <rand.h>
 #include <gbdk/console.h>
 #include <gbdk/font.h>
 
@@ -135,10 +136,29 @@ inline void initSprites() {
     move_win(7, 128);
 }
 
+inline void seed_rand() {
+    DISPLAY_ON;
+    SHOW_BKG;
+    gotoxy(0, 0);
+    puts("Getting seed.");
+    puts("Push any key. (1)");
+    waitpad(0xFF);
+    waitpadup();
+    uint16_t seed = DIV_REG;
+    puts("Push any key. (2)");
+    waitpad(0xFF);
+    waitpadup();
+    seed |= (uint16_t)DIV_REG << 8;
+    initrand(seed);
+    HIDE_BKG;
+    DISPLAY_OFF;
+}
+
 void main() {
     display_logo_splash();
     show_title();
 play_again:
+    seed_rand();
     generate_rooms(&player);
     initPlayer();
     initSprites();
