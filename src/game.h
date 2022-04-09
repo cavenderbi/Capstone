@@ -20,6 +20,7 @@
 #include "hud.h"
 #include "powerup.h"
 #include "dmgtype.h"
+#include "failscreen.h"
 
 #define FRAMES_ANIM_UPDATE 10
 
