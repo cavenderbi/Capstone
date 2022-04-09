@@ -161,11 +161,5 @@ play_again:
     free_rooms();   // Free the memory used by the rooms. The last thing I need is my 8KB of WRAM being leaky.
 
     show_deathscreen();
-    HIDE_WIN;           // Hides the HUD layer.
-    font_init();        // Temp death screen. Replace the next four lines, if not the rest. 
-    font_load(font_italic);
-    gotoxy(0, 0);
-    //puts("You died.\nPress START to play again."); 
-    //waitpad(J_START);   // The next two lines do exactly what they say.
     goto play_again;    // Wait until the player presses start, then jump back up to where the game starts.
 }
