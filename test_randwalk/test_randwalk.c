@@ -33,10 +33,10 @@ void main() {
     initrand(seed);
 
     // Pick starting point. 
-    /* ro = rand() % ROW;
-    co = rand() % COL; */
-    ro = ROW / 2;
-    co = COL / 2;
+    ro = rand() % ROW;
+    co = rand() % COL;
+    /* ro = ROW / 2;
+    co = COL / 2; */
     grid[ro][co];
 
     /*  Now, there's four possible moves for the walk to take. 
