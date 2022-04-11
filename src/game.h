@@ -21,6 +21,7 @@
 #include "powerup.h"
 #include "dmgtype.h"
 #include "failscreen.h"
+#include "buttonpressscreen.h"
 
 #define FRAMES_ANIM_UPDATE 10
 
