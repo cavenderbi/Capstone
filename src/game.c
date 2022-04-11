@@ -172,7 +172,7 @@ play_again:
     generate_rooms(&player);
     initPlayer();
     initSprites();
-    init_camera(bricktileset_tiles, 0x21, test_fourrooms_TILE_COUNT, rooms[player.room_i][player.room_j]->tilemap);
+    init_camera(bricktileset_tiles, 0x21, bricktileset_TILE_COUNT, rooms[player.room_i][player.room_j]->tilemap);
 
     spawnEnemy(60, 60, UP, 4, rooms[player.room_i][player.room_j]->enemies);
 
