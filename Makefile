@@ -73,6 +73,7 @@ res/bar.c: res/bar.png
 	$(PNG2ASSET) res/bar.png -map -noflip
 
 # Tilemaps
+    # Corners
 res/topleft.c: res/topleft.png res/bricktileset.png
 	$(PNG2ASSET) res/topleft.png -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
 res/topright.c: res/topright.png res/bricktileset.png
@@ -81,6 +82,33 @@ res/bottomleft.c: res/bottomleft.png res/bricktileset.png
 	$(PNG2ASSET) res/bottomleft.png -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
 res/bottomright.c: res/bottomright.png res/bricktileset.png
 	$(PNG2ASSET) res/bottomright.png -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
+    # Singles
+res/singleup.c: res/singleup.png res/bricktileset.png
+	$(PNG2ASSET) res/singleup.png -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
+res/singledown.c: res/singledown.png res/bricktileset.png
+	$(PNG2ASSET) res/singledown.png  -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
+res/singleleft.c: res/singleleft.png res/bricktileset.png
+	$(PNG2ASSET) res/singleleft.png  -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
+res/singleright.c: res/singleright.png res/bricktileset.png
+	$(PNG2ASSET) res/singleright.png  -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
+    # Three-entrance rooms
+res/middletop.c: res/middletop.png res/bricktileset.png
+	$(PNG2ASSET) res/middletop.png  -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
+res/middlebottom.c: res/middlebottom.png res/bricktileset.png
+	$(PNG2ASSET) res/middlebottom.png  -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
+res/middleleft.c: res/middleleft.png res/bricktileset.png
+	$(PNG2ASSET) res/middleleft.png  -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
+res/middleright.c: res/middleright.png res/bricktileset.png
+	$(PNG2ASSET) res/middleright.png  -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
+    # Center room
+res/middle.c: res/middle.png res/bricktileset.png
+	$(PNG2ASSET) res/middle.png -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
+    # Straights
+res/straighthorizontal.c: res/straighthorizontal.png res/bricktileset.png
+	$(PNG2ASSET) res/straighthorizontal.png  -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
+res/straightvertical.c: res/straightvertical.png res/bricktileset.png
+	$(PNG2ASSET) res/straightvertical.png  -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
+
 res/bricktileset.c: res/bricktileset.png
 	$(PNG2ASSET) res/bricktileset.png -map -noflip -tiles_only
 

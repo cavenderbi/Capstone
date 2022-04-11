@@ -6,21 +6,18 @@
 #include <gbdk/platform.h>
 #include <gbdk/metasprites.h>
 
-#define straightvertical_TILE_ORIGIN 0
-#define straightvertical_TILE_H 16
+#define straightvertical_TILE_ORIGIN 33
+#define straightvertical_TILE_H 8
 #define straightvertical_WIDTH 160
 #define straightvertical_HEIGHT 128
-#define straightvertical_TILE_COUNT 12
-#define straightvertical_PIVOT_X 80
-#define straightvertical_PIVOT_Y 64
-#define straightvertical_PIVOT_W 160
-#define straightvertical_PIVOT_H 128
+#define straightvertical_TILE_COUNT 0
+#define straightvertical_PALETTE_COUNT 1
+#define straightvertical_MAP_ATTRIBUTES 0
+#define straightvertical_TILE_PALS straightvertical_tile_pals
 
 BANKREF_EXTERN(straightvertical)
 
-extern const palette_color_t straightvertical_palettes[4];
-extern const uint8_t straightvertical_tiles[192];
 
-extern const metasprite_t* const straightvertical_metasprites[1];
+extern const unsigned char straightvertical_map[341];
 
 #endif

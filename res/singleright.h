@@ -6,21 +6,18 @@
 #include <gbdk/platform.h>
 #include <gbdk/metasprites.h>
 
-#define singleright_TILE_ORIGIN 0
-#define singleright_TILE_H 16
+#define singleright_TILE_ORIGIN 33
+#define singleright_TILE_H 8
 #define singleright_WIDTH 160
 #define singleright_HEIGHT 128
-#define singleright_TILE_COUNT 14
-#define singleright_PIVOT_X 80
-#define singleright_PIVOT_Y 64
-#define singleright_PIVOT_W 160
-#define singleright_PIVOT_H 128
+#define singleright_TILE_COUNT 0
+#define singleright_PALETTE_COUNT 1
+#define singleright_MAP_ATTRIBUTES 0
+#define singleright_TILE_PALS singleright_tile_pals
 
 BANKREF_EXTERN(singleright)
 
-extern const palette_color_t singleright_palettes[4];
-extern const uint8_t singleright_tiles[224];
 
-extern const metasprite_t* const singleright_metasprites[1];
+extern const unsigned char singleright_map[341];
 
 #endif

@@ -6,21 +6,18 @@
 #include <gbdk/platform.h>
 #include <gbdk/metasprites.h>
 
-#define singleup_TILE_ORIGIN 0
-#define singleup_TILE_H 16
+#define singleup_TILE_ORIGIN 33
+#define singleup_TILE_H 8
 #define singleup_WIDTH 160
 #define singleup_HEIGHT 128
-#define singleup_TILE_COUNT 12
-#define singleup_PIVOT_X 80
-#define singleup_PIVOT_Y 64
-#define singleup_PIVOT_W 160
-#define singleup_PIVOT_H 128
+#define singleup_TILE_COUNT 0
+#define singleup_PALETTE_COUNT 1
+#define singleup_MAP_ATTRIBUTES 0
+#define singleup_TILE_PALS singleup_tile_pals
 
 BANKREF_EXTERN(singleup)
 
-extern const palette_color_t singleup_palettes[4];
-extern const uint8_t singleup_tiles[192];
 
-extern const metasprite_t* const singleup_metasprites[1];
+extern const unsigned char singleup_map[341];
 
 #endif
