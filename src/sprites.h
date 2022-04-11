@@ -15,7 +15,6 @@
 #include "../res/knight_walk_side.h"
 #include "../res/knight_walk_up.h"
 
-
 #include "../res/bottomleft.h"
 #include "../res/bottomright.h"
 #include "../res/topleft.h"
@@ -24,4 +23,4 @@
 
 #include "../res/fire.h"
 #include "../res/frost.h"
-#include "../res/shock.h"
+#include "../res/shock.h
