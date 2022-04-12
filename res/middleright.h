@@ -18,6 +18,6 @@
 BANKREF_EXTERN(middleright)
 
 
-extern const unsigned char middleright_map[341];
+extern const unsigned char middleright_map[320];
 
 #endif

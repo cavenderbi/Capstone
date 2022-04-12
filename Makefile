@@ -112,6 +112,8 @@ res/straightvertical.c: res/straightvertical.png res/bricktileset.png
 res/bricktileset.c: res/bricktileset.png
 	$(PNG2ASSET) res/bricktileset.png -map -noflip -tiles_only
 
+tilesets: res/topleft.c res/topright.c res/bottomleft.c res/bottomright.c res/singleup.c res/singledown.c res/singleleft.c res/singleright.c res/middletop.c res/middlebottom.c res/middleleft.c res/middleright.c res/middle.c res/straighthorizontal.c res/straightvertical.c
+
 # Compile .c files in "src/" to .o object files
 $(OBJDIR)/%.o:	$(SRCDIR)/%.c
 	$(LCC) $(LCCFLAGS) -c -o $@ $<

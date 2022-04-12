@@ -18,6 +18,6 @@
 BANKREF_EXTERN(singleleft)
 
 
-extern const unsigned char singleleft_map[341];
+extern const unsigned char singleleft_map[320];
 
 #endif

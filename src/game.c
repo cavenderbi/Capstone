@@ -136,7 +136,6 @@ inline void initSprites() {
     move_win(7, 128);
 }
 
-/*
 inline void seed_rand() {
     DISPLAY_ON;
     SHOW_BKG;
@@ -164,13 +163,12 @@ inline void seed_rand() {
     HIDE_BKG;
     DISPLAY_OFF;
 }
-*/
 
 void main() {
     display_logo_splash();
     show_title();
 play_again:
-    //seed_rand();
+    seed_rand();
     generate_rooms(&player);
     initPlayer();
     initSprites();

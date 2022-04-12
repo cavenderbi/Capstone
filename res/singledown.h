@@ -18,6 +18,6 @@
 BANKREF_EXTERN(singledown)
 
 
-extern const unsigned char singledown_map[341];
+extern const unsigned char singledown_map[320];
 
 #endif

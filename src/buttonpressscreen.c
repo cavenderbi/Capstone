@@ -2,7 +2,7 @@
 #include <gb/cgb.h>
 #include <stdio.h>
 #include <rand.h>
-#include "../res/buttonscreen.h"
+//#include "../res/buttonscreen.h"
 
 inline void seed_rand() {
     DISPLAY_ON;
@@ -15,9 +15,9 @@ inline void seed_rand() {
     puts("Getting seed.");
     puts("Push any key. (1)");
     */
-    set_bkg_palette(0 ,1 , buttonscreen_palettes);
+    /* set_bkg_palette(0 ,1 , buttonscreen_palettes);
     set_bkg_data(0, 1, buttonscreen_tiles);
-    set_bkg_tiles(0, 0, 20, 18, buttonscreen_map);
+    set_bkg_tiles(0, 0, 20, 18, buttonscreen_map); */
     waitpad(0xFF);  // This function returns the key pressed. Maybe make a variable that stores it, so you can display it to the player.
 
     // DON'T TOUCH THE NEXT 2.

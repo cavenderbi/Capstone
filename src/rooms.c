@@ -43,13 +43,13 @@ void free_rooms() {
 /*  TODO: Acturally generate rooms. Just sets things up for test tilemap. */
 void generate_rooms(Player * player) {
     spawn_room(0, 0);
-    rooms[0][0]->tilemap = topleft_map;
+    rooms[0][0]->tilemap = topright_map;
 
     spawn_room(0, 1); 
     rooms[0][1]->tilemap = middleleft_map;
 
     spawn_room(0, 2);
-    rooms[0][2]->tilemap = bottomleft_map;
+    rooms[0][2]->tilemap = bottomright_map;
 
     spawn_room(1, 0); 
     rooms[1][0]->tilemap = middletop_map;
@@ -61,13 +61,13 @@ void generate_rooms(Player * player) {
     rooms[1][2]->tilemap = middlebottom_map;
 
     spawn_room(2, 0);
-    rooms[2][0]->tilemap = topright_map;
+    rooms[2][0]->tilemap = topleft_map;
 
     spawn_room(2, 1);
     rooms[2][1]->tilemap = middleright_map;
 
     spawn_room(2, 2);
-    rooms[2][2]->tilemap = bottomright_map;
+    rooms[2][2]->tilemap = bottomleft_map;
 
     // Starting room is [0][0]
     player->room_i = 0;

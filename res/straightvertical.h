@@ -18,6 +18,6 @@
 BANKREF_EXTERN(straightvertical)
 
 
-extern const unsigned char straightvertical_map[341];
+extern const unsigned char straightvertical_map[320];
 
 #endif
