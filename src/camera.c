@@ -4,6 +4,8 @@
 uint8_t tile_offset;
 Cam cam;
 
+#define EMPTY_TILE 0x21
+
 /*  Loads in a single column of a tileset.
  *  
  *  @param x Starting X-coordinate (in tiles).
@@ -38,7 +40,11 @@ void scroll_up(Player * player, const uint8_t * tilemap, uint8_t tilemap_width, 
     while (i--) {
         wait_vbl_done();
         cam.y_pos--;
+        // Draw the new row.
         set_bkg_tiles(cam.x_pos % 32, cam.y_pos % 32, tilemap_width, 1u, tilemap);
+        // Erase the old row.
+        wait_vbl_done();
+        fill_bkg_rect(cam.x_pos % 32, (cam.y_pos + tilemap_height) % 32, tilemap_width, 1u, EMPTY_TILE);
         tilemap -= tilemap_width;
         SCY_REG -= 8;
         // Handle player position. 
@@ -48,7 +54,6 @@ void scroll_up(Player * player, const uint8_t * tilemap, uint8_t tilemap_width, 
             scroll_sprite(2, 0, 8);
             scroll_sprite(3, 0, 8);
         } else player->y_pos -= 8;
-        delay(25);
     }
 }
 
@@ -65,7 +70,11 @@ void scroll_down(Player * player, const uint8_t * tilemap, uint8_t tilemap_width
     int i = tilemap_height;
     while (i--) {
         wait_vbl_done();
+        // Draw the new row.
         set_bkg_tiles(cam.x_pos % 32, (cam.y_pos + tilemap_height) % 32, tilemap_width, 1u, tilemap);
+        // Erase the old row.
+        wait_vbl_done();
+        fill_bkg_rect(cam.x_pos % 32, cam.y_pos % 32, tilemap_width, 1u, EMPTY_TILE);
         tilemap += tilemap_width;
         cam.y_pos++;
         SCY_REG += 8;
@@ -76,7 +85,6 @@ void scroll_down(Player * player, const uint8_t * tilemap, uint8_t tilemap_width
             scroll_sprite(2, 0, -8);
             scroll_sprite(3, 0, -8);
         } else player->y_pos += 8;
-        delay(25);
     }
 }
 
@@ -95,7 +103,11 @@ void scroll_left(Player * player, const uint8_t * tilemap, uint8_t tilemap_width
     while (i--) {
         wait_vbl_done();
         cam.x_pos--;
+        // Draw the new column.
         set_bkg_tiles_col(cam.x_pos % 32, cam.y_pos % 32, tilemap_height, tilemap_width, tilemap--);
+        // Erase the old column.
+        wait_vbl_done();
+        fill_bkg_rect((cam.x_pos + tilemap_width) % 32, cam.y_pos % 32, 1u, tilemap_height, EMPTY_TILE);
         SCX_REG -= 8;
         // Handle player position. 
         if ((player->x_pos / 8) - cam.x_pos < 20) {
@@ -104,7 +116,6 @@ void scroll_left(Player * player, const uint8_t * tilemap, uint8_t tilemap_width
             scroll_sprite(2, 8, 0);
             scroll_sprite(3, 8, 0);
         } else player->x_pos -= 8;
-        delay(25);
     }
 }
 
@@ -121,7 +132,11 @@ void scroll_right(Player * player, const uint8_t * tilemap, uint8_t tilemap_widt
     int i = tilemap_width;
     while (i--) {
         wait_vbl_done();
+        // Draw the new column.
         set_bkg_tiles_col((cam.x_pos + tilemap_width) % 32, cam.y_pos % 32, tilemap_height, tilemap_width, tilemap++);
+        // Erase the old column.
+        wait_vbl_done();
+        fill_bkg_rect(cam.x_pos % 32, cam.y_pos % 32, 1u, tilemap_height, EMPTY_TILE);
         cam.x_pos++;
         SCX_REG += 8;
         // Handle player position. 
@@ -131,7 +146,6 @@ void scroll_right(Player * player, const uint8_t * tilemap, uint8_t tilemap_widt
             scroll_sprite(2, -8, 0);
             scroll_sprite(3, -8, 0);
         } else player->x_pos += 8;
-        delay(25);
     }
 }
 
