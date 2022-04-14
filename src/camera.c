@@ -42,11 +42,12 @@ void scroll_up(Player * player, const uint8_t * tilemap, uint8_t tilemap_width, 
         cam.y_pos--;
         // Draw the new row.
         set_bkg_tiles(cam.x_pos % 32, cam.y_pos % 32, tilemap_width, 1u, tilemap);
-        // Erase the old row.
+        // Move the camera.
         wait_vbl_done();
+        SCY_REG -= 8;
+        // Erase the old row.
         fill_bkg_rect(cam.x_pos % 32, (cam.y_pos + tilemap_height) % 32, tilemap_width, 1u, EMPTY_TILE);
         tilemap -= tilemap_width;
-        SCY_REG -= 8;
         // Handle player position. 
         if ((player->y_pos / 8) - cam.y_pos < 17) {
             scroll_sprite(0, 0, 8);
@@ -72,12 +73,13 @@ void scroll_down(Player * player, const uint8_t * tilemap, uint8_t tilemap_width
         wait_vbl_done();
         // Draw the new row.
         set_bkg_tiles(cam.x_pos % 32, (cam.y_pos + tilemap_height) % 32, tilemap_width, 1u, tilemap);
-        // Erase the old row.
+        // Move the camera.
         wait_vbl_done();
+        SCY_REG += 8;
+        // Erase the old row.
         fill_bkg_rect(cam.x_pos % 32, cam.y_pos % 32, tilemap_width, 1u, EMPTY_TILE);
         tilemap += tilemap_width;
         cam.y_pos++;
-        SCY_REG += 8;
         // Handle player position. 
         if ((player->y_pos / 8) - 2 > cam.y_pos) {
             scroll_sprite(0, 0, -8);
@@ -105,10 +107,11 @@ void scroll_left(Player * player, const uint8_t * tilemap, uint8_t tilemap_width
         cam.x_pos--;
         // Draw the new column.
         set_bkg_tiles_col(cam.x_pos % 32, cam.y_pos % 32, tilemap_height, tilemap_width, tilemap--);
-        // Erase the old column.
+        // Move the camera.
         wait_vbl_done();
-        fill_bkg_rect((cam.x_pos + tilemap_width) % 32, cam.y_pos % 32, 1u, tilemap_height, EMPTY_TILE);
         SCX_REG -= 8;
+        // Erase the old column.
+        fill_bkg_rect((cam.x_pos + tilemap_width) % 32, cam.y_pos % 32, 1u, tilemap_height, EMPTY_TILE);
         // Handle player position. 
         if ((player->x_pos / 8) - cam.x_pos < 20) {
             scroll_sprite(0, 8, 0);
@@ -134,11 +137,12 @@ void scroll_right(Player * player, const uint8_t * tilemap, uint8_t tilemap_widt
         wait_vbl_done();
         // Draw the new column.
         set_bkg_tiles_col((cam.x_pos + tilemap_width) % 32, cam.y_pos % 32, tilemap_height, tilemap_width, tilemap++);
-        // Erase the old column.
+        // Move the camera.
         wait_vbl_done();
+        SCX_REG += 8;
+        // Erase the old column.
         fill_bkg_rect(cam.x_pos % 32, cam.y_pos % 32, 1u, tilemap_height, EMPTY_TILE);
         cam.x_pos++;
-        SCX_REG += 8;
         // Handle player position. 
         if ((player->x_pos / 8) - 1 > cam.x_pos) {
             scroll_sprite(0, -8, 0);
@@ -149,18 +153,18 @@ void scroll_right(Player * player, const uint8_t * tilemap, uint8_t tilemap_widt
     }
 }
 
-void init_camera(const uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, const uint8_t * tilemap) {
+void init_camera(const uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, const uint8_t * tilemap, uint8_t x_pos, uint8_t y_pos) {
     DISPLAY_OFF;
 
     // Initialize the camera's position. 
-    cam.x_pos = 0;
-    cam.y_pos = 0;
+    SCX_REG = (cam.x_pos = x_pos * 20) * 8;
+    SCY_REG = (cam.y_pos = y_pos * 16) * 8;
 
     // Clear the screen.
     fill_rect(0, 0, 32, 32, 0x21);
     // Draw the first tilemap. 
     set_bkg_data(tile_offset, num_tiles, tiles);
-    set_bkg_tiles(cam.x_pos, cam.y_pos, 20u, 16u, tilemap);
+    set_bkg_tiles(SCX_REG / 8, SCY_REG / 8, 20u, 16u, tilemap);
 
     DISPLAY_ON;
     SHOW_BKG;

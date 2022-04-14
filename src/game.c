@@ -9,7 +9,7 @@ inline void initPlayer() {
     player.health = 12;
 }
 
-// Reads the user input and responds apropriately. 
+// Reads the user input and responds appropriately. 
 inline void input() {
     uint8_t j = joypad();
     if (j & J_UP) {
@@ -55,6 +55,20 @@ inline void input() {
             draw_HUD_health(--player.health);
         }
     } else changed = true;
+
+    static bool menu = false, pressed = true;
+    if (j & J_SELECT) {
+        if (pressed) {
+            pressed = false;
+            if (menu) {
+                menu = false;
+                scroll_win(0, -128);
+            } else {
+                menu = true;
+                move_win(7, 128);
+            }
+        }
+    } else pressed = true;
 }
 
 // Controls other game functions such as moving projectiles. 
@@ -172,11 +186,7 @@ play_again:
     generate_rooms(&player);
     initPlayer();
     initSprites();
-    init_camera(bricktileset_tiles, 0x21, bricktileset_TILE_COUNT, rooms[player.room_i][player.room_j]->tilemap);
-
-    spawnEnemy(60, 60, UP, 4, rooms[player.room_i][player.room_j]->enemies);
-
-    spawn_powerup(120, 120, PWR_FIRE, rooms[player.room_i][player.room_j]->powerups);
+    init_camera(bricktileset_tiles, 0x21, bricktileset_TILE_COUNT, rooms[player.room_i][player.room_j]->tilemap, player.room_i, player.room_j);
 
     SHOW_SPRITES;
     SHOW_BKG;

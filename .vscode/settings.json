@@ -5,7 +5,8 @@
         "direction.h": "c",
         "limits": "c",
         "*.tcc": "c",
-        "projectile.h": "c"
+        "projectile.h": "c",
+        "topright.h": "c"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }

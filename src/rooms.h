@@ -11,6 +11,9 @@
 #include "player.h"
 #include "powerup.h"
 
+#define ROWS 6
+#define COLS 6
+
 /*  Each room is defined by the enemies within it and the tilemap it draws. */
 typedef struct {
     /*  The list of enemies left in that room. Each room 
@@ -19,7 +22,7 @@ typedef struct {
     Enemy enemies[8];
     PowerUP powerups[8];
 } Room;
-extern Room * rooms[4][4];
+extern Room * rooms[ROWS][COLS];
 
 void generate_rooms(Player *);
 void free_rooms();

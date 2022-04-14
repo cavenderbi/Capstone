@@ -14,7 +14,7 @@ typedef struct {
 
 extern Cam cam;
 
-void init_camera(const uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, const uint8_t * _tilemap);
+void init_camera(const uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, const uint8_t * _tilemap, uint8_t, uint8_t);
 void scroll_camera(Player *);
 
 #endif
