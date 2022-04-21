@@ -14,10 +14,3 @@ const uint8_t powerorb_tiles[16] = {
 	0x3c,0x3c,0x42,0x7e,0x81,0xff,0x99,0xe7,0x99,0xe7,0x81,0xff,0x42,0x7e,0x3c,0x3c
 };
 
-const metasprite_t powerorb_metasprite0[] = {
-	METASPR_ITEM(-4, -4, 0, 0), METASPR_TERM
-};
-
-const metasprite_t* const powerorb_metasprites[1] = {
-	powerorb_metasprite0
-};

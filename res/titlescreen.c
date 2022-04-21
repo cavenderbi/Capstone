@@ -6,7 +6,7 @@
 
 BANKREF(titlescreen)
 
-const palette_color_t titlescreen_palettes[28] = {
+/* const palette_color_t titlescreen_palettes[28] = {
 	RGB8(184, 107, 233), RGB8(108, 125, 171), RGB8(107, 70, 196), RGB8(25, 15, 108),
 	RGB8(108, 125, 171), RGB8(107, 70, 196), RGB8(47, 99, 130), RGB8(25, 15, 108),
 	RGB8(242, 135, 150), RGB8(108, 125, 171), RGB8(107, 70, 196), RGB8(47, 99, 130),
@@ -14,7 +14,7 @@ const palette_color_t titlescreen_palettes[28] = {
 	RGB8(242, 135, 150), RGB8(107, 70, 196), RGB8(47, 99, 130), RGB8(25, 15, 108),
 	RGB8(187, 192, 146), RGB8(242, 135, 150), RGB8(106, 143, 135), RGB8(47, 99, 130),
 	RGB8(187, 192, 146), RGB8(106, 143, 135), RGB8(108, 125, 171), RGB8(25, 15, 108)
-};
+}; */
 
 const uint8_t titlescreen_tiles[3568] = {
 	0x00,0xff,0x00,0xff,0x00,0xff,0x00,0xff,0x00,0xfe,0x00,0xf8,0x00,0xe0,0x00,0x80,

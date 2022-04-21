@@ -84,10 +84,10 @@ void generate_rooms(Player * player) {
         for (uint8_t b = 0; b < COLS; ++b) {
             flags = 0;
             // Set the flags for UP, DOWN, LEFT, and RIGHT.
-            if (a - 1 < ROWS && rooms[b][a - 1] != NULL) flags &= 0x08; // UP
-            if (a + 1 < ROWS && rooms[b][a + 1] != NULL) flags &= 0x04; // DOWN
-            if (b - 1 < COLS && rooms[b - 1][a] != NULL) flags &= 0x02; // LEFT
-            if (b + 1 < COLS && rooms[b + 1][a] != NULL) flags &= 0x01; // RIGHT
+            if (a - 1 < ROWS && rooms[b][a - 1] != NULL) flags |= 0x08; // UP
+            if (a + 1 < ROWS && rooms[b][a + 1] != NULL) flags |= 0x04; // DOWN
+            if (b - 1 < COLS && rooms[b - 1][a] != NULL) flags |= 0x02; // LEFT
+            if (b + 1 < COLS && rooms[b + 1][a] != NULL) flags |= 0x01; // RIGHT
 
             switch (flags) {
                 case 0x0F: rooms[b][a]->tilemap = middle_map;               break; // UP, DOWN, LEFT, and RIGHT // 1111

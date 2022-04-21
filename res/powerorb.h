@@ -11,16 +11,12 @@
 #define powerorb_WIDTH 8
 #define powerorb_HEIGHT 8
 #define powerorb_TILE_COUNT 1
-#define powerorb_PIVOT_X 4
-#define powerorb_PIVOT_Y 4
-#define powerorb_PIVOT_W 8
-#define powerorb_PIVOT_H 8
+#define powerorb_PALETTE_COUNT 1
 
 BANKREF_EXTERN(powerorb)
 
 extern const palette_color_t powerorb_palettes[4];
 extern const uint8_t powerorb_tiles[16];
 
-extern const metasprite_t* const powerorb_metasprites[1];
 
 #endif

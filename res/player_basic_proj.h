@@ -11,16 +11,12 @@
 #define player_basic_proj_WIDTH 8
 #define player_basic_proj_HEIGHT 16
 #define player_basic_proj_TILE_COUNT 2
-#define player_basic_proj_PIVOT_X 4
-#define player_basic_proj_PIVOT_Y 8
-#define player_basic_proj_PIVOT_W 8
-#define player_basic_proj_PIVOT_H 16
+#define player_basic_proj_PALETTE_COUNT 1
 
 BANKREF_EXTERN(player_basic_proj)
 
 extern const palette_color_t player_basic_proj_palettes[4];
 extern const uint8_t player_basic_proj_tiles[32];
 
-extern const metasprite_t* const player_basic_proj_metasprites[1];
 
 #endif

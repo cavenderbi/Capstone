@@ -15,10 +15,3 @@ const uint8_t player_basic_proj_tiles[32] = {
 	0x70,0x70,0x88,0xf8,0xa8,0xd8,0xa8,0xd8,0x70,0x50,0x50,0x70,0x20,0x20,0x20,0x20
 };
 
-const metasprite_t player_basic_proj_metasprite0[] = {
-	METASPR_ITEM(-8, -4, 0, 0), METASPR_ITEM(8, 0, 1, 0), METASPR_TERM
-};
-
-const metasprite_t* const player_basic_proj_metasprites[1] = {
-	player_basic_proj_metasprite0
-};
