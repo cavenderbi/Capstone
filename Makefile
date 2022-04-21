@@ -12,7 +12,7 @@ PNG2ASSET = $(GBDK_HOME)bin/png2asset
 
 # You can set flags for LCC here
 # For example, you can uncomment the line below to turn on debug output
-LCCFLAGS = -Wm-yc -debug
+LCCFLAGS = -Wm-yc -Wl-yoA -Wl-yt0x1A -Wm-yn"WIZARDVSWARRIOR" -debug -autobank
 
 # You can set the name of the .gb ROM file here
 PROJECTNAME    = WizardsvsWarriors
@@ -53,8 +53,8 @@ res/knight_walk_side.c: res/knight_walk_side.png
 	$(PNG2ASSET) res/knight_walk_side.png -sh 16 -spr8x8
 
 # Create the title screen tilemap and tiles. 
-res/sketch_titlescreen.c: res/sketch_titlescreen.png
-	$(PNG2ASSET) res/sketch_titlescreen.png -map -noflip
+res/titlescreen.c: res/titlescreen.png
+	$(PNG2ASSET) res/titlescreen.png -map -noflip -b 1
 
 # Power-up sprite.
 res/powerorb.c: res/powerorb.png

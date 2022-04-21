@@ -24,3 +24,5 @@
 #include "../res/fire.h"
 #include "../res/frost.h"
 #include "../res/shock.h"
+
+#include "../res/titlescreen.h"

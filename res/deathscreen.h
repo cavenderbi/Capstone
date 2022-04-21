@@ -11,6 +11,7 @@
 #define deathscreen_WIDTH 160
 #define deathscreen_HEIGHT 144
 #define deathscreen_TILE_COUNT 106
+#define deathscreen_PALETTE_COUNT 1
 #define deathscreen_MAP_ATTRIBUTES 0
 #define deathscreen_TILE_PALS deathscreen_tile_pals
 

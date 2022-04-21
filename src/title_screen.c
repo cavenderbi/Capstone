@@ -3,6 +3,7 @@
 #include "../res/titlescreen.h"
 
 /*  Displays the tite screen and waits for the player to press start. */
+BANKREF(show_title)
 void show_title() {
     DISPLAY_OFF;
     
@@ -13,7 +14,7 @@ void show_title() {
     /* VBK_REG = 1; 
     set_bkg_tiles(0, 0, 20, 18, titlescreen_tile_pals);
     VBK_REG = 0; */
-    
+
     SHOW_BKG;
     DISPLAY_ON;
     // Wait for the user to press start. 

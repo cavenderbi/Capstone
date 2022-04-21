@@ -1,17 +1,13 @@
 #include <gb/gb.h>
 #include <gb/cgb.h>
 
-#include "../res/test_logo_data.h"
-#include "../res/test_logo_map.h"
-
-#include "logo_splash.h"
+#include "../res/test_logo.h"
 
 void display_logo_splash() {
     DISPLAY_OFF;
 
-    const palette_color_t pal[] = { RGB_WHITE, RGB_WHITE, RGB_WHITE, RGB_BLACK };
-    set_bkg_palette(0, 1, pal);
-    set_bkg_data(0, 75, test_logo_data);
+    set_bkg_palette(0, test_logo_PALETTE_COUNT, test_logo_palettes);
+    set_bkg_data(0, test_logo_TILE_COUNT, test_logo_tiles);
     set_bkg_tiles(0, 0, 20, 18, test_logo_map);
 
     SHOW_BKG;

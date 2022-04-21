@@ -46,7 +46,7 @@ inline void input() {
         }
     }
 
-    // TODO: Remove this and use power-ups to enable different damage types. 
+    // TODO: Remove this and use enemies to deal damage. 
     static bool changed = true;
     if (j & J_B) {
         if (changed) {
@@ -55,20 +55,6 @@ inline void input() {
             draw_HUD_health(--player.health);
         }
     } else changed = true;
-
-    static bool menu = false, pressed = true;
-    if (j & J_SELECT) {
-        if (pressed) {
-            pressed = false;
-            if (menu) {
-                menu = false;
-                scroll_win(0, -128);
-            } else {
-                menu = true;
-                move_win(7, 128);
-            }
-        }
-    } else pressed = true;
 }
 
 // Controls other game functions such as moving projectiles. 
@@ -197,7 +183,7 @@ play_again:
         input();
         logic();
         draw();
-    } 
+    }
     free_rooms();   // Free the memory used by the rooms. The last thing I need is my 8KB of WRAM being leaky.
 
     show_deathscreen();
