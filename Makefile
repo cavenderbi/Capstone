@@ -12,7 +12,7 @@ PNG2ASSET = $(GBDK_HOME)bin/png2asset
 
 # You can set flags for LCC here
 # For example, you can uncomment the line below to turn on debug output
-LCCFLAGS = -Wm-yc -Wl-yoA -Wl-yt0x1A -Wm-yn"WIZARDVSWARRIOR" -debug -autobank
+LCCFLAGS = -Wm-yc -Wl-yoA -Wm-yn"WIZVWARRIOR" -debug 
 
 # You can set the name of the .gb ROM file here
 PROJECTNAME    = WizardsvsWarriors
@@ -31,88 +31,25 @@ compile.bat: Makefile
 	@echo "REM Automatically generated from Makefile" > compile.bat
 	@make -sn | sed y/\\//\\\\/ | grep -v make >> compile.bat
 
-# Create the wizard.c file from wizard.png
-res/wizard_walk_up.c:	res/wizard_walk_up.png
-	$(PNG2ASSET) res/wizard_walk_up.png -sh 16 -spr8x8
-# Create the wizard.c file from wizard.png
-res/wizard_walk_down.c:	res/wizard_walk_down.png
-	$(PNG2ASSET) res/wizard_walk_down.png -sh 16 -spr8x8
-# Create the wizard.c file from wizard.png
-res/wizard_walk_side.c:	res/wizard_walk_side.png
-	$(PNG2ASSET) res/wizard_walk_side.png -sh 16 -spr8x8
-# Create the player_basic_proj..c file from player_basic_proj.png
-res/player_basic_proj.c: res/player_basic_proj.png
-	$(PNG2ASSET) res/player_basic_proj.png -spr8x8 -tiles_only
+# Splash screens
+res/%.c: res/splashes/%.png 
+	$(PNG2ASSET) $< -o $@ -map -noflip -use_map_attributes
 
-# Create the knight sprite .c files from the .png files. 
-res/knight_walk_up.c: res/knight_walk_up.png
-	$(PNG2ASSET) res/knight_walk_up.png -sh 16 -spr8x8
-res/knight_walk_down.c: res/knight_walk_down.png
-	$(PNG2ASSET) res/knight_walk_down.png -sh 16 -spr8x8
-res/knight_walk_side.c: res/knight_walk_side.png
-	$(PNG2ASSET) res/knight_walk_side.png -sh 16 -spr8x8
+# Sprites
+res/%.c: res/sprites/size8/%.png
+	$(PNG2ASSET) $< -o $@ -spr8x8 -tiles_only
+res/%.c: res/sprites/size16%.png
+	$(PNG2ASSET) $< -o $@ -sh 16 -spr8x8
 
-# Create the title screen tilemap and tiles. 
-res/titlescreen.c: res/titlescreen.png
-	$(PNG2ASSET) res/titlescreen.png -map -noflip -b 1
-
-# Power-up sprite.
-res/powerorb.c: res/powerorb.png
-	$(PNG2ASSET) res/powerorb.png -spr8x8 -tiles_only
-# Elemental type icons. 
-res/fire.c: res/fire.png
-	$(PNG2ASSET) res/fire.png -map
-res/frost.c: res/frost.png
-	$(PNG2ASSET) res/frost.png -map
-res/shock.c: res/shock.png
-	$(PNG2ASSET) res/shock.png -map
-# HUD Icons
-res/hearts.c: res/hearts.png	
-	$(PNG2ASSET) res/hearts.png -map
-res/bar.c: res/bar.png
-	$(PNG2ASSET) res/bar.png -map -noflip
+# HUD elements. 
+res/%.c: res/hud_elements/%.png
+	$(PNG2ASSET) $< -o $@ -map -noflip
 
 # Tilemaps
-    # Corners
-res/topleft.c: res/topleft.png res/bricktileset.png
-	$(PNG2ASSET) res/topleft.png -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
-res/topright.c: res/topright.png res/bricktileset.png
-	$(PNG2ASSET) res/topright.png -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
-res/bottomleft.c: res/bottomleft.png res/bricktileset.png
-	$(PNG2ASSET) res/bottomleft.png -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
-res/bottomright.c: res/bottomright.png res/bricktileset.png
-	$(PNG2ASSET) res/bottomright.png -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
-    # Singles
-res/singleup.c: res/singleup.png res/bricktileset.png
-	$(PNG2ASSET) res/singleup.png -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
-res/singledown.c: res/singledown.png res/bricktileset.png
-	$(PNG2ASSET) res/singledown.png  -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
-res/singleleft.c: res/singleleft.png res/bricktileset.png
-	$(PNG2ASSET) res/singleleft.png  -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
-res/singleright.c: res/singleright.png res/bricktileset.png
-	$(PNG2ASSET) res/singleright.png  -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
-    # Three-entrance rooms
-res/middletop.c: res/middletop.png res/bricktileset.png
-	$(PNG2ASSET) res/middletop.png  -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
-res/middlebottom.c: res/middlebottom.png res/bricktileset.png
-	$(PNG2ASSET) res/middlebottom.png  -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
-res/middleleft.c: res/middleleft.png res/bricktileset.png
-	$(PNG2ASSET) res/middleleft.png  -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
-res/middleright.c: res/middleright.png res/bricktileset.png
-	$(PNG2ASSET) res/middleright.png  -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
-    # Center room
-res/middle.c: res/middle.png res/bricktileset.png
-	$(PNG2ASSET) res/middle.png -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
-    # Straights
-res/straighthorizontal.c: res/straighthorizontal.png res/bricktileset.png
-	$(PNG2ASSET) res/straighthorizontal.png  -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
-res/straightvertical.c: res/straightvertical.png res/bricktileset.png
-	$(PNG2ASSET) res/straightvertical.png  -map -noflip -source_tileset res/bricktileset.png -tile_origin 33
-
 res/bricktileset.c: res/bricktileset.png
 	$(PNG2ASSET) res/bricktileset.png -map -noflip -tiles_only
-
-tilesets: res/topleft.c res/topright.c res/bottomleft.c res/bottomright.c res/singleup.c res/singledown.c res/singleleft.c res/singleright.c res/middletop.c res/middlebottom.c res/middleleft.c res/middleright.c res/middle.c res/straighthorizontal.c res/straightvertical.c
+res/%.c: res/rooms/%.png res/bricktileset.png
+	$(PNG2ASSET) $< -o $@ -map -noflip -source_tileset res/bricktileset.png -tile_origin 33 
 
 # Compile .c files in "src/" to .o object files
 $(OBJDIR)/%.o:	$(SRCDIR)/%.c

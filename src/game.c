@@ -136,27 +136,35 @@ inline void initSprites() {
     move_win(7, 128);
 }
 
+void putbutton(uint8_t pad) {
+    switch(pad) {
+        case J_A:      putchar('A'); break;
+        case J_B:      putchar('B'); break;
+        case J_UP:     putchar('^'); break;
+        case J_DOWN:   putchar('v'); break;
+        case J_LEFT:   putchar('<'); break;
+        case J_RIGHT:  putchar('>'); break;
+        case J_SELECT: putchar('s'); break;
+        case J_START:  putchar('S'); break;
+    }
+}
+
 inline void seed_rand() {
     DISPLAY_ON;
     SHOW_BKG;
-    // These next 5 lines should be replaced by an inital set_bkg_data and set_bkg_tiles.
+    if (_cpu == CGB_TYPE) {
+        VBK_REG = 1; 
+        fill_rect(0, 0, 20, 18, 0);
+        VBK_REG = 0;
+    }
     font_init();
     font_load(font_italic);
     gotoxy(0, 0);
     puts("Getting seed.");
-    puts("Push any key. (1)");
-    waitpad(0xFF);  // This function returns the key pressed. Maybe make a variable that stores it, so you can display it to the player.
-    
-    // DON'T TOUCH THE NEXT 2.
+    putbutton(waitpad(0xFF));
     waitpadup();
     uint16_t seed = DIV_REG;
-    // DON'T TOUCH THE PREVIOUS 2.
-    
-    puts("Push any key. (2)");  // Replace this with something to display which button the player pressed.
-    waitpad(0xFF);  // This function returns the key pressed. Maybe reuse that variable that stores it, so you can display it to the player.
-    // Put something here to display the player's second button.
-
-    // DON'T TOUCH ANYTHING BELOW THIS POINT.
+    putbutton(waitpad(0xFF));
     waitpadup();
     seed |= (uint16_t)DIV_REG << 8;
     initrand(seed);

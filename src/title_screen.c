@@ -6,14 +6,14 @@
 BANKREF(show_title)
 void show_title() {
     DISPLAY_OFF;
-    
-    //set_bkg_palette(0, titlescreen_PALETTE_COUNT, titlescreen_palettes);
+    if (_cpu == CGB_TYPE) {
+        set_bkg_palette(0, titlescreen_PALETTE_COUNT, titlescreen_palettes);
+        VBK_REG = 1;
+        set_bkg_tiles(0, 0, titlescreen_WIDTH >> 3, titlescreen_HEIGHT >> 3, titlescreen_map_attributes);
+        VBK_REG = 0;
+    }
     set_bkg_data(0, titlescreen_TILE_COUNT, titlescreen_tiles);
     set_bkg_tiles(0, 0, 20, 18, titlescreen_map);
-
-    /* VBK_REG = 1; 
-    set_bkg_tiles(0, 0, 20, 18, titlescreen_tile_pals);
-    VBK_REG = 0; */
 
     SHOW_BKG;
     DISPLAY_ON;

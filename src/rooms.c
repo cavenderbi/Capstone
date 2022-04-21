@@ -108,14 +108,4 @@ void generate_rooms(Player * player) {
             }
         }
     }
-    // TODO: Remove layout print once the above is implemented.
-    font_init();
-    for (int a = 0; a < ROWS; ++a) {
-        for (int b = 0; b < COLS; ++b)
-            if (b == player->room_i && a == player->room_j)
-                putchar('S');
-            else putchar(rooms[b][a] != NULL ? '1' : '0');
-        if (a < ROWS - 1) putchar('\n');
-    }
-    waitpad(J_START);
 }
