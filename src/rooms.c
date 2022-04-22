@@ -1,4 +1,5 @@
 #include "rooms.h"
+#include "enemy.h"
 #include <stdlib.h>
 #include <rand.h>
 #include <gbdk/font.h>
@@ -82,29 +83,41 @@ void generate_rooms(Player * player) {
     uint8_t flags;
     for (uint8_t a = 0; a < ROWS; ++a) {
         for (uint8_t b = 0; b < COLS; ++b) {
-            flags = 0;
-            // Set the flags for UP, DOWN, LEFT, and RIGHT.
-            if (a - 1 < ROWS && rooms[b][a - 1] != NULL) flags |= 0x08; // UP
-            if (a + 1 < ROWS && rooms[b][a + 1] != NULL) flags |= 0x04; // DOWN
-            if (b - 1 < COLS && rooms[b - 1][a] != NULL) flags |= 0x02; // LEFT
-            if (b + 1 < COLS && rooms[b + 1][a] != NULL) flags |= 0x01; // RIGHT
+            if (rooms[b][a] != NULL) {
+                flags = 0;
+                // Set the flags for UP, DOWN, LEFT, and RIGHT.
+                if (a - 1 < ROWS && rooms[b][a - 1] != NULL) flags |= 0x08; // UP
+                if (a + 1 < ROWS && rooms[b][a + 1] != NULL) flags |= 0x04; // DOWN
+                if (b - 1 < COLS && rooms[b - 1][a] != NULL) flags |= 0x02; // LEFT
+                if (b + 1 < COLS && rooms[b + 1][a] != NULL) flags |= 0x01; // RIGHT
 
-            switch (flags) {
-                case 0x0F: rooms[b][a]->tilemap = middle_map;               break; // UP, DOWN, LEFT, and RIGHT // 1111
-                case 0x0E: rooms[b][a]->tilemap = middleright_map;          break; // UP, DOWN, and LEFT        // 1110
-                case 0x0D: rooms[b][a]->tilemap = middleleft_map;           break; // UP, DOWN, and RIGHT       // 1101
-                case 0x0C: rooms[b][a]->tilemap = straightvertical_map;     break; // UP and DOWN               // 1100
-                case 0x0B: rooms[b][a]->tilemap = middlebottom_map;         break; // UP, LEFT, and RIGHT       // 1011
-                case 0x0A: rooms[b][a]->tilemap = bottomleft_map;           break; // UP and LEFT               // 1010
-                case 0x09: rooms[b][a]->tilemap = bottomright_map;          break; // UP and RIGHT              // 1001
-                case 0x08: rooms[b][a]->tilemap = singleup_map;             break; // UP only                   // 1000
-                case 0x07: rooms[b][a]->tilemap = middletop_map;            break; // DOWN, LEFT, and RIGHT     // 0111
-                case 0x06: rooms[b][a]->tilemap = topleft_map;              break; // DOWN and LEFT             // 0110
-                case 0x05: rooms[b][a]->tilemap = topright_map;             break; // DOWN and RIGHT            // 0101
-                case 0x04: rooms[b][a]->tilemap = singledown_map;           break; // DOWN only                 // 0100
-                case 0x03: rooms[b][a]->tilemap = straighthorizontal_map;   break; // LEFT and RIGHT            // 0011
-                case 0x02: rooms[b][a]->tilemap = singleleft_map;           break; // LEFT only                 // 0010
-                case 0x01: rooms[b][a]->tilemap = singleright_map;          break; // RIGHT only                // 0001
+                switch (flags) {
+                    case 0x0F: rooms[b][a]->tilemap = middle_map;               break; // UP, DOWN, LEFT, and RIGHT // 1111
+                    case 0x0E: rooms[b][a]->tilemap = middleright_map;          break; // UP, DOWN, and LEFT        // 1110
+                    case 0x0D: rooms[b][a]->tilemap = middleleft_map;           break; // UP, DOWN, and RIGHT       // 1101
+                    case 0x0C: rooms[b][a]->tilemap = straightvertical_map;     break; // UP and DOWN               // 1100
+                    case 0x0B: rooms[b][a]->tilemap = middlebottom_map;         break; // UP, LEFT, and RIGHT       // 1011
+                    case 0x0A: rooms[b][a]->tilemap = bottomleft_map;           break; // UP and LEFT               // 1010
+                    case 0x09: rooms[b][a]->tilemap = bottomright_map;          break; // UP and RIGHT              // 1001
+                    case 0x08: rooms[b][a]->tilemap = singleup_map;             break; // UP only                   // 1000
+                    case 0x07: rooms[b][a]->tilemap = middletop_map;            break; // DOWN, LEFT, and RIGHT     // 0111
+                    case 0x06: rooms[b][a]->tilemap = topleft_map;              break; // DOWN and LEFT             // 0110
+                    case 0x05: rooms[b][a]->tilemap = topright_map;             break; // DOWN and RIGHT            // 0101
+                    case 0x04: rooms[b][a]->tilemap = singledown_map;           break; // DOWN only                 // 0100
+                    case 0x03: rooms[b][a]->tilemap = straighthorizontal_map;   break; // LEFT and RIGHT            // 0011
+                    case 0x02: rooms[b][a]->tilemap = singleleft_map;           break; // LEFT only                 // 0010
+                    case 0x01: rooms[b][a]->tilemap = singleright_map;          break; // RIGHT only                // 0001
+                }
+                flags = rand();
+                int enemy_x_pos = (20*8*b) + 8, enemy_y_pos = (16*8*a) + 16;
+                if (flags & 0x1)
+                    spawnEnemy(enemy_x_pos + 32, enemy_y_pos + 32, UP, 4, rooms[b][a]->enemies);
+                if (flags & 0x2)
+                    spawnEnemy(enemy_x_pos + 32, enemy_y_pos + 96, UP, 4, rooms[b][a]->enemies);
+                if (flags & 0x4)
+                    spawnEnemy(enemy_x_pos + 96, enemy_y_pos + 32, UP, 4, rooms[b][a]->enemies);
+                if (flags & 0x8)
+                    spawnEnemy(enemy_x_pos + 96, enemy_y_pos + 96, UP, 4, rooms[b][a]->enemies);
             }
         }
     }

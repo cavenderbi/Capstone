@@ -171,8 +171,7 @@ void init_camera(const uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, 
 }
 
 void scroll_camera(Player * player) {
-    hideEnemies();
-    hide_powerups();
+    hide_sprites_range(4, MAX_HARDWARE_SPRITES);
     switch(player->dir) {
         case UP:
             scroll_up(player, rooms[player->room_i][--player->room_j]->tilemap, 20u, 16u);

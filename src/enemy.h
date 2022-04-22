@@ -8,14 +8,13 @@
 #include <gb/metasprites.h>
 
 typedef struct {
-    uint8_t x_pos;
-    uint8_t y_pos;
+    uint16_t x_pos;
+    uint16_t y_pos;
     uint8_t health;
     Direction dir;
 } Enemy;
 
-void spawnEnemy(uint8_t, uint8_t, Direction, uint8_t, Enemy *);
+void spawnEnemy(uint16_t, uint16_t, Direction, uint8_t, Enemy *);
 void updateEnemies(Enemy *, Player *);
-void hideEnemies();
 
 #endif

@@ -4,10 +4,7 @@
 #include <gbdk/console.h>
 #include <gbdk/font.h>
 
-inline void initPlayer() {
-    player.dir = RIGHT;
-    player.health = 12;
-}
+Player player;
 
 // Reads the user input and responds appropriately. 
 inline void input() {
@@ -105,7 +102,7 @@ inline void initSprites() {
     const palette_color_t magic_missile_pal[4] = {0, RGBHTML(0x7f9de0), RGBHTML(0x4e81db), RGBHTML(0x2c58ce)};
     const palette_color_t test_enemy_pal[4] = {0, RGB_RED, RGB_RED, RGB_DARKRED};
     // 1 palette for the player. This will change based on the current damage type. 
-    set_sprite_palette(0, 1, wizard_palettes);
+    set_sprite_palette(0, 1, wizard_walk_down_palettes);
     // 3 palettes for different enemy types.
     set_sprite_palette(1, 1, knight_walk_side_palettes);
     // 4 palettes for the different damage types.
@@ -175,10 +172,10 @@ inline void seed_rand() {
 void main() {
     display_logo_splash();
     show_title();
-play_again:
+play_again: 
     seed_rand();
     generate_rooms(&player);
-    initPlayer();
+    player.health = 14;
     initSprites();
     init_camera(bricktileset_tiles, 0x21, bricktileset_TILE_COUNT, rooms[player.room_i][player.room_j]->tilemap, player.room_i, player.room_j);
 
@@ -193,7 +190,7 @@ play_again:
         draw();
     }
     free_rooms();   // Free the memory used by the rooms. The last thing I need is my 8KB of WRAM being leaky.
-
+    
     show_deathscreen();
     goto play_again;    // Wait until the player presses start, then jump back up to where the game starts.
 }

@@ -12,7 +12,7 @@ PNG2ASSET = $(GBDK_HOME)bin/png2asset
 
 # You can set flags for LCC here
 # For example, you can uncomment the line below to turn on debug output
-LCCFLAGS = -Wm-yc -Wl-yoA -Wm-yn"WIZVWARRIOR" -debug 
+LCCFLAGS = -Wm-yc -Wm-yn"WIZVWARRIOR" -debug 
 
 # You can set the name of the .gb ROM file here
 PROJECTNAME    = WizardsvsWarriors

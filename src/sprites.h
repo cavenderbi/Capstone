@@ -6,8 +6,7 @@
 // Player sprites. 
 #include "../res/wizard_walk_up.h"
 #include "../res/wizard_walk_down.h"
-#include "../res/wizard_walk_side.h" 
-#include "../res/wizard_palettes.h" 
+#include "../res/wizard_walk_side.h"
 // Player projectile.
 #include "../res/player_basic_proj.h"
 #include "../res/powerorb.h"

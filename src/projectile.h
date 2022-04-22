@@ -11,7 +11,7 @@
 
 typedef struct {
     Direction dir;
-    uint8_t x, y;
+    uint16_t x, y;
     uint8_t dmg;
     bool valid;
     PWR_TYPE type;

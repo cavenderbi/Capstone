@@ -25,8 +25,4 @@
 
 #define FRAMES_ANIM_UPDATE 10
 
-Player player;
-
-inline void input();
-inline void logic();
-inline void draw();
+extern Player player;
