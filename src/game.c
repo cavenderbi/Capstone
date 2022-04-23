@@ -2,6 +2,7 @@
 
 #include "game.h"
 #include <rand.h>
+#include <stdio.h>
 
 Player player;
 
@@ -9,7 +10,7 @@ BANKREF(main)
 BANKREF_EXTERN(main)
 
 // Reads the user input and responds appropriately. 
-void input() BANKED {
+void input() NONBANKED {
     uint8_t j = joypad();
     if (j & J_UP) {
         player.dir = UP;
@@ -57,7 +58,7 @@ void input() BANKED {
 }
 
 // Controls other game functions such as moving projectiles. 
-void logic() BANKED {
+void logic() NONBANKED {
     //  Has player left the room?
     int minx = (20*8 * player.room_i) + 8, 
         miny = (16*8 * player.room_j) + 16, 
@@ -74,7 +75,7 @@ void logic() BANKED {
 }
 
 // Every ten frames, update the animation. 
-void draw() BANKED {
+void draw() NONBANKED {
     static uint8_t offset = 0; 
     // If the D-PAD is pressed, animate the sprite. 
     if (joypad() & (J_UP | J_DOWN | J_LEFT | J_RIGHT)) {
@@ -101,7 +102,7 @@ void draw() BANKED {
     wait_vbl_done();
 }
 
-void initSprites() BANKED {
+void initSprites() NONBANKED {
     const palette_color_t greyscale[4] = {RGB_WHITE, RGB_LIGHTGRAY, RGB_DARKGRAY, RGB_BLACK};
     const palette_color_t magic_missile_pal[4] = {0, RGBHTML(0x7f9de0), RGBHTML(0x4e81db), RGBHTML(0x2c58ce)};
     const palette_color_t test_enemy_pal[4] = {0, RGB_RED, RGB_RED, RGB_DARKRED};
@@ -137,7 +138,7 @@ void initSprites() BANKED {
     move_win(7, 128);
 }
 
-/* void putbutton(uint8_t pad) BANKED {
+void putbutton(uint8_t pad) NONBANKED {
     switch(pad) {
         case J_A:      puts("A"); break;
         case J_B:      puts("B"); break;
@@ -148,25 +149,24 @@ void initSprites() BANKED {
         case J_SELECT: puts("s"); break;
         case J_START:  puts("S"); break;
     }
-} */
+}
 
-void seed_rand() BANKED {
+void seed_rand() NONBANKED {
     DISPLAY_ON;
     SHOW_BKG;
     if (_cpu == CGB_TYPE) {
         VBK_REG = 1; 
         fill_rect(0, 0, 20, 18, 0);
         VBK_REG = 0;
-    }
-    // font_init();
-    // font_load(font_italic);
-    // gotoxy(0, 0);
-    //puts("Getting seed.");
-    //putbutton(waitpad(0xFF));
+    }/* 
+    font_init();
+    font_load(font_italic);
+    gotoxy(0, 0); */
+    putbutton(waitpad(0xFF));
     waitpad(0xFF);
     waitpadup();
     uint16_t seed = DIV_REG;
-    //putbutton(waitpad(0xFF));
+    putbutton(waitpad(0xFF));
     waitpad(0xFF);
     waitpadup();
     seed |= (uint16_t)DIV_REG << 8;
