@@ -1,10 +1,8 @@
 #ifndef _ROOMS_H
 #define _ROOMS_H
 
-//#include <rand.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
 
 #include "direction.h"
 #include "enemy.h"

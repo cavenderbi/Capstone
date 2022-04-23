@@ -7,7 +7,14 @@
         "*.tcc": "c",
         "projectile.h": "c",
         "topright.h": "c",
-        "metasprites.h": "c"
+        "metasprites.h": "c",
+        "stdint.h": "c",
+        "bottomright.h": "c",
+        "player.h": "c",
+        "hud.h": "c",
+        "gb.h": "c",
+        "stdlib.h": "c",
+        "platform.h": "c"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }

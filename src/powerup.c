@@ -1,10 +1,12 @@
+#pragma bank 1
+
 #include "powerup.h"
 #include "collision.h"
 #include "hud.h"
 
 #include <gb/cgb.h>
 
-void spawn_powerup(uint16_t x, uint16_t y, PWR_TYPE type, PowerUP * powerups) {
+void spawn_powerup(uint16_t x, uint16_t y, PWR_TYPE type, PowerUP * powerups) BANKED {
     int i = 0x14;
     for (PowerUP * current = powerups; current != powerups + 8; current++, i++)
         if (!current->valid) {
@@ -28,7 +30,7 @@ void spawn_powerup(uint16_t x, uint16_t y, PWR_TYPE type, PowerUP * powerups) {
         }
 }
 
-void update_powerups(PowerUP * powerups, Player * player) {
+void update_powerups(PowerUP * powerups, Player * player) BANKED {
     int i = 0x14;
     for (PowerUP * current = powerups; current != powerups + 8; current++, i++) {
         if (current->valid) {
@@ -61,7 +63,7 @@ void update_powerups(PowerUP * powerups, Player * player) {
     }
 }
 
-void hide_powerups() {
+void hide_powerups() BANKED {
     for (int i = 0x14; i <= 0x14 + 8; ++i)
         hide_sprite(i);
 }

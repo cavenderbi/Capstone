@@ -1,8 +1,9 @@
+#pragma bank 1
+
 #include "rooms.h"
 #include "enemy.h"
 #include <stdlib.h>
 #include <rand.h>
-#include <gbdk/font.h>
 
 #include "../res/bottomleft.h"
 #include "../res/bottomright.h"
@@ -20,15 +21,13 @@
 #include "../res/straighthorizontal.h"
 #include "../res/straightvertical.h"
 
-#define LEN(arr) ((int) (sizeof (arr) / sizeof (arr)[0]))
-
 Room * rooms[ROWS][COLS];
 
 /*  Spawns a room at [i][j]. 
     Uses malloc. 
 */
-void spawn_room(uint8_t i, uint8_t j) {
-    if (i > LEN(rooms) || j > LEN(*rooms) || rooms[i][j] != NULL)
+void spawn_room(uint8_t i, uint8_t j) BANKED {
+    if (i > ROWS || j > COLS || rooms[i][j] != NULL)
         return;
     rooms[i][j] = (Room *)calloc(1, sizeof(Room));
 }
@@ -36,9 +35,9 @@ void spawn_room(uint8_t i, uint8_t j) {
 /*  Loops through and frees allocated rooms. 
     Uses free. 
 */
-void free_rooms() {
-    for (int i = 0; i < LEN(rooms); ++i)
-        for (int j = 0; i < LEN(*rooms); ++i)
+void free_rooms() BANKED {
+    for (int i = 0; i < ROWS; ++i)
+        for (int j = 0; i < COLS; ++i)
             free(rooms[i][j]);
 }
 
@@ -47,7 +46,7 @@ void free_rooms() {
 #define LEFT 2
 #define RIGHT 3
 /*  TODO: Actually generate rooms. Just sets things up for test tilemap. */
-void generate_rooms(Player * player) {
+void generate_rooms(Player * player) BANKED {
     uint8_t row = player->room_i = rand() % ROWS;
     uint8_t col = player->room_j = rand() % COLS;
     uint8_t itr = ROWS * COLS * 2 / 3;
@@ -108,16 +107,8 @@ void generate_rooms(Player * player) {
                     case 0x02: rooms[b][a]->tilemap = singleleft_map;           break; // LEFT only                 // 0010
                     case 0x01: rooms[b][a]->tilemap = singleright_map;          break; // RIGHT only                // 0001
                 }
-                flags = rand();
-                int enemy_x_pos = (20*8*b) + 8, enemy_y_pos = (16*8*a) + 16;
-                if (flags & 0x1)
-                    spawnEnemy(enemy_x_pos + 32, enemy_y_pos + 32, UP, 4, rooms[b][a]->enemies);
-                if (flags & 0x2)
-                    spawnEnemy(enemy_x_pos + 32, enemy_y_pos + 96, UP, 4, rooms[b][a]->enemies);
-                if (flags & 0x4)
-                    spawnEnemy(enemy_x_pos + 96, enemy_y_pos + 32, UP, 4, rooms[b][a]->enemies);
-                if (flags & 0x8)
-                    spawnEnemy(enemy_x_pos + 96, enemy_y_pos + 96, UP, 4, rooms[b][a]->enemies);
+                int enemy_x_pos = (20*8*b) + 8 + 32, enemy_y_pos = (16*8*a) + 16 + 32;
+                spawnEnemy(enemy_x_pos, enemy_y_pos, UP, 4, rooms[b][a]->enemies);
             }
         }
     }

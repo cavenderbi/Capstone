@@ -5,7 +5,7 @@
 #include <gb/metasprites.h>
 // Booleans are nice to have.
 #include <stdbool.h>
-#include <stdio.h>
+//#include <stdio.h>
 // Include the title screen. 
 #include "logo_splash.h"
 #include "title_screen.h"

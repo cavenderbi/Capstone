@@ -1,13 +1,15 @@
+#pragma bank 1
+
 #include "game.h"
-#include <stdio.h>
 #include <rand.h>
-#include <gbdk/console.h>
-#include <gbdk/font.h>
 
 Player player;
 
+BANKREF(main)
+BANKREF_EXTERN(main)
+
 // Reads the user input and responds appropriately. 
-inline void input() {
+void input() BANKED {
     uint8_t j = joypad();
     if (j & J_UP) {
         player.dir = UP;
@@ -55,22 +57,24 @@ inline void input() {
 }
 
 // Controls other game functions such as moving projectiles. 
-inline void logic() {
+void logic() BANKED {
     //  Has player left the room?
     int minx = (20*8 * player.room_i) + 8, 
         miny = (16*8 * player.room_j) + 16, 
         maxx = minx + 20*8-7, //  18 tiles * 8 pixels per tile.
         maxy = miny + 16*8-7; //  14 tiles * 8 pixels per tile.
-    if (player.x_pos > maxx || player.x_pos < minx || player.y_pos > maxy || player.y_pos < miny)
+    if (player.x_pos > maxx || player.x_pos < minx || player.y_pos > maxy || player.y_pos < miny) {
+        SWITCH_ROM_MBC5(BANK(camera));
         scroll_camera(&player);
-
+        SWITCH_ROM_MBC5(BANK(main));
+    }
     updateProjs(rooms[player.room_i][player.room_j]->enemies);
     updateEnemies(rooms[player.room_i][player.room_j]->enemies, &player);
     update_powerups(rooms[player.room_i][player.room_j]->powerups, &player);
 }
 
 // Every ten frames, update the animation. 
-inline void draw() {
+void draw() BANKED {
     static uint8_t offset = 0; 
     // If the D-PAD is pressed, animate the sprite. 
     if (joypad() & (J_UP | J_DOWN | J_LEFT | J_RIGHT)) {
@@ -97,7 +101,7 @@ inline void draw() {
     wait_vbl_done();
 }
 
-inline void initSprites() {
+void initSprites() BANKED {
     const palette_color_t greyscale[4] = {RGB_WHITE, RGB_LIGHTGRAY, RGB_DARKGRAY, RGB_BLACK};
     const palette_color_t magic_missile_pal[4] = {0, RGBHTML(0x7f9de0), RGBHTML(0x4e81db), RGBHTML(0x2c58ce)};
     const palette_color_t test_enemy_pal[4] = {0, RGB_RED, RGB_RED, RGB_DARKRED};
@@ -133,20 +137,20 @@ inline void initSprites() {
     move_win(7, 128);
 }
 
-void putbutton(uint8_t pad) {
+/* void putbutton(uint8_t pad) BANKED {
     switch(pad) {
-        case J_A:      putchar('A'); break;
-        case J_B:      putchar('B'); break;
-        case J_UP:     putchar('^'); break;
-        case J_DOWN:   putchar('v'); break;
-        case J_LEFT:   putchar('<'); break;
-        case J_RIGHT:  putchar('>'); break;
-        case J_SELECT: putchar('s'); break;
-        case J_START:  putchar('S'); break;
+        case J_A:      puts("A"); break;
+        case J_B:      puts("B"); break;
+        case J_UP:     puts("^"); break;
+        case J_DOWN:   puts("v"); break;
+        case J_LEFT:   puts("<"); break;
+        case J_RIGHT:  puts(">"); break;
+        case J_SELECT: puts("s"); break;
+        case J_START:  puts("S"); break;
     }
-}
+} */
 
-inline void seed_rand() {
+void seed_rand() BANKED {
     DISPLAY_ON;
     SHOW_BKG;
     if (_cpu == CGB_TYPE) {
@@ -154,14 +158,16 @@ inline void seed_rand() {
         fill_rect(0, 0, 20, 18, 0);
         VBK_REG = 0;
     }
-    font_init();
-    font_load(font_italic);
-    gotoxy(0, 0);
-    puts("Getting seed.");
-    putbutton(waitpad(0xFF));
+    // font_init();
+    // font_load(font_italic);
+    // gotoxy(0, 0);
+    //puts("Getting seed.");
+    //putbutton(waitpad(0xFF));
+    waitpad(0xFF);
     waitpadup();
     uint16_t seed = DIV_REG;
-    putbutton(waitpad(0xFF));
+    //putbutton(waitpad(0xFF));
+    waitpad(0xFF);
     waitpadup();
     seed |= (uint16_t)DIV_REG << 8;
     initrand(seed);
@@ -169,15 +175,28 @@ inline void seed_rand() {
     DISPLAY_OFF;
 }
 
-void main() {
+void main() NONBANKED {
+//  Initialize sound. 
+    LCDC_REG = 0xD1;
+    BGP_REG  = 0xE4;
+    NR52_REG = 0x80;
+    NR51_REG = 0xFF;
+    NR50_REG = 0x77;
+    
+    SWITCH_ROM_MBC5(BANK(show_title));
     display_logo_splash();
     show_title();
+    SWITCH_ROM_MBC5(BANK(main));
+
 play_again: 
     seed_rand();
     generate_rooms(&player);
     player.health = 14;
     initSprites();
+
+    SWITCH_ROM_MBC5(BANK(camera));
     init_camera(bricktileset_tiles, 0x21, bricktileset_TILE_COUNT, rooms[player.room_i][player.room_j]->tilemap, player.room_i, player.room_j);
+    SWITCH_ROM_MBC5(BANK(main));
 
     SHOW_SPRITES;
     SHOW_BKG;
@@ -189,8 +208,9 @@ play_again:
         logic();
         draw();
     }
-    free_rooms();   // Free the memory used by the rooms. The last thing I need is my 8KB of WRAM being leaky.
+//  Free the memory used by the rooms. The last thing I need is my 8KB of WRAM being leaky.
+    free_rooms();   
     
     show_deathscreen();
-    goto play_again;    // Wait until the player presses start, then jump back up to where the game starts.
+    goto play_again;    
 }

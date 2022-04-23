@@ -1,9 +1,11 @@
+#pragma bank 2
+
 #include <gb/gb.h>
 #include <gb/cgb.h>
 #include "../res/deathscreen.h"
 
 /*  Displays the tite screen and waits for the player to press start. */
-void show_deathscreen() {
+void show_deathscreen() BANKED {
     move_bkg(0, 0);
     
     HIDE_SPRITES;

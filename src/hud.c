@@ -1,3 +1,5 @@
+#pragma bank 1
+
 #include <stdint.h>
 #include <gb/cgb.h>
 #include <gb/gb.h>
@@ -12,7 +14,7 @@
 // Timer icons. 
 #include "../res/bar.h"
 
-void init_HUD() {
+void init_HUD() BANKED {
     set_win_data(00, hearts_TILE_COUNT, hearts_tiles);
     set_win_data(03, fire_TILE_COUNT  , fire_tiles);
     set_win_data(07, frost_TILE_COUNT , frost_tiles);
@@ -26,7 +28,7 @@ void init_HUD() {
     set_bkg_palette(2, 1, bar_palettes);
     fill_win_rect(0, 0, 20, 2, 2);
 }
-void draw_HUD_health(uint8_t health) {
+void draw_HUD_health(uint8_t health) BANKED {
     // Draw health hearts. 
     fill_win_rect(1, 0, 7, 2, 1);
     if (health <= 14 && health != 0) {
@@ -35,7 +37,7 @@ void draw_HUD_health(uint8_t health) {
             fill_win_rect(1, 1, health - 7, 1, 0);
     }
 }
-void draw_HUD_element(PWR_TYPE element) {
+void draw_HUD_element(PWR_TYPE element) BANKED {
     // Draw element icon.
     switch(element) {
         case PWR_NONE:
@@ -57,7 +59,7 @@ void draw_HUD_element(PWR_TYPE element) {
 
 }
 
-void draw_HUD_usage(uint8_t usage) {
+void draw_HUD_usage(uint8_t usage) BANKED {
     // Draw power-up timer.
     // Begin bar. 
     if (usage > 1) {

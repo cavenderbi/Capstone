@@ -1,3 +1,5 @@
+#pragma bank 3
+
 #include "camera.h"
 #include "rooms.h"
 
@@ -5,6 +7,8 @@ uint8_t tile_offset;
 Cam cam;
 
 #define EMPTY_TILE 0x21
+
+BANKREF(camera)
 
 /*  Loads in a single column of a tileset.
  *  
@@ -14,7 +18,7 @@ Cam cam;
  *  @param map_width Width of the tilemap.
  *  @param p_src_map Pointer to the tilemap to be scrolled to. 
  */
-void set_bkg_tiles_col(uint8_t x, uint8_t y, uint8_t row_height, uint8_t map_width, const uint8_t * p_src_map) {
+void set_bkg_tiles_col(uint8_t x, uint8_t y, uint8_t row_height, uint8_t map_width, const uint8_t * p_src_map) BANKED {
     // Cache returned address of first cam tile vram address
     uint8_t * p_col_screen = (uint8_t *)set_bkg_tile_xy(x, y, *p_src_map);
     while (--row_height) {
@@ -34,7 +38,7 @@ void set_bkg_tiles_col(uint8_t x, uint8_t y, uint8_t row_height, uint8_t map_wid
  *  @param tilemap_height Height of tilemap.
  *  @returns Y-coordinate ended at. 
  */
-void scroll_up(Player * player, const uint8_t * tilemap, uint8_t tilemap_width, uint8_t tilemap_height) {
+void scroll_up(Player * player, const uint8_t * tilemap, uint8_t tilemap_width, uint8_t tilemap_height) BANKED {
     int i = tilemap_height;
     tilemap += tilemap_width * (tilemap_height - 1);
     while (i--) {
@@ -67,7 +71,7 @@ void scroll_up(Player * player, const uint8_t * tilemap, uint8_t tilemap_width, 
  *  @param tilemap_height Height of tilemap.
  *  @returns Y-coordinate ended at. 
  */
-void scroll_down(Player * player, const uint8_t * tilemap, uint8_t tilemap_width, uint8_t tilemap_height) {
+void scroll_down(Player * player, const uint8_t * tilemap, uint8_t tilemap_width, uint8_t tilemap_height) BANKED {
     int i = tilemap_height;
     while (i--) {
         wait_vbl_done();
@@ -99,7 +103,7 @@ void scroll_down(Player * player, const uint8_t * tilemap, uint8_t tilemap_width
  *  @param tilemap_height Height of tilemap.
  *  @returns X-coordinate ended at. 
  */
-void scroll_left(Player * player, const uint8_t * tilemap, uint8_t tilemap_width, uint8_t tilemap_height) {
+void scroll_left(Player * player, const uint8_t * tilemap, uint8_t tilemap_width, uint8_t tilemap_height) BANKED {
     int i = tilemap_width; 
     tilemap += (tilemap_width - 1);
     while (i--) {
@@ -131,7 +135,7 @@ void scroll_left(Player * player, const uint8_t * tilemap, uint8_t tilemap_width
  *  @param tilemap_height Height of tilemap.
  *  @returns X-coordinate ended at. 
  */
-void scroll_right(Player * player, const uint8_t * tilemap, uint8_t tilemap_width, uint8_t tilemap_height) {
+void scroll_right(Player * player, const uint8_t * tilemap, uint8_t tilemap_width, uint8_t tilemap_height) BANKED {
     int i = tilemap_width;
     while (i--) {
         wait_vbl_done();
@@ -153,7 +157,7 @@ void scroll_right(Player * player, const uint8_t * tilemap, uint8_t tilemap_widt
     }
 }
 
-void init_camera(const uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, const uint8_t * tilemap, uint8_t x_pos, uint8_t y_pos) {
+void init_camera(const uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, const uint8_t * tilemap, uint8_t x_pos, uint8_t y_pos) BANKED {
     DISPLAY_OFF;
 
     // Initialize the camera's position. 
@@ -170,7 +174,7 @@ void init_camera(const uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, 
     SHOW_BKG;
 }
 
-void scroll_camera(Player * player) {
+void scroll_camera(Player * player) BANKED {
     hide_sprites_range(4, MAX_HARDWARE_SPRITES);
     switch(player->dir) {
         case UP:

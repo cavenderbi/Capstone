@@ -7,15 +7,15 @@
 # to match your GBDK root directory (ex: GBDK_HOME = "C:/GBDK/"
 GBDK_HOME = ~/Downloads/gbdk/
 
-LCC = $(GBDK_HOME)bin/lcc 
+LCC = $(GBDK_HOME)bin/lcc
 PNG2ASSET = $(GBDK_HOME)bin/png2asset
 
 # You can set flags for LCC here
 # For example, you can uncomment the line below to turn on debug output
-LCCFLAGS = -Wm-yc -Wm-yn"WIZVWARRIOR" -debug 
+LCCFLAGS = -Wl-yt0x1A -Wl-yoA -Wm-yc -Wm-yn"WIZVWARRIOR" -debug -autobank
 
 # You can set the name of the .gb ROM file here
-PROJECTNAME    = WizardsvsWarriors
+PROJECTNAME = WizardsvsWarriors
 
 SRCDIR      = src
 OBJDIR      = obj
@@ -23,7 +23,7 @@ RESDIR      = res
 BINS	    = $(PROJECTNAME).gb
 CSOURCES    = $(foreach dir,$(SRCDIR),$(notdir $(wildcard $(dir)/*.c))) $(foreach dir,$(RESDIR),$(notdir $(wildcard $(dir)/*.c)))
 ASMSOURCES  = $(foreach dir,$(SRCDIR),$(notdir $(wildcard $(dir)/*.s)))
-OBJS       = $(CSOURCES:%.c=$(OBJDIR)/%.o) $(ASMSOURCES:%.s=$(OBJDIR)/%.o)
+OBJS       = $(CSOURCES:%.c=$(OBJDIR)/%.o) $(ASMSOURCES:%.s=$(OBJDIR)/%.o) mus/UwU.o lib/hUGEDriver.obj.o
 
 all:	prepare $(BINS)
 
@@ -50,6 +50,9 @@ res/bricktileset.c: res/bricktileset.png
 	$(PNG2ASSET) res/bricktileset.png -map -noflip -tiles_only
 res/%.c: res/rooms/%.png res/bricktileset.png
 	$(PNG2ASSET) $< -o $@ -map -noflip -source_tileset res/bricktileset.png -tile_origin 33 
+
+mus/UwU.o: mus/UwU.c
+	$(LCC) $(LCCFLAGS) -c -o $@ $<
 
 # Compile .c files in "src/" to .o object files
 $(OBJDIR)/%.o:	$(SRCDIR)/%.c

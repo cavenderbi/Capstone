@@ -8,6 +8,8 @@
 #include "player.h"
 #include "powerup.h"
 
+BANKREF_EXTERN(camera)
+
 typedef struct {
     uint8_t x_pos, y_pos;
 } Cam;

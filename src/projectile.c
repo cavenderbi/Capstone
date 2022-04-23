@@ -1,10 +1,12 @@
+#pragma bank 1
+
 #include "projectile.h"
 #include "player.h"
 
 Projectile projectiles[4];
 
 /*  Initialize the projectile array. */
-void initProjs() {
+void initProjs() BANKED {
     for (Projectile * current = projectiles; current != projectiles + 4; current++)
         current->valid = false;
 }
@@ -13,7 +15,7 @@ void initProjs() {
     @param x The starting x-coordinate of the projectile. 
     @param y The starting y-coordinate of the projectile. 
     @param dir The direction the projectile is facing. */
-void shoot(uint8_t x, uint8_t y, Direction dir, PWR_TYPE type) {
+void shoot(uint8_t x, uint8_t y, Direction dir, PWR_TYPE type) BANKED {
     /*  Limit the number of projectiles, at least for now. */
     int i = 0x24;
     for (Projectile * current = projectiles; current != projectiles + 4; current++, i++)
@@ -66,7 +68,7 @@ void shoot(uint8_t x, uint8_t y, Direction dir, PWR_TYPE type) {
 
 /*  Updates the projectiles position and detects projectile collision. 
     Then updates the relevant sprites. */
-void updateProjs(Enemy * enemies) {
+void updateProjs(Enemy * enemies) BANKED {
     const int speed = 3;
     int i = 0x24;
     for (Projectile * current = projectiles; current != projectiles + 4; current++, i++) {

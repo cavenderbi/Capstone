@@ -1,9 +1,11 @@
+#pragma bank 2
+
 #include <gb/gb.h>
 #include <gb/cgb.h>
 
 #include "../res/test_logo.h"
 
-void display_logo_splash() {
+void display_logo_splash() BANKED {
     DISPLAY_OFF;
 
     set_bkg_palette(0, test_logo_PALETTE_COUNT, test_logo_palettes);
