@@ -2,10 +2,11 @@
 
 #include <gb/gb.h>
 #include <gb/cgb.h>
+#include "music.h"
 #include "../res/titlescreen.h"
 #include "../lib/hUGEDriver.h"
 
-extern const hUGESong_t title_theme;
+extern const hUGESong_t UwU;
 
 /*  Displays the tite screen and waits for the player to press start. */
 BANKREF(show_title)
@@ -28,7 +29,7 @@ void show_title() BANKED {
     
     // Play the title theme. 
     __critical {
-        hUGE_init(&title_theme);
+        hUGE_init(&UwU);
         add_VBL(hUGE_dosound);
     }
     

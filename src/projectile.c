@@ -6,7 +6,7 @@
 Projectile projectiles[4];
 
 /*  Initialize the projectile array. */
-void initProjs() BANKED {
+void initProjs() NONBANKED {
     for (Projectile * current = projectiles; current != projectiles + 4; current++)
         current->valid = false;
 }
@@ -15,7 +15,7 @@ void initProjs() BANKED {
     @param x The starting x-coordinate of the projectile. 
     @param y The starting y-coordinate of the projectile. 
     @param dir The direction the projectile is facing. */
-void shoot(uint8_t x, uint8_t y, Direction dir, PWR_TYPE type) BANKED {
+void shoot(uint8_t x, uint8_t y, Direction dir, PWR_TYPE type) NONBANKED {
     /*  Limit the number of projectiles, at least for now. */
     int i = 0x24;
     for (Projectile * current = projectiles; current != projectiles + 4; current++, i++)
@@ -68,7 +68,7 @@ void shoot(uint8_t x, uint8_t y, Direction dir, PWR_TYPE type) BANKED {
 
 /*  Updates the projectiles position and detects projectile collision. 
     Then updates the relevant sprites. */
-void updateProjs(Enemy * enemies) BANKED {
+void updateProjs(Enemy * enemies) NONBANKED {
     const int speed = 3;
     int i = 0x24;
     for (Projectile * current = projectiles; current != projectiles + 4; current++, i++) {

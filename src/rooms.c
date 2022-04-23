@@ -26,7 +26,7 @@ Room * rooms[ROWS][COLS];
 /*  Spawns a room at [i][j]. 
     Uses malloc. 
 */
-void spawn_room(uint8_t i, uint8_t j) BANKED {
+void spawn_room(uint8_t i, uint8_t j) NONBANKED {
     if (i > ROWS || j > COLS || rooms[i][j] != NULL)
         return;
     rooms[i][j] = (Room *)calloc(1, sizeof(Room));
@@ -35,7 +35,7 @@ void spawn_room(uint8_t i, uint8_t j) BANKED {
 /*  Loops through and frees allocated rooms. 
     Uses free. 
 */
-void free_rooms() BANKED {
+void free_rooms() NONBANKED {
     for (int i = 0; i < ROWS; ++i)
         for (int j = 0; i < COLS; ++i)
             free(rooms[i][j]);
@@ -46,7 +46,7 @@ void free_rooms() BANKED {
 #define LEFT 2
 #define RIGHT 3
 /*  TODO: Actually generate rooms. Just sets things up for test tilemap. */
-void generate_rooms(Player * player) BANKED {
+void generate_rooms(Player * player) NONBANKED {
     uint8_t row = player->room_i = rand() % ROWS;
     uint8_t col = player->room_j = rand() % COLS;
     uint8_t itr = ROWS * COLS * 2 / 3;

@@ -1,8 +1,11 @@
 #pragma bank 1
 
 #include "game.h"
+#include "../lib/hUGEDriver.h"
 #include <rand.h>
 #include <stdio.h>
+
+extern const hUGESong_t FishNChips;
 
 Player player;
 
@@ -197,6 +200,12 @@ play_again:
     SWITCH_ROM_MBC5(BANK(camera));
     init_camera(bricktileset_tiles, 0x21, bricktileset_TILE_COUNT, rooms[player.room_i][player.room_j]->tilemap, player.room_i, player.room_j);
     SWITCH_ROM_MBC5(BANK(main));
+
+    // PLAY THAT FUNKY MUSIC GAMEBOY!
+    __critical {
+        hUGE_init(&FishNChips);
+        add_VBL(hUGE_dosound);
+    }
 
     SHOW_SPRITES;
     SHOW_BKG;

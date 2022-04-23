@@ -6,7 +6,7 @@
 
 #include <gb/cgb.h>
 
-void spawn_powerup(uint16_t x, uint16_t y, PWR_TYPE type, PowerUP * powerups) BANKED {
+void spawn_powerup(uint16_t x, uint16_t y, PWR_TYPE type, PowerUP * powerups) NONBANKED {
     int i = 0x14;
     for (PowerUP * current = powerups; current != powerups + 8; current++, i++)
         if (!current->valid) {
@@ -30,7 +30,7 @@ void spawn_powerup(uint16_t x, uint16_t y, PWR_TYPE type, PowerUP * powerups) BA
         }
 }
 
-void update_powerups(PowerUP * powerups, Player * player) BANKED {
+void update_powerups(PowerUP * powerups, Player * player) NONBANKED {
     int i = 0x14;
     for (PowerUP * current = powerups; current != powerups + 8; current++, i++) {
         if (current->valid) {
@@ -63,7 +63,7 @@ void update_powerups(PowerUP * powerups, Player * player) BANKED {
     }
 }
 
-void hide_powerups() BANKED {
+void hide_powerups() NONBANKED {
     for (int i = 0x14; i <= 0x14 + 8; ++i)
         hide_sprite(i);
 }

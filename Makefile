@@ -23,7 +23,7 @@ RESDIR      = res
 BINS	    = $(PROJECTNAME).gb
 CSOURCES    = $(foreach dir,$(SRCDIR),$(notdir $(wildcard $(dir)/*.c))) $(foreach dir,$(RESDIR),$(notdir $(wildcard $(dir)/*.c)))
 ASMSOURCES  = $(foreach dir,$(SRCDIR),$(notdir $(wildcard $(dir)/*.s)))
-OBJS       = $(CSOURCES:%.c=$(OBJDIR)/%.o) $(ASMSOURCES:%.s=$(OBJDIR)/%.o) mus/UwU.o lib/hUGEDriver.obj.o
+OBJS       = $(CSOURCES:%.c=$(OBJDIR)/%.o) $(ASMSOURCES:%.s=$(OBJDIR)/%.o) lib/hUGEDriver.obj.o
 
 all:	prepare $(BINS)
 
@@ -54,6 +54,9 @@ res/%.c: res/rooms/%.png res/bricktileset.png
 mus/UwU.o: mus/UwU.c
 	$(LCC) $(LCCFLAGS) -c -o $@ $<
 
+mus/FishNChips.o: mus/FishNChips.c
+	$(LCC) $(LCCFLAGS) -c -o $@ $< 
+	
 # Compile .c files in "src/" to .o object files
 $(OBJDIR)/%.o:	$(SRCDIR)/%.c
 	$(LCC) $(LCCFLAGS) -c -o $@ $<

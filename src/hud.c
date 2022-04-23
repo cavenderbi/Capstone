@@ -14,7 +14,7 @@
 // Timer icons. 
 #include "../res/bar.h"
 
-void init_HUD() BANKED {
+void init_HUD() NONBANKED {
     set_win_data(00, hearts_TILE_COUNT, hearts_tiles);
     set_win_data(03, fire_TILE_COUNT  , fire_tiles);
     set_win_data(07, frost_TILE_COUNT , frost_tiles);
@@ -28,7 +28,7 @@ void init_HUD() BANKED {
     set_bkg_palette(2, 1, bar_palettes);
     fill_win_rect(0, 0, 20, 2, 2);
 }
-void draw_HUD_health(uint8_t health) BANKED {
+void draw_HUD_health(uint8_t health) NONBANKED {
     // Draw health hearts. 
     fill_win_rect(1, 0, 7, 2, 1);
     if (health <= 14 && health != 0) {
@@ -37,7 +37,7 @@ void draw_HUD_health(uint8_t health) BANKED {
             fill_win_rect(1, 1, health - 7, 1, 0);
     }
 }
-void draw_HUD_element(PWR_TYPE element) BANKED {
+void draw_HUD_element(PWR_TYPE element) NONBANKED {
     // Draw element icon.
     switch(element) {
         case PWR_NONE:
@@ -59,7 +59,7 @@ void draw_HUD_element(PWR_TYPE element) BANKED {
 
 }
 
-void draw_HUD_usage(uint8_t usage) BANKED {
+void draw_HUD_usage(uint8_t usage) NONBANKED {
     // Draw power-up timer.
     // Begin bar. 
     if (usage > 1) {
