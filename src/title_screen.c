@@ -2,7 +2,6 @@
 
 #include <gb/gb.h>
 #include <gb/cgb.h>
-#include "music.h"
 #include "../res/titlescreen.h"
 #include "../lib/hUGEDriver.h"
 

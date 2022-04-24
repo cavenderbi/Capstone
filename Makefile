@@ -50,12 +50,6 @@ res/bricktileset.c: res/bricktileset.png
 	$(PNG2ASSET) res/bricktileset.png -map -noflip -tiles_only
 res/%.c: res/rooms/%.png res/bricktileset.png
 	$(PNG2ASSET) $< -o $@ -map -noflip -source_tileset res/bricktileset.png -tile_origin 33 
-
-mus/UwU.o: mus/UwU.c
-	$(LCC) $(LCCFLAGS) -c -o $@ $<
-
-mus/FishNChips.o: mus/FishNChips.c
-	$(LCC) $(LCCFLAGS) -c -o $@ $< 
 	
 # Compile .c files in "src/" to .o object files
 $(OBJDIR)/%.o:	$(SRCDIR)/%.c

@@ -62,8 +62,3 @@ void update_powerups(PowerUP * powerups, Player * player) NONBANKED {
         else hide_sprite(i);
     }
 }
-
-void hide_powerups() NONBANKED {
-    for (int i = 0x14; i <= 0x14 + 8; ++i)
-        hide_sprite(i);
-}

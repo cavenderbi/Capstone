@@ -31,5 +31,3 @@ void spawn_powerup(uint16_t, uint16_t, PWR_TYPE, PowerUP *);
             the power-up.
 */
 void update_powerups(PowerUP *, Player *);
-// Hide the sprites allocated to power-ups. 
-void hide_powerups();

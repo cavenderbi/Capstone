@@ -26,10 +26,11 @@ bool sprite_sprite_collision(uint8_t x_1, uint8_t y_1, uint8_t width_1, uint8_t 
     @param width The width of the sprite. 
     @param height The height of the sprite.
     @returns Returns false if the sprite overlaps with a collidable background tile. */
-bool sprite_tile_collision(uint8_t x, uint8_t y, Direction dir) NONBANKED {
-    if (dir == DOWN || dir == RIGHT) {
-        x += 7;
-        y += 7;
+bool sprite_tile_collision(uint16_t x, uint16_t y, Direction dir) NONBANKED {
+    switch (dir) {
+        case DOWN:  y += 7; break;
+        case LEFT:  x -= 7; break;
+        case RIGHT: x += 7; break;
     }
     return get_bkg_tile_xy((x - 8) >> 3, ((y - 16) >> 3)) == 0x21;
 }
