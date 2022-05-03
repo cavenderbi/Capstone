@@ -27,7 +27,7 @@ Room * rooms[ROWS][COLS];
 /*  Spawns a room at [i][j]. 
     Uses malloc. 
 */
-void spawn_room(uint8_t i, uint8_t j) NONBANKED {
+void spawn_room(uint8_t i, uint8_t j) BANKED {
     if (i > ROWS || j > COLS || rooms[i][j] != NULL)
         return;
     rooms[i][j] = (Room *)calloc(1, sizeof(Room));

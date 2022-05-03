@@ -3,6 +3,7 @@
 #include "game.h"
 #include "music.h"
 #include "../lib/hUGEDriver.h"
+#include<gbdk/font.h>
 #include <rand.h>
 #include <stdio.h>
 
@@ -162,10 +163,8 @@ void seed_rand() BANKED {
         VBK_REG = 1; 
         fill_rect(0, 0, 20, 18, 0);
         VBK_REG = 0;
-    }/* 
-    font_init();
-    font_load(font_italic);
-    gotoxy(0, 0); */
+    }
+    puts("Press your lucky\nbuttons!");
     putbutton(waitpad(0xFF));
     waitpad(0xFF);
     waitpadup();
@@ -188,12 +187,14 @@ void main() NONBANKED {
     SWITCH_ROM_MBC5(BANK(show_title));
     display_logo_splash();
     show_title();
-    SWITCH_ROM_MBC5(BANK(main));
 
 play_again: 
+    SWITCH_ROM_MBC5(BANK(main));
     seed_rand();
     generate_rooms(&player);
-    player.health = 14;
+    player.health = 14; 
+    player.usage = 0;
+    player.element = 0;
     initSprites();
 
     SWITCH_ROM_MBC5(BANK(camera));
