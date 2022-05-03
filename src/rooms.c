@@ -36,10 +36,11 @@ void spawn_room(uint8_t i, uint8_t j) BANKED {
 /*  Loops through and frees allocated rooms. 
     Uses free. 
 */
-void free_rooms() NONBANKED {
+void free_rooms() BANKED {
     for (int i = 0; i < ROWS; ++i)
         for (int j = 0; i < COLS; ++i)
-            free(rooms[i][j]);
+            if (rooms[i][j] != NULL)
+                free(rooms[i][j]);
 }
 
 #define UP 0

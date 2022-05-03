@@ -2,6 +2,7 @@
 
 #include "camera.h"
 #include "rooms.h"
+#include "../res/bricktileset.h"
 
 uint8_t tile_offset;
 Cam cam;
@@ -132,7 +133,7 @@ void scroll_left(Player * player, const uint8_t * tilemap, uint8_t tilemap_width
  *  @param y Y-coordinate to start at.
  *  @param tilemap Tilemap to scroll to.
  *  @param tilemap_width Width of tilemap.
- *  @param tilemap_height Height of tilemap.
+ *  @param tilemap_heightconst uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles,  Height of tilemap.
  *  @returns X-coordinate ended at. 
  */
 void scroll_right(Player * player, const uint8_t * tilemap, uint8_t tilemap_width, uint8_t tilemap_height) NONBANKED {
@@ -157,7 +158,7 @@ void scroll_right(Player * player, const uint8_t * tilemap, uint8_t tilemap_widt
     }
 }
 
-void init_camera(const uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, const uint8_t * tilemap, uint8_t x_pos, uint8_t y_pos) NONBANKED {
+void init_camera(const uint8_t * tilemap, uint8_t x_pos, uint8_t y_pos) NONBANKED {
     DISPLAY_OFF;
 
     // Initialize the camera's position. 
@@ -167,7 +168,7 @@ void init_camera(const uint8_t * tiles, uint8_t tile_offset, uint8_t num_tiles, 
     // Clear the screen.
     fill_rect(0, 0, 32, 32, 0x21);
     // Draw the first tilemap. 
-    set_bkg_data(tile_offset, num_tiles, tiles);
+    set_bkg_data(0x21, bricktileset_TILE_COUNT, bricktileset_tiles);
     set_bkg_tiles(SCX_REG / 8, SCY_REG / 8, 20u, 16u, tilemap);
 
     DISPLAY_ON;

@@ -5,12 +5,6 @@
 
 Projectile projectiles[4];
 
-/*  Initialize the projectile array. */
-void initProjs() NONBANKED {
-    for (Projectile * current = projectiles; current != projectiles + 4; current++)
-        current->valid = false;
-}
-
 /*  Spawns a new projectile at the given x and y coordinates, facing the given direction. 
     @param x The starting x-coordinate of the projectile. 
     @param y The starting y-coordinate of the projectile. 

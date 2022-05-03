@@ -3,7 +3,7 @@
 #include "game.h"
 #include "music.h"
 #include "../lib/hUGEDriver.h"
-#include<gbdk/font.h>
+#include <gbdk/font.h>
 #include <rand.h>
 #include <stdio.h>
 
@@ -159,11 +159,13 @@ void putbutton(uint8_t pad) BANKED {
 void seed_rand() BANKED {
     DISPLAY_ON;
     SHOW_BKG;
+    fill_rect(0, 0, 20, 18, 0);
     if (_cpu == CGB_TYPE) {
         VBK_REG = 1; 
         fill_rect(0, 0, 20, 18, 0);
         VBK_REG = 0;
     }
+    font_load(font_ibm);
     puts("Press your lucky\nbuttons!");
     putbutton(waitpad(0xFF));
     waitpad(0xFF);
@@ -187,6 +189,7 @@ void main() NONBANKED {
     SWITCH_ROM_MBC5(BANK(show_title));
     display_logo_splash();
     show_title();
+    font_init();
 
 play_again: 
     SWITCH_ROM_MBC5(BANK(main));
@@ -198,11 +201,11 @@ play_again:
     initSprites();
 
     SWITCH_ROM_MBC5(BANK(camera));
-    init_camera(bricktileset_tiles, 0x21, bricktileset_TILE_COUNT, rooms[player.room_i][player.room_j]->tilemap, player.room_i, player.room_j);
+    init_camera(rooms[player.room_i][player.room_j]->tilemap, player.room_i, player.room_j);
     SWITCH_ROM_MBC5(BANK(main));
 
     // Play that funky music, Gameboy! 
-    // 
+    // Play that funky music right!
     switch_hUGE_module(&fight_theme, 1);
 
     SHOW_SPRITES;
