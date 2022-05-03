@@ -1,6 +1,7 @@
 #pragma bank 1
 
 #include "powerup.h"
+#include "camera.h"
 #include "collision.h"
 #include "hud.h"
 
@@ -56,7 +57,7 @@ void update_powerups(PowerUP * powerups, Player * player) NONBANKED {
                 }
             }
             // Draw sprite. ✍️
-            move_sprite(i, current->x_pos, current->y_pos);
+            move_sprite(i, current->x_pos - cam.x_pos * 8, current->y_pos - cam.y_pos * 8);
         }
         // Hide sprite. 🙈
         else hide_sprite(i);
