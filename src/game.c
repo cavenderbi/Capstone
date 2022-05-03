@@ -1,11 +1,12 @@
 #pragma bank 1
 
 #include "game.h"
+#include "music.h"
 #include "../lib/hUGEDriver.h"
 #include <rand.h>
 #include <stdio.h>
 
-extern const hUGESong_t FishNChips;
+extern const hUGESong_t fight_theme;
 
 Player player;
 
@@ -141,7 +142,7 @@ void initSprites() NONBANKED {
     move_win(7, 128);
 }
 
-void putbutton(uint8_t pad) NONBANKED {
+void putbutton(uint8_t pad) BANKED {
     switch(pad) {
         case J_A:      puts("A"); break;
         case J_B:      puts("B"); break;
@@ -154,7 +155,7 @@ void putbutton(uint8_t pad) NONBANKED {
     }
 }
 
-void seed_rand() NONBANKED {
+void seed_rand() BANKED {
     DISPLAY_ON;
     SHOW_BKG;
     if (_cpu == CGB_TYPE) {
@@ -179,9 +180,7 @@ void seed_rand() NONBANKED {
 }
 
 void main() NONBANKED {
-//  Initialize sound. 
-    LCDC_REG = 0xD1;
-    BGP_REG  = 0xE4;
+//  Initialize sound.
     NR52_REG = 0x80;
     NR51_REG = 0xFF;
     NR50_REG = 0x77;
@@ -201,11 +200,9 @@ play_again:
     init_camera(bricktileset_tiles, 0x21, bricktileset_TILE_COUNT, rooms[player.room_i][player.room_j]->tilemap, player.room_i, player.room_j);
     SWITCH_ROM_MBC5(BANK(main));
 
-    // PLAY THAT FUNKY MUSIC GAMEBOY!
-    __critical {
-        hUGE_init(&FishNChips);
-        add_VBL(hUGE_dosound);
-    }
+    // Play that funky music, Gameboy! 
+    // 
+    switch_hUGE_module(&fight_theme, 1);
 
     SHOW_SPRITES;
     SHOW_BKG;
@@ -218,8 +215,9 @@ play_again:
         draw();
     }
 //  Free the memory used by the rooms. The last thing I need is my 8KB of WRAM being leaky.
-    free_rooms();   
-    
+    free_rooms();
+
+    SWITCH_ROM_MBC5(BANK(show_title)); 
     show_deathscreen();
     goto play_again;    
 }

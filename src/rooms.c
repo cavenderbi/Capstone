@@ -1,6 +1,7 @@
 #pragma bank 1
 
 #include "rooms.h"
+#include "powerup.h"
 #include "enemy.h"
 #include <stdlib.h>
 #include <rand.h>
@@ -109,7 +110,9 @@ void generate_rooms(Player * player) NONBANKED {
                 }
                 int enemy_x_pos = (20*8*b) + 8 + 32, enemy_y_pos = (16*8*a) + 16 + 32;
                 spawnEnemy(enemy_x_pos, enemy_y_pos, UP, 4, rooms[b][a]->enemies);
+                
             }
         }
     }
+    spawn_powerup((20*8*player->room_i) + 80, (16*8*player->room_j) + 40, PWR_FIRE, rooms[player->room_i][player->room_j]->powerups);
 }

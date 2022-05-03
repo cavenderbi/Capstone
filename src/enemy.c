@@ -19,7 +19,7 @@
  *  @param dir direction the enemy is facing when it spawns. 
  *  @param health starting health of the enemy. 
  */
-void spawnEnemy(uint16_t x, uint16_t y, Direction dir, uint8_t health, Enemy * enemies) NONBANKED {
+void spawnEnemy(uint16_t x, uint16_t y, Direction dir, uint8_t health, Enemy * enemies) {
     for (Enemy * current = enemies; current != enemies + 8; current++) {
         if (current->health == 0) {
             current->x_pos = x;
@@ -34,7 +34,7 @@ void spawnEnemy(uint16_t x, uint16_t y, Direction dir, uint8_t health, Enemy * e
 /*  Updates enemy and relevant sprites. 
  *  TODO: Implement true pathfinding. A* pathfinding maybe? 
  */
-void updateEnemies(Enemy * enemies, Player * player) NONBANKED {
+void updateEnemies(Enemy * enemies, Player * player) {
     int i = 0x04;
     //int16_t x, y;
     for (Enemy * current = enemies; current != enemies + 4; current++, i+=4) {

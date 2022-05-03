@@ -14,7 +14,10 @@
         "hud.h": "c",
         "gb.h": "c",
         "stdlib.h": "c",
-        "platform.h": "c"
+        "platform.h": "c",
+        "titlescreen.h": "c",
+        "rooms.h": "c",
+        "hugedriver.h": "c"
     },
     "C_Cpp.errorSquiggles": "Enabled"
 }
